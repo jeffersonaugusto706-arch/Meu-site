@@ -340,7 +340,19 @@ function renderPage(pageId, clickedElement = null) {
 
 // Inicializa o conteúdo ao carregar a página
 const initialPage = window.location.hash.substring(1) || 'home';
-renderPage(initialPage);
+renderPage(initialPage);// Conteúdo de todas as "páginas" em formato HTML
+const pages = {
+    home: `
+        <!-- CONTEÚDO HTML DA HOME -->
+    `,
+    filmes: `
+        <!-- CONTEÚDO HTML DE FILMES -->
+    `,
+    hqs: `
+        <!-- CONTEÚDO HTML DE HQS -->
+    `,
+    // ... e assim por diante para todas as outras seções
+};
 
 
 
