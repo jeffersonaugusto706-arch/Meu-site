@@ -1,504 +1,315 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wolf Studios Produções</title>
+    <!-- Carrega o Tailwind CSS para estilos modernos e responsivos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuração de fonte padrão */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #0a0a0a; /* Fundo escuro */
+        }
+        /* Garantindo que o conteúdo principal ocupe o espaço restante */
+        #content-area {
+            flex-grow: 1;
+        }
+        /* Estilo para links de navegação ativos */
+        .active-nav-link {
+            color: #ffffff !important;
+            border-bottom: 2px solid #a3e635; /* Cor de destaque para o ativo */
+        }
+        /* Estilo para vídeos do YouTube */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
-<body>
-    <h1>Bem-vindo à Wolf Studios Produções</h1>
-    <p>Site publicado com sucesso usando GitHub + Vercel!</p>
-</body>
-</html>body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0a0a0a;
-    color: #e0e0e0;
-}
-
-header {
-    background: #111;
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid #333;
-}
-
-header h1 {
-    color: #c0c0c0;
-    font-size: 32px;
-    letter-spacing: 2px;
-}
-
-nav {
-    display: flex;
-    justify-content: center;
-    background: #151515;
-    padding: 15px;
-    border-bottom: 1px solid #333;
-}
-
-nav a {
-    color: #d4d4d4;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-nav a:hover {
-    color: #ffffff;
-}
-
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-}
-
-.card {
-    background: #1a1a1a;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #333;
-}
-
-.card img {
-    width: 100%;
-    border-radius: 10px;
-}
-
-button, .btn {
-    display: inline-block;
-    background: #444;
-    padding: 10px 18px;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    margin-top: 10px;
-    transition: 0.3s;
-    border: none;
-}
-
-button:hover, .btn:hover {
-    background: #666;
-}
-
-footer {
-    margin-top: 30px;
-    padding: 20px;
-    text-align: center;
-    background: #111;
-    border-top: 1px solid #333;
-}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Wolf Studios Produções</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header>
-    <h1>Wolf Studios Produções</h1>
-</header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-    <div class="card">
-        <h2>Bem-vindo à Wolf Studios</h2>
-        <p>A casa da sua criatividade — Filmes, Quadrinhos e Multimídia produzidos por Jeff.</p>
-        <a class="btn" href="filmes.html">Ver Filmes</a>
-        <a class="btn" href="hqs.html">Ver Quadrinhos</a>
-    </div>
-</div>
-
-<footer>
-    Wolf Studios Produções © 2025
-</footer>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Filmes - Wolf Studios Produções</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Filmes Wolf Studios</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Título do Filme</h2>
-        <img src="https://via.placeholder.com/900x400?text=Capa+do+Filme">
-        <p>Descrição do filme produzido por Jeff.</p>
-        <p><strong>Preço: R$ 15,00</strong></p>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar pelo WhatsApp</a>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>HQs - Wolf Studios Produções</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Quadrinhos Wolf Studios</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Título da HQ</h2>
-        <img src="https://via.placeholder.com/900x400?text=Capa+da+HQ">
-        <p>Descrição da HQ criada por Jeff.</p>
-        <p><strong>Preço: R$ 10,00</strong></p>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar pelo WhatsApp</a>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Loja - Wolf Studios</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Loja Wolf Studios</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-<div class="container">
-    <h2>Filmes</h2>
-    <div class="card">
-        <img src="https://via.placeholder.com/900x400?text=Capa+do+Filme">
-        <h3>Título do Filme</h3>
-        <p>Descrição curta.</p>
-        <strong>R$ 15,00</strong>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar</a>
-    </div>
-    <h2>Quadrinhos</h2>
-    <div class="card">
-        <img src="https://via.placeholder.com/900x400?text=Capa+da+HQ">
-        <h3>Título da HQ</h3>
-        <p>Descrição curta.</p>
-        <strong>R$ 10,00</strong>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar</a>
-    </div>
-</div>
-<footer>Wolf Studios Produções © 2025</footer>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Vídeos - Wolf Studios</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Vídeos e Trailers</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Título do Vídeo</h2>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/SEUVIDEO"></iframe>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Sobre - Wolf Studios Produções</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Sobre a Wolf Studios</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-    <div class="card">
-        <h2>Quem somos?</h2>
-        <p>Wolf Studios Produções é uma produtora independente criada por Jeff, focada em filmes, quadrinhos, efeitos especiais e narrativas criativas.</p>
-        <p>Todos os filmes e HQs vendidos nesta plataforma são **produções originais**.</p>
-    </div>
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Contato - Wolf Studios</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Contato</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Fale conosco</h2>
-        <p>WhatsApp: <strong>(coloque seu número)</strong></p>
-        <p>Email: <strong>(se tiver, me diga que eu coloco)</strong></p>
-        <p>Instagram: @wolfstudios</p>
-
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Enviar mensagem</a>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Wolf Studios Produções</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header>
-    <h1>Wolf Studios Produções</h1>
-</header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-    <div class="card">
-        <h2>Bem-vindo à Wolf Studios</h2>
-        <p>A casa da sua criatividade — Filmes, Quadrinhos e Multimídia produzidos por Jeff.</p>
-        <a class="btn" href="filmes.html">Ver Filmes</a>
-        <a class="btn" href="hqs.html">Ver Quadrinhos</a>
-    </div>
-</div>
-
-<footer>
-    Wolf Studios Produções © 2025
-</footer>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Filmes - Wolf Studios Produções</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Filmes Wolf Studios</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Título do Filme</h2>
-        <img src="https://via.placeholder.com/900x400?text=Capa+do+Filme">
-        <p>Descrição do filme produzido por Jeff.</p>
-        <p><strong>Preço: R$ 15,00</strong></p>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar pelo WhatsApp</a>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Loja - Wolf Studios</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Loja Wolf Studios</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <h2>Filmes</h2>
-    <div class="card">
-        <img src="https://via.placeholder.com/900x400?text=Capa+do+Filme">
-        <h3>Título do Filme</h3>
-        <p>Descrição curta.</p>
-        <strong>R$ 15,00</strong>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar</a>
-    </div>
-
-    <h2>Quadrinhos</h2>
-    <div class="card">
-        <img src="https://via.placeholder.com/900x400?text=Capa+da+HQ">
-        <h3>Título da HQ</h3>
-        <p>Descrição curta.</p>
-        <strong>R$ 10,00</strong>
-        <a class="btn" href="https://wa.me/55SEUNUMERO">Comprar</a>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Vídeos - Wolf Studios</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header><h1>Vídeos e Trailers</h1></header>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="videos.html">Vídeos</a>
-    <a href="filmes.html">Filmes</a>
-    <a href="hqs.html">Quadrinhos</a>
-    <a href="loja.html">Loja</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="contato.html">Contato</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Título do Vídeo</h2>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/SEUVIDEO"></iframe>
-    </div>
-
-</div>
-
-<footer>Wolf Studios Produções © 2025</footer>
-
+<body class="bg-gray-950 text-gray-200">
+
+    <!-- CABEÇALHO -->
+    <header class="bg-black shadow-lg sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-3xl font-bold text-gray-100 tracking-wider text-center">
+                Wolf Studios Produções
+            </h1>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO -->
+    <nav class="bg-gray-900 border-b border-gray-700 shadow-md">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex space-x-4 overflow-x-auto justify-center py-3">
+                <!-- Os links agora chamam a função JS para mudar o conteúdo -->
+                <a href="#" onclick="renderPage('home', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out active-nav-link" data-page="home">Home</a>
+                <a href="#" onclick="renderPage('videos', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="videos">Vídeos</a>
+                <a href="#" onclick="renderPage('filmes', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="filmes">Filmes</a>
+                <a href="#" onclick="renderPage('hqs', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="hqs">Quadrinhos</a>
+                <a href="#" onclick="renderPage('loja', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="loja">Loja</a>
+                <a href="#" onclick="renderPage('sobre', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="sobre">Sobre</a>
+                <a href="#" onclick="renderPage('contato', this)" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="contato">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ÁREA DE CONTEÚDO DINÂMICO -->
+    <main id="content-area" class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- O conteúdo será carregado aqui pelo JavaScript -->
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="mt-auto bg-black text-center py-4 border-t border-gray-700 text-gray-400 text-sm">
+        Wolf Studios Produções © <span id="current-year"></span>
+    </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Variável de controle para o número de WhatsApp
+        const WHATSAPP_NUMBER = "SEUNUMERO"; // Por favor, substitua pelo seu número!
+
+        // Função utilitária para gerar o link do WhatsApp
+        const getWhatsappLink = () => `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
+
+        // Conteúdo de todas as "páginas" em formato HTML
+        const pages = {
+            home: `
+                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 transition duration-500 hover:shadow-gray-700/50">
+                    <h2 class="text-3xl font-extrabold text-lime-400 mb-4">Bem-vindo(a) à Wolf Studios</h2>
+                    <p class="text-lg mb-6 text-gray-300">A casa da sua criatividade — Filmes, Quadrinhos e Multimídia produzidos por Jeff. Explore nossas narrativas épicas!</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#" onclick="renderPage('filmes', this)" class="flex-1 text-center py-3 px-6 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-[1.02]">
+                            Ver Filmes
+                        </a>
+                        <a href="#" onclick="renderPage('hqs', this)" class="flex-1 text-center py-3 px-6 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-[1.02]">
+                            Ver Quadrinhos
+                        </a>
+                    </div>
+                </div>
+            `,
+            filmes: `
+                <h2 class="text-4xl font-bold text-center text-red-500 mb-8">Catálogo de Filmes Wolf Studios</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Cartão de Filme Exemplo 1 -->
+                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+                        <img src="https://placehold.co/900x400/1e293b/a3a3a3?text=CAPA+DO+FILME+1" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-2">A Lenda do Lobo Cinzento</h3>
+                        <p class="text-gray-400 mb-3">Um épico de fantasia e ação dirigido por Jeff, explorando um mundo de magia e mistério.</p>
+                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 15,00</p>
+                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
+                            Comprar via WhatsApp
+                        </a>
+                    </div>
+                    <!-- Cartão de Filme Exemplo 2 (duplique para mais filmes) -->
+                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+                        <img src="https://placehold.co/900x400/292524/a3a3a3?text=CAPA+DO+FILME+2" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-2">O Enigma Temporal</h3>
+                        <p class="text-gray-400 mb-3">Thriller de ficção científica com viagem no tempo e reviravoltas surpreendentes.</p>
+                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 18,00</p>
+                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
+                            Comprar via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            `,
+            hqs: `
+                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-8">Nossas Histórias em Quadrinhos</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Cartão de HQ Exemplo 1 -->
+                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+                        <img src="https://placehold.co/900x400/374151/a3a3a3?text=CAPA+DA+HQ+1" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-2">O Despertar da Cidade</h3>
+                        <p class="text-gray-400 mb-3">Uma graphic novel distópica com arte incrível e um roteiro eletrizante.</p>
+                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 10,00</p>
+                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
+                            Comprar via WhatsApp
+                        </a>
+                    </div>
+                    <!-- Cartão de HQ Exemplo 2 (duplique para mais HQs) -->
+                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+                        <img src="https://placehold.co/900x400/525252/a3a3a3?text=CAPA+DA+HQ+2" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-2">Caminhos da Sombra</h3>
+                        <p class="text-gray-400 mb-3">A história de um anti-herói em busca de redenção em um mundo sombrio.</p>
+                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 12,00</p>
+                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
+                            Comprar via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            `,
+            loja: `
+                <h2 class="text-4xl font-bold text-center text-yellow-400 mb-8">Loja Wolf Studios - Compre Agora!</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    
+                    <!-- Seção de Filmes na Loja -->
+                    <div>
+                        <h3 class="text-3xl font-semibold text-red-500 mb-6 border-b border-gray-700 pb-2">Filmes</h3>
+                        <div class="space-y-6">
+                            <div class="p-4 bg-gray-800 rounded-lg shadow-xl flex flex-col sm:flex-row items-center gap-4">
+                                <img src="https://placehold.co/100x100/1e293b/a3a3a3?text=Filme+1" class="w-20 h-20 rounded-md object-cover">
+                                <div>
+                                    <h4 class="text-xl font-bold">A Lenda do Lobo Cinzento</h4>
+                                    <p class="text-sm text-gray-400">Épico de fantasia e ação.</p>
+                                    <p class="text-lg font-bold text-yellow-400 mt-1">R$ 15,00</p>
+                                    <a href="${getWhatsappLink()}" target="_blank" class="mt-2 text-sm inline-block py-1.5 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção de Quadrinhos na Loja -->
+                    <div>
+                        <h3 class="text-3xl font-semibold text-cyan-400 mb-6 border-b border-gray-700 pb-2">Quadrinhos (HQs)</h3>
+                        <div class="space-y-6">
+                            <div class="p-4 bg-gray-800 rounded-lg shadow-xl flex flex-col sm:flex-row items-center gap-4">
+                                <img src="https://placehold.co/100x100/374151/a3a3a3?text=HQ+1" class="w-20 h-20 rounded-md object-cover">
+                                <div>
+                                    <h4 class="text-xl font-bold">O Despertar da Cidade</h4>
+                                    <p class="text-sm text-gray-400">Graphic novel distópica.</p>
+                                    <p class="text-lg font-bold text-yellow-400 mt-1">R$ 10,00</p>
+                                    <a href="${getWhatsappLink()}" target="_blank" class="mt-2 text-sm inline-block py-1.5 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            videos: `
+                <h2 class="text-4xl font-bold text-center text-orange-400 mb-8">Vídeos e Trailers Oficiais</h2>
+                <div class="space-y-8">
+                    <!-- Cartão de Vídeo Exemplo 1 -->
+                    <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Trailer Oficial: A Lenda do Lobo Cinzento</h3>
+                        <!-- Insira o código de incorporação do YouTube. Lembre-se de substituir "SEUVIDEO" pelo ID real. -->
+                        <div class="video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/SEUVIDEO_ID_AQUI" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <p class="text-gray-400 mt-4">Assista ao trailer épico do nosso mais novo filme!</p>
+                    </div>
+
+                    <!-- Cartão de Vídeo Exemplo 2 -->
+                    <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Bastidores da Produção</h3>
+                        <div class="video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/OUTRO_VIDEO_ID_AQUI" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <p class="text-gray-400 mt-4">Veja como criamos os efeitos visuais de 'O Despertar da Cidade'.</p>
+                    </div>
+                </div>
+            `,
+            sobre: `
+                <h2 class="text-4xl font-bold text-center text-purple-400 mb-8">Sobre a Wolf Studios Produções</h2>
+                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+                    <h3 class="text-2xl font-semibold text-white mb-4">A Visão</h3>
+                    <p class="text-lg text-gray-300 mb-4">Wolf Studios Produções é uma produtora independente criada por Jeff, focada em filmes, quadrinhos, efeitos especiais e, acima de tudo, em **narrativas criativas e impactantes**.</p>
+                    
+                    <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Compromisso</h3>
+                    <p class="text-lg text-gray-300 mb-4">Todos os filmes e HQs vendidos nesta plataforma são **produções originais** com o selo de qualidade e paixão da Wolf Studios. Acreditamos no poder da imaginação e em contar histórias que ficam com você.</p>
+                    
+                    <h3 class="text-2xl font-semibold text-white mb-4 mt-6">O Criador</h3>
+                    <p class="text-lg text-gray-300">Jeff é a mente criativa por trás da Wolf Studios, combinando habilidades em roteiro, direção e arte para dar vida a mundos únicos.</p>
+                </div>
+            `,
+            contato: `
+                <h2 class="text-4xl font-bold text-center text-blue-400 mb-8">Fale Conosco</h2>
+                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 max-w-lg mx-auto">
+                    <h3 class="text-2xl font-semibold text-white mb-4">Detalhes de Contato</h3>
+                    <ul class="space-y-3 text-lg">
+                        <li class="flex items-center gap-3">
+                            <span class="text-green-500 font-bold">WhatsApp:</span> 
+                            <strong>(55) ${WHATSAPP_NUMBER}</strong>
+                            <a href="${getWhatsappLink()}" target="_blank" class="text-sm text-blue-400 hover:text-blue-300 transition duration-300">(Enviar Mensagem)</a>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-yellow-500 font-bold">Email:</span> 
+                            <strong>seunome@wolfstudios.com</strong> <!-- Substitua pelo seu email! -->
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-pink-500 font-bold">Instagram:</span> 
+                            <a href="https://instagram.com/wolfstudios" target="_blank" class="text-blue-400 hover:text-blue-300 transition duration-300">@wolfstudios</a>
+                        </li>
+                    </ul>
+
+                    <a class="mt-8 block w-full text-center py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition duration-300 ease-in-out transform hover:scale-[1.02]" href="${getWhatsappLink()}" target="_blank">
+                        Entrar em Contato Agora
+                    </a>
+                </div>
+            `
+        };
+
+        const contentArea = document.getElementById('content-area');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        /**
+         * Renderiza a página baseada no ID e atualiza o estado de ativo na navegação.
+         * @param {string} pageId - O ID da página a ser renderizada.
+         * @param {HTMLElement} [clickedElement] - O link clicado, se houver.
+         */
+        function renderPage(pageId, clickedElement = null) {
+            // 1. Limpa o conteúdo atual e insere o novo
+            contentArea.innerHTML = pages[pageId] || pages.home;
+            
+            // 2. Remove a classe ativa de todos os links
+            navLinks.forEach(link => link.classList.remove('active-nav-link'));
+
+            // 3. Adiciona a classe ativa ao link correto
+            if (clickedElement) {
+                // Se foi um clique, usa o elemento clicado
+                clickedElement.classList.add('active-nav-link');
+            } else {
+                // Se for a carga inicial, encontra o link pela data-page
+                const initialLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
+                if (initialLink) {
+                    initialLink.classList.add('active-nav-link');
+                }
+            }
+            
+            // Opcional: Atualiza o URL (Histórico do navegador)
+            history.pushState({ page: pageId }, '', `#${pageId}`);
+        }
+        
+        // Listener para o botão de voltar/avançar do navegador
+        window.addEventListener('popstate', (event) => {
+            const page = event.state ? event.state.page : 'home';
+            renderPage(page);
+        });
+
+        // Carrega a página inicial ou a página do hash na URL
+        const initialPage = window.location.hash.substring(1) || 'home';
+        renderPage(initialPage);
+
+    </script>
 </body>
 </html>
-
 
 
 
