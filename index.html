@@ -309,7 +309,38 @@
 
     </script>
 </body>
-</html>
+</html>/**
+ * Renderiza a página baseada no ID e atualiza o estado de ativo na navegação.
+ * @param {string} pageId - O ID da página a ser renderizada.
+ * @param {HTMLElement} [clickedElement] - O link clicado, se houver.
+ */
+function renderPage(pageId, clickedElement = null) {
+    // 1. Limpa o conteúdo atual e insere o novo
+    contentArea.innerHTML = pages[pageId] || pages.home;
+    
+    // 2. Remove a classe ativa de todos os links
+    navLinks.forEach(link => link.classList.remove('active-nav-link'));
+
+    // 3. Adiciona a classe ativa ao link correto
+    if (clickedElement) {
+        // Se foi um clique, usa o elemento clicado
+        clickedElement.classList.add('active-nav-link');
+    } else {
+        // Se for a carga inicial, encontra o link pela data-page
+        const initialLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
+        if (initialLink) {
+            initialLink.classList.add('active-nav-link');
+        }
+    }
+    
+    // Opcional: Atualiza o URL (Histórico do navegador)
+    // Isso permite usar os botões "Voltar" e "Avançar" do navegador e compartilhar o link com a seção correta (#home, #filmes).
+    history.pushState({ page: pageId }, '', `#${pageId}`);
+}
+
+// Inicializa o conteúdo ao carregar a página
+const initialPage = window.location.hash.substring(1) || 'home';
+renderPage(initialPage);
 
 
 
