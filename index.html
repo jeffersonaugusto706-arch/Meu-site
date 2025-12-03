@@ -1,209 +1,120 @@
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios Loja | Produções Premium</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); }
-        .glass { backdrop-filter: blur(20px); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .gradient-lime { background: linear-gradient(135deg, #a3e635 0%, #84cc16 100%); }
-        .gradient-gold { background: linear-gradient(135deg, #eab308 0%, #f59e0b 100%); }
-        .card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .card-hover:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 32px 64px rgba(163, 230, 53, 0.3); }
-        .nav-active { color: #a3e635 !important; border-bottom: 3px solid #a3e635; }
-    </style>
-</head>
-<body class="min-h-screen text-gray-200 overflow-x-hidden">
+const WHATSAPP_NUMBER = "41998984617";
+let users = {};  // Armazenamento temporário de usuários {email: {name, password}}
+let currentUser = null;
 
-    <!-- Header Premium -->
-    <header class="glass sticky top-0 z-50 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-fw fa-paw text-3xl text-lime-400"></i>
-                <h1 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">
-                    Wolf Studios
-                </h1>
-            </div>
-            <div class="flex items-center space-x-2 sm:space-x-4">
-                <div id="auth-buttons" class="flex gap-2">
-                    <button onclick="openModal('login')" class="px-4 py-2 glass text-sm font-bold rounded-xl hover:bg-white/10 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-1"></i>Login
-                    </button>
-                    <button onclick="openModal('register')" class="px-4 py-2 gradient-gold text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <i class="fas fa-user-plus mr-1"></i>Cadastre-se
-                    </button>
-                </div>
-                <div id="user-info" class="hidden flex items-center gap-3 glass px-4 py-2 rounded-xl">
-                    <i class="fas fa-user-circle text-lime-400 text-xl"></i>
-                    <span class="font-semibold text-sm">Olá, <span id="username-display"></span>!</span>
-                    <button onclick="logout()" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition duration-300">
-                        Sair
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
+document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    <!-- Nav Moderna -->
-    <nav class="glass backdrop-blur-xl shadow-xl border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex overflow-x-auto pb-4 pt-6 -mb-4 space-x-2 sm:space-x-6 justify-center">
-                <a href="#" onclick="renderPage('home', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="home">
-                    <i class="fas fa-home mr-2"></i>Home
-                </a>
-                <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="videos">
-                    <i class="fas fa-video mr-2"></i>Vídeos
-                </a>
-                <a href="#" onclick="renderPage('filmes', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap nav-active" data-page="filmes">
-                    <i class="fas fa-film mr-2"></i>Filmes
-                </a>
-                <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="hqs">
-                    <i class="fas fa-book-open mr-2"></i>HQs
-                </a>
-                <a href="#" onclick="renderPage('loja', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="loja">
-                    <i class="fas fa-store mr-2"></i>Loja
-                </a>
-                <a href="#" onclick="renderPage('sobre', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="sobre">
-                    <i class="fas fa-info-circle mr-2"></i>Sobre
-                </a>
-            </div>
-        </div>
-    </nav>
+function getWhatsappLink() {
+    return `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
+}
 
-    <!-- Hero Section (Home) -->
-    <main id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
-        <div class="text-center mb-20">
-            <div class="inline-block p-2 glass rounded-2xl mb-6">
-                <i class="fas fa-crown text-2xl text-yellow-400"></i>
-            </div>
-            <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent mb-6 leading-tight">
-                Wolf Studios<br><span class="text-4xl md:text-5xl">Produções Premium</span>
-            </h1>
-            <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
-                Filmes épicos, quadrinhos lendários e conteúdo exclusivo criado por Jeff. 
-                <strong class="text-lime-400">Compre agora e apoie a arte independente!</strong>
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#" onclick="renderPage('loja', this); return false;" class="group flex-1 max-w-sm mx-auto px-8 py-4 gradient-lime text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
-                    <i class="fas fa-shopping-cart mr-3 group-hover:animate-bounce"></i>
-                    Comprar Agora
-                </a>
-                <a href="#whatsapp" class="group flex-1 max-w-sm mx-auto px-8 py-4 glass border-2 border-lime-400 text-lime-400 font-bold text-lg rounded-2xl hover:bg-lime-400/10 transition-all duration-300">
-                    <i class="fab fa-whatsapp mr-3 text-2xl"></i>
-                    WhatsApp
-                </a>
-            </div>
-        </div>
+function openModal(type) {
+    document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
 
-        <!-- Produtos Destaque -->
-        <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="card-hover glass p-8 rounded-3xl border border-white/10">
-                <div class="w-24 h-24 mx-auto mb-6 rounded-2xl gradient-lime flex items-center justify-center">
-                    <i class="fas fa-film text-3xl text-black"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-center text-white mb-4">Filmes Premium</h3>
-                <p class="text-gray-400 text-center mb-6">Narrativas épicas em alta qualidade</p>
-                <div class="text-3xl font-black text-center text-lime-400 mb-4">R$ 25</div>
-                <a href="${getWhatsappLink()}" target="_blank" class="block w-full py-3 gradient-lime text-white font-bold text-center rounded-xl hover:shadow-xl transition-all duration-300">
-                    Comprar
-                </a>
-            </div>
-            <div class="card-hover glass p-8 rounded-3xl border border-white/10">
-                <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
-                    <i class="fas fa-book-open text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-center text-white mb-4">Quadrinhos</h3>
-                <p class="text-gray-400 text-center mb-6">Edições colecionáveis exclusivas</p>
-                <div class="text-3xl font-black text-center text-yellow-400 mb-4">R$ 35</div>
-                <a href="${getWhatsappLink()}" target="_blank" class="block w-full py-3 gradient-gold text-white font-bold text-center rounded-xl hover:shadow-xl transition-all duration-300">
-                    Comprar
-                </a>
-            </div>
-            <div class="card-hover glass p-8 rounded-3xl border border-white/10">
-                <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center">
-                    <i class="fas fa-video text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-center text-white mb-4">Vídeos Exclusivos</h3>
-                <p class="text-gray-400 text-center mb-6">Conteúdo behind-the-scenes</p>
-                <div class="text-3xl font-black text-center text-red-400 mb-4">R$ 15</div>
-                <a href="${getWhatsappLink()}" target="_blank" class="block w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                    Comprar
-                </a>
-            </div>
-        </section>
-    </main>
+function closeModal(type) {
+    document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
 
-    <!-- Footer -->
-    <footer class="glass mt-auto border-t border-white/10 py-8 text-center text-sm text-gray-400">
-        <div class="max-w-7xl mx-auto px-4">
-            <p>&copy; <span id="current-year"></span> Wolf Studios Produções. Todos os direitos reservados.</p>
-            <p class="mt-2">Feito com <i class="fas fa-heart text-red-400"></i> por Jeff</p>
-        </div>
-    </footer>
+/**
+ * Registra um novo usuário.
+ */
+function handleRegister(event) {
+    event.preventDefault();
+    const name = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim().toLowerCase();
+    const password = document.getElementById('register-password').value;
 
-    <!-- Modals (mantidos iguais mas estilizados) -->
-    <div id="login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000] hidden flex items-center justify-center p-4">
-        <div class="glass max-w-md w-full rounded-3xl p-8 border border-white/20 shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-black text-lime-400">Entrar</h2>
-                <button onclick="closeModal('login')" class="text-2xl text-gray-400 hover:text-white">&times;</button>
-            </div>
-            <form onsubmit="handleLogin(event)" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Email</label>
-                    <input type="email" id="login-email" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-lime-400 focus:outline-none transition-all">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Senha</label>
-                    <input type="password" id="login-password" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-lime-400 focus:outline-none transition-all">
-                </div>
-                <button type="submit" class="w-full py-4 gradient-lime text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                    Entrar na Loja
-                </button>
-            </form>
-        </div>
-    </div>
+    if (!name || !email || !password) {
+        alert("Preencha todos os campos corretamente.");
+        return;
+    }
 
-    <div id="register-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000] hidden flex items-center justify-center p-4">
-        <div class="glass max-w-md w-full rounded-3xl p-8 border border-white/20 shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-black text-yellow-400">Criar Conta</h2>
-                <button onclick="closeModal('register')" class="text-2xl text-gray-400 hover:text-white">&times;</button>
-            </div>
-            <form onsubmit="handleRegister(event)" class="space-y-6">
-                <div><label class="block text-sm font-bold text-gray-300 mb-3">Nome</label><input type="text" id="register-name" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400"></div>
-                <div><label class="block text-sm font-bold text-gray-300 mb-3">Email</label><input type="email" id="register-email" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400"></div>
-                <div><label class="block text-sm font-bold text-gray-300 mb-3">Senha</label><input type="password" id="register-password" required minlength="6" class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400"></div>
-                <button type="submit" class="w-full py-4 gradient-gold text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                    Criar Minha Conta
-                </button>
-            </form>
-        </div>
-    </div>
+    if (users[email]) {
+        alert("Este email já está cadastrado.");
+        return;
+    }
 
-    <script>
-        const WHATSAPP_NUMBER = "41998984617";
-        let users = {}, currentUser = null;
-        
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+    users[email] = { name, password };
+    alert(`Conta criada com sucesso! Bem-vindo, ${name}.`);
+    closeModal('register');
+    updateAuthUI(email);
+}
 
-        function getWhatsappLink() { return `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}`; }
+/**
+ * Realiza login do usuário.
+ */
+function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const password = document.getElementById('login-password').value;
 
-        function openModal(type) {
-            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+    if (!users[email]) {
+        alert("Usuário não encontrado.");
+        return;
+    }
+    if (users[email].password !== password) {
+        alert("Senha incorreta.");
+        return;
+    }
 
-        function closeModal(type) {
-            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
+    alert(`Login realizado com sucesso! Olá, ${users[email].name}.`);
+    closeModal('login');
+    updateAuthUI(email);
+}
 
-        function handleRegister(event) {
-            event.preventDefault();
-            const name =index.html
+/**
+ * Atualiza a interface de acordo com o usuário logado.
+ */
+function updateAuthUI(email) {
+    currentUser = email;
+
+    document.getElementById('auth-buttons').classList.add('hidden');
+    document.getElementById('user-info').classList.remove('hidden');
+    document.getElementById('username-display').textContent = users[email].name;
+}
+
+/**
+ * Logout do usuário atual.
+ */
+function logout() {
+    currentUser = null;
+    document.getElementById('auth-buttons').classList.remove('hidden');
+    document.getElementById('user-info').classList.add('hidden');
+}
+
+/**
+ * Renderiza as páginas simples via JS simulando single-page app.
+ */
+function renderPage(page, element) {
+    const contentArea = document.getElementById('content-area');
+    // Atualiza botões de navegação
+    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('nav-active'));
+    if (element) element.classList.add('nav-active');
+
+    switch(page) {
+        case 'home':
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">Página Home</h2><p class="mt-4 text-center">Conteúdo da Home aqui.</p>';
+            break;
+        case 'videos':
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">Vídeos</h2><p class="mt-4 text-center">Galeria de vídeos em breve.</p>';
+            break;
+        case 'filmes':
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">Filmes</h2><p class="mt-4 text-center">Catálogo de filmes premium.</p>';
+            break;
+        case 'hqs':
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">HQs</h2><p class="mt-4 text-center">Coleção de quadrinhos.</p>';
+            break;
+        case 'loja':
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">Loja</h2><p class="mt-4 text-center">Compre nossos produtos.</p>';
+            break;
+        case 'sobre':
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">Sobre</h2><p class="mt-4 text-center">Conheça nosso estúdio.</p>';
+            break;
+        default:
+            contentArea.innerHTML = '<h2 class="text-3xl font-bold text-center">Página não encontrada</h2>';
+    }
+}
