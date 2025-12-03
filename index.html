@@ -1,6 +1,6 @@
 <script>
     const WHATSAPP_NUMBER = "41998984617";
-    let users = {}; // Objeto simples para armazenar usuários (em produção use backend!)
+    let users = {}; // Armazena usuários temporariamente
     let currentUser = null;
 
     document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -25,14 +25,18 @@
         const email = document.getElementById('register-email').value.trim().toLowerCase();
         const password = document.getElementById('register-password').value;
 
+        if (!name || !email || !password) {
+            alert('Preencha todos os campos!');
+            return;
+        }
+
         if (users[email]) {
-            alert('Este email já está cadastrado!');
+            alert('Este e-mail já está cadastrado!');
             return;
         }
 
         users[email] = { name, email, password };
         currentUser = users[email];
-
         updateUserDisplay();
         closeModal('register');
         alert(`Conta criada com sucesso! Bem-vindo(a), ${name}!`);
@@ -76,17 +80,11 @@
     }
 
     function renderPage(page, element) {
-        // Remove nav-active de todos
         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('nav-active'));
-        // Adiciona nav-active no clicado
         element.classList.add('nav-active');
 
-        // Apenas um exemplo simples, você pode expandir para carregar conteúdo real
         const contentArea = document.getElementById('content-area');
-        contentArea.innerHTML = `<h2 class="text-3xl font-bold text-center text-white">Você está na página: ${page}</h2>`;
+        contentArea.innerHTML = `<h2 class="text-3xl font-bold text-center text-white mt-20">Você está na página: ${page}</h2>`;
     }
 </script>
-
-
-
 
