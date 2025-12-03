@@ -37,15 +37,45 @@
             width: 100%;
             height: 100%;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active {
+            display: flex;
+        }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-200">
 
     <header class="bg-black shadow-lg sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <h1 class="text-3xl font-bold text-gray-100 tracking-wider text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center flex-wrap gap-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-100 tracking-wider">
                 Wolf Studios Produções
             </h1>
+            <div id="auth-buttons" class="flex gap-2 sm:gap-3">
+                <button onclick="openModal('login')" class="px-3 sm:px-4 py-2 bg-lime-600 hover:bg-lime-700 text-white text-sm font-medium rounded-lg transition duration-300">
+                    Login
+                </button>
+                <button onclick="openModal('register')" class="px-3 sm:px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition duration-300">
+                    Cadastre-se
+                </button>
+            </div>
+            <div id="user-info" class="hidden items-center gap-3">
+                <span class="text-lime-400 font-semibold text-sm sm:text-base">Olá, <span id="username-display"></span>!</span>
+                <button onclick="logout()" class="px-3 sm:px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition duration-300">
+                    Sair
+                </button>
+            </div>
         </div>
     </header>
 
@@ -63,8 +93,67 @@
         </div>
     </nav>
 
+    <!-- MODAL DE LOGIN -->
+    <div id="login-modal" class="modal">
+        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full mx-4 border border-gray-700 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-lime-400">Login</h2>
+                <button onclick="closeModal('login')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="login-email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-lime-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-lime-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-lime-600 hover:bg-lime-700 text-white font-bold rounded-lg transition duration-300">
+                    Entrar
+                </button>
+                <p class="text-center text-sm text-gray-400">
+                    Não tem conta? <a href="#" onclick="closeModal('login'); openModal('register'); return false;" class="text-lime-400 hover:text-lime-300">Cadastre-se aqui</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO -->
+    <div id="register-modal" class="modal">
+        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full mx-4 border border-gray-700 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-yellow-400">Cadastre-se</h2>
+                <button onclick="closeModal('register')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+            </div>
+            <form onsubmit="handleRegister(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Nome Completo</label>
+                    <input type="text" id="register-name" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="register-email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
+                    <input type="password" id="register-password" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Confirmar Senha</label>
+                    <input type="password" id="register-password-confirm" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition duration-300">
+                    Criar Conta
+                </button>
+                <p class="text-center text-sm text-gray-400">
+                    Já tem conta? <a href="#" onclick="closeModal('register'); openModal('login'); return false;" class="text-yellow-400 hover:text-yellow-300">Faça login aqui</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
     <main id="content-area" class="container mx-auto px-4 py-8 max-w-7xl">
-        <!-- O conteúdo será carregado aqui pelo JavaScript -->
     </main>
 
     <footer class="mt-auto bg-black text-center py-4 border-t border-gray-700 text-gray-400 text-sm">
@@ -72,17 +161,105 @@
     </footer>
 
     <script>
-        // Configurações de contato
         const WHATSAPP_NUMBER = "41998984617";
         const EMAIL_ADDRESS = "wolfstudiosproducoes@gmail.com";
 
-        // Atualiza o ano no rodapé
+        let users = {};
+        let currentUser = null;
+
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Função para gerar link do WhatsApp
         const getWhatsappLink = () => `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
 
-        // Conteúdo de todas as páginas
+        function openModal(type) {
+            const modalId = type === 'login' ? 'login-modal' : 'register-modal';
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(type) {
+            const modalId = type === 'login' ? 'login-modal' : 'register-modal';
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+
+            if (password !== passwordConfirm) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            if (users[email]) {
+                alert('Este email já está cadastrado!');
+                return;
+            }
+
+            users[email] = { name, password };
+            alert('Cadastro realizado com sucesso! Faça login para continuar.');
+            closeModal('register');
+            openModal('login');
+            
+            document.getElementById('register-name').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-password-confirm').value = '';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!users[email]) {
+                alert('Usuário não encontrado! Cadastre-se primeiro.');
+                return;
+            }
+
+            if (users[email].password !== password) {
+                alert('Senha incorreta!');
+                return;
+            }
+
+            currentUser = { email, name: users[email].name };
+            updateAuthUI();
+            closeModal('login');
+            alert(`Bem-vindo(a), ${currentUser.name}!`);
+            
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                currentUser = null;
+                updateAuthUI();
+                alert('Você saiu da sua conta.');
+            }
+        }
+
+        function updateAuthUI() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userInfo = document.getElementById('user-info');
+            const usernameDisplay = document.getElementById('username-display');
+
+            if (currentUser) {
+                authButtons.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                userInfo.classList.add('flex');
+                usernameDisplay.textContent = currentUser.name;
+            } else {
+                authButtons.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+                userInfo.classList.remove('flex');
+            }
+        }
+
         const pages = {
             home: `
                 <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 transition duration-500 hover:shadow-gray-700/50">
@@ -102,7 +279,7 @@
                 <h2 class="text-4xl font-bold text-center text-red-500 mb-8">Catálogo de Filmes Wolf Studios</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/1e293b/a3a3a3?text=CAPA+DO+FILME+1" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <img src="https://placehold.co/900x400/1e293b/a3a3a3?text=CAPA+DO+FILME+1" class="w-full h-auto rounded-lg mb-4 shadow-xl">
                         <h3 class="text-2xl font-semibold text-white mb-2">A Lenda do Lobo Cinzento</h3>
                         <p class="text-gray-400 mb-3">Um épico de fantasia e ação dirigido por Jeff, explorando um mundo de magia e mistério.</p>
                         <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 15,00</p>
@@ -111,7 +288,7 @@
                         </a>
                     </div>
                     <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/292524/a3a3a3?text=CAPA+DO+FILME+2" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <img src="https://placehold.co/900x400/292524/a3a3a3?text=CAPA+DO+FILME+2" class="w-full h-auto rounded-lg mb-4 shadow-xl">
                         <h3 class="text-2xl font-semibold text-white mb-2">O Enigma Temporal</h3>
                         <p class="text-gray-400 mb-3">Thriller de ficção científica com viagem no tempo e reviravoltas surpreendentes.</p>
                         <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 18,00</p>
@@ -125,7 +302,7 @@
                 <h2 class="text-4xl font-bold text-center text-cyan-400 mb-8">Nossas Histórias em Quadrinhos</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/374151/a3a3a3?text=CAPA+DA+HQ+1" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <img src="https://placehold.co/900x400/374151/a3a3a3?text=CAPA+DA+HQ+1" class="w-full h-auto rounded-lg mb-4 shadow-xl">
                         <h3 class="text-2xl font-semibold text-white mb-2">O Despertar da Cidade</h3>
                         <p class="text-gray-400 mb-3">Uma graphic novel distópica com arte incrível e um roteiro eletrizante.</p>
                         <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 10,00</p>
@@ -134,7 +311,7 @@
                         </a>
                     </div>
                     <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/525252/a3a3a3?text=CAPA+DA+HQ+2" onerror="this.src='https://placehold.co/900x400/1e293b/a3a3a3?text=Erro+ao+Carregar+Imagem'" class="w-full h-auto rounded-lg mb-4 shadow-xl">
+                        <img src="https://placehold.co/900x400/525252/a3a3a3?text=CAPA+DA+HQ+2" class="w-full h-auto rounded-lg mb-4 shadow-xl">
                         <h3 class="text-2xl font-semibold text-white mb-2">Caminhos da Sombra</h3>
                         <p class="text-gray-400 mb-3">A história de um anti-herói em busca de redenção em um mundo sombrio.</p>
                         <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 12,00</p>
