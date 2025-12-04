@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -16,16 +17,41 @@
         .card-hover:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 32px 64px rgba(163, 230, 53, 0.3); }
         .nav-active { color: #a3e635 !important; border-bottom: 3px solid #a3e635; }
         .logo-shield { 
-            width: 80px; 
-            height: 80px; 
-            object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(163, 230, 53, 0.4));
+            width: 70px; 
+            height: 70px;
+            filter: drop-shadow(0 0 15px rgba(163, 230, 53, 0.5));
+            transition: all 0.3s ease;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+        @keyframes logoPulse {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(163, 230, 53, 0.5)); }
+            50% { filter: drop-shadow(0 0 25px rgba(163, 230, 53, 0.8)); }
+        }
+        .logo-shield:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.9));
         }
         .hero-banner {
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.ibb.co/9ZXMbqY/image.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+        }
+        .hero-logo {
+            width: 180px;
+            height: 180px;
+            filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.7));
+            animation: heroLogoPulse 3s ease-in-out infinite;
+        }
+        @keyframes heroLogoPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.7));
+                transform: scale(1);
+            }
+            50% { 
+                filter: drop-shadow(0 0 50px rgba(163, 230, 53, 0.9));
+                transform: scale(1.05);
+            }
         }
     </style>
 </head>
@@ -35,7 +61,34 @@
     <header class="glass sticky top-0 z-50 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <img src="https://i.ibb.co/9ZXMbqY/image.png" alt="Wolf Studios Logo" class="logo-shield">
+                <svg class="logo-shield" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
+                            <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
+                        </linearGradient>
+                        <linearGradient id="wolfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
+                          fill="url(#shieldGrad)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
+                    <g fill="url(#wolfGrad)">
+                        <path d="M110 80 L90 50 L100 80 Z"/>
+                        <path d="M190 80 L210 50 L200 80 Z"/>
+                        <ellipse cx="150" cy="110" rx="50" ry="45"/>
+                        <ellipse cx="150" cy="130" rx="35" ry="30"/>
+                        <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
+                        <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                        <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                        <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
+                        <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
+                        <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" 
+                              stroke="url(#wolfGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                    </g>
+                </svg>
                 <h1 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">
                     Wolf Studios
                 </h1>
@@ -243,7 +296,38 @@
                 home: `
                     <div class="hero-banner text-center mb-20 py-20 rounded-3xl">
                         <div class="inline-block p-4 glass rounded-3xl mb-6">
-                            <img src="https://i.ibb.co/9ZXMbqY/image.png" alt="Wolf Studios" class="w-32 h-32 object-contain">
+                            <svg class="hero-logo" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="heroShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
+                                        <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
+                                    </linearGradient>
+                                    <linearGradient id="heroWolfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
+                                      fill="url(#heroShieldGrad)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
+                                <g fill="url(#heroWolfGrad)">
+                                    <path d="M110 80 L90 50 L100 80 Z"/>
+                                    <path d="M190 80 L210 50 L200 80 Z"/>
+                                    <ellipse cx="150" cy="110" rx="50" ry="45"/>
+                                    <ellipse cx="150" cy="130" rx="35" ry="30"/>
+                                    <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
+                                    <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                                    <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                                    <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
+                                    <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
+                                    <path d="M120 90 L115 75 M130 85 L128 70 M140 82 L140 67" stroke="url(#heroWolfGrad)" stroke-width="2" fill="none"/>
+                                    <path d="M180 90 L185 75 M170 85 L172 70 M160 82 L160 67" stroke="url(#heroWolfGrad)" stroke-width="2" fill="none"/>
+                                    <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" stroke="url(#heroWolfGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                </g>
+                                <text x="150" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="2">PRODUÇÃO DE</text>
+                                <text x="150" y="245" font-family="Arial, sans-serif" font-size="42" font-weight="900" fill="#fbbf24" text-anchor="middle" letter-spacing="4">WOLF</text>
+                                <text x="150" y="275" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="6">STUDIOS</text>
+                            </svg>
                         </div>
                         <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent mb-6 leading-tight">
                             Wolf Studios<br><span class="text-4xl md:text-5xl">Produções Premium</span>
@@ -478,7 +562,36 @@
                     <div class="max-w-4xl mx-auto">
                         <div class="text-center mb-12">
                             <div class="inline-block p-4 glass rounded-3xl mb-6">
-                                <img src="https://i.ibb.co/9ZXMbqY/image.png" alt="Wolf Studios" class="w-32 h-32 object-contain">
+                                <svg style="width: 140px; height: 140px; filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.7));" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="aboutShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
+                                            <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
+                                        </linearGradient>
+                                        <linearGradient id="aboutWolfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                                            <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
+                                          fill="url(#aboutShieldGrad)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
+                                    <g fill="url(#aboutWolfGrad)">
+                                        <path d="M110 80 L90 50 L100 80 Z"/>
+                                        <path d="M190 80 L210 50 L200 80 Z"/>
+                                        <ellipse cx="150" cy="110" rx="50" ry="45"/>
+                                        <ellipse cx="150" cy="130" rx="35" ry="30"/>
+                                        <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
+                                        <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                                        <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                                        <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
+                                        <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
+                                        <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" stroke="url(#aboutWolfGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                    </g>
+                                    <text x="150" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="2">PRODUÇÃO DE</text>
+                                    <text x="150" y="245" font-family="Arial, sans-serif" font-size="42" font-weight="900" fill="#fbbf24" text-anchor="middle" letter-spacing="4">WOLF</text>
+                                    <text x="150" y="275" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="6">STUDIOS</text>
+                                </svg>
                             </div>
                             <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">Sobre Wolf Studios</h2>
                         </div>
