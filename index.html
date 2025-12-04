@@ -4,647 +4,844 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios Loja | Produções Premium</title>
+    <title>Wolf Studios | Streaming Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); }
-        .glass { backdrop-filter: blur(20px); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .gradient-lime { background: linear-gradient(135deg, #a3e635 0%, #84cc16 100%); }
-        .gradient-gold { background: linear-gradient(135deg, #eab308 0%, #f59e0b 100%); }
-        .card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .card-hover:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 32px 64px rgba(163, 230, 53, 0.3); }
-        .nav-active { color: #a3e635 !important; border-bottom: 3px solid #a3e635; }
-        .logo-shield { 
-            width: 70px; 
-            height: 70px;
-            filter: drop-shadow(0 0 15px rgba(163, 230, 53, 0.5));
+        @import url('https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #141414;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Header Netflix Style */
+        .header-netflix {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background 0.3s ease;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+        
+        .header-netflix.scrolled {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Logo Animation */
+        .logo-svg {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(163, 230, 53, 0.5));
             transition: all 0.3s ease;
-            animation: logoPulse 3s ease-in-out infinite;
         }
-        @keyframes logoPulse {
-            0%, 100% { filter: drop-shadow(0 0 15px rgba(163, 230, 53, 0.5)); }
-            50% { filter: drop-shadow(0 0 25px rgba(163, 230, 53, 0.8)); }
-        }
-        .logo-shield:hover {
+        
+        .logo-svg:hover {
             transform: scale(1.1);
-            filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.9));
+            filter: drop-shadow(0 0 20px rgba(163, 230, 53, 0.8));
         }
+        
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            color: #e5e5e5;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover { color: #b3b3b3; }
+        
+        .nav-link.active {
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #a3e635;
+            border-radius: 2px;
+        }
+        
+        /* Hero Banner */
         .hero-banner {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.ibb.co/9ZXMbqY/image.png');
+            position: relative;
+            height: 85vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, #141414 0%, transparent 50%, #141414 100%),
+                        linear-gradient(0deg, #141414 0%, transparent 50%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23222" width="100" height="100"/></svg>');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            margin-top: 70px;
         }
-        .hero-logo {
-            width: 180px;
-            height: 180px;
-            filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.7));
-            animation: heroLogoPulse 3s ease-in-out infinite;
+        
+        .hero-content {
+            max-width: 650px;
+            padding: 0 60px;
         }
-        @keyframes heroLogoPulse {
-            0%, 100% { 
-                filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.7));
-                transform: scale(1);
+        
+        .hero-logo-large {
+            width: 200px;
+            height: 200px;
+            filter: drop-shadow(0 0 40px rgba(163, 230, 53, 0.6));
+            animation: heroFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        /* Content Rows (Netflix Style) */
+        .content-row {
+            padding: 0 60px;
+            margin-bottom: 50px;
+        }
+        
+        .row-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .cards-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #4a4a4a #1a1a1a;
+        }
+        
+        .cards-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .cards-container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        
+        .cards-container::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 10px;
+        }
+        
+        .cards-container::-webkit-scrollbar-thumb:hover {
+            background: #5a5a5a;
+        }
+        
+        /* Content Card */
+        .content-card {
+            position: relative;
+            min-width: 280px;
+            height: 160px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #4a4a4a;
+        }
+        
+        .content-card.has-content {
+            border: none;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .content-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 15px;
+        }
+        
+        .content-card:hover .card-overlay {
+            opacity: 1;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .card-info {
+            font-size: 12px;
+            color: #b3b3b3;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .btn-play, .btn-info {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: rgba(42, 42, 42, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-play:hover {
+            background: #fff;
+            color: #000;
+            transform: scale(1.1);
+        }
+        
+        .btn-info:hover {
+            border-color: #a3e635;
+            color: #a3e635;
+            transform: scale(1.1);
+        }
+        
+        /* Empty State */
+        .empty-card-content {
+            text-align: center;
+            color: #666;
+        }
+        
+        .empty-card-content i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            opacity: 0.3;
+        }
+        
+        .empty-card-content p {
+            font-size: 12px;
+            opacity: 0.5;
+        }
+        
+        /* Upload Button (Admin Only) */
+        .upload-btn {
+            background: #a3e635;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .upload-btn:hover {
+            background: #84cc16;
+            transform: scale(1.05);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: #181818;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 30px 30px 20px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #2a2a2a;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: #a3e635;
+            color: #000;
+            transform: rotate(90deg);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #e5e5e5;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #a3e635;
+            background: #1a1a1a;
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #4a4a4a;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #a3e635;
+            background: #1a1a1a;
+        }
+        
+        .file-upload-area.dragover {
+            border-color: #a3e635;
+            background: #1a2a1a;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #a3e635;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: #84cc16;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(163, 230, 53, 0.3);
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #4a4a4a;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #3a3a3a;
+            border-color: #5a5a5a;
+        }
+        
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #a3e635, #84cc16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid #333;
+            border-radius: 8px;
+            min-width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .user-dropdown.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .dropdown-item:hover {
+            background: #2a2a2a;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: #333;
+            margin: 5px 0;
+        }
+        
+        /* Admin Badge */
+        .admin-badge {
+            background: #a3e635;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-row {
+                padding: 0 20px;
             }
-            50% { 
-                filter: drop-shadow(0 0 50px rgba(163, 230, 53, 0.9));
-                transform: scale(1.05);
+            
+            .hero-content {
+                padding: 0 20px;
+            }
+            
+            .hero-logo-large {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .content-card {
+                min-width: 200px;
+                height: 120px;
             }
         }
     </style>
 </head>
-<body class="min-h-screen text-gray-200 overflow-x-hidden">
-
-    <!-- Header Premium -->
-    <header class="glass sticky top-0 z-50 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <svg class="logo-shield" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
-                            <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
-                        </linearGradient>
-                        <linearGradient id="wolfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
-                          fill="url(#shieldGrad)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
-                    <g fill="url(#wolfGrad)">
-                        <path d="M110 80 L90 50 L100 80 Z"/>
-                        <path d="M190 80 L210 50 L200 80 Z"/>
-                        <ellipse cx="150" cy="110" rx="50" ry="45"/>
-                        <ellipse cx="150" cy="130" rx="35" ry="30"/>
-                        <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
-                        <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
-                        <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
-                        <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
-                        <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
-                        <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" 
-                              stroke="url(#wolfGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
-                    </g>
-                </svg>
-                <h1 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">
-                    Wolf Studios
-                </h1>
-            </div>
-            <div class="flex items-center space-x-2 sm:space-x-4">
-                <div id="auth-buttons" class="flex gap-2">
-                    <button onclick="openModal('login')" class="px-4 py-2 glass text-sm font-bold rounded-xl hover:bg-white/10 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-1"></i>Login
-                    </button>
-                    <button onclick="openModal('register')" class="px-4 py-2 gradient-gold text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <i class="fas fa-user-plus mr-1"></i>Cadastre-se
-                    </button>
+<body>
+    <!-- Header Netflix Style -->
+    <header class="header-netflix" id="header">
+        <div class="max-w-full mx-auto px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="renderPage('home')">
+                    <svg class="logo-svg" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="shieldG" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
+                                <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
+                            </linearGradient>
+                            <linearGradient id="wolfG" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
+                              fill="url(#shieldG)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
+                        <g fill="url(#wolfG)">
+                            <path d="M110 80 L90 50 L100 80 Z"/>
+                            <path d="M190 80 L210 50 L200 80 Z"/>
+                            <ellipse cx="150" cy="110" rx="50" ry="45"/>
+                            <ellipse cx="150" cy="130" rx="35" ry="30"/>
+                            <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
+                            <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                            <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                            <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
+                            <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
+                            <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" stroke="url(#wolfG)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        </g>
+                    </svg>
+                    <span class="text-xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">WOLF STUDIOS</span>
                 </div>
-                <div id="user-info" class="hidden items-center gap-3 glass px-4 py-2 rounded-xl">
-                    <i class="fas fa-user-circle text-lime-400 text-xl"></i>
-                    <span class="font-semibold text-sm">Olá, <span id="username-display"></span>!</span>
-                    <button onclick="logout()" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition duration-300">
-                        Sair
-                    </button>
+                
+                <!-- Navigation -->
+                <nav class="nav-links flex gap-6">
+                    <a href="#" class="nav-link active" onclick="renderPage('home'); return false;">Início</a>
+                    <a href="#" class="nav-link" onclick="renderPage('filmes'); return false;">Filmes</a>
+                    <a href="#" class="nav-link" onclick="renderPage('series'); return false;">Séries</a>
+                    <a href="#" class="nav-link" onclick="renderPage('hqs'); return false;">HQs</a>
+                    <a href="#" class="nav-link" onclick="renderPage('loja'); return false;">Loja</a>
+                </nav>
+            </div>
+            
+            <!-- Right Side -->
+            <div class="flex items-center gap-4">
+                <i class="fas fa-search text-xl cursor-pointer hover:text-lime-400 transition"></i>
+                <i class="fas fa-bell text-xl cursor-pointer hover:text-lime-400 transition"></i>
+                
+                <!-- User Menu -->
+                <div class="user-menu" id="auth-section">
+                    <!-- Will be populated by JS -->
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Nav Moderna -->
-    <nav class="glass backdrop-blur-xl shadow-xl border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex overflow-x-auto pb-4 pt-6 -mb-4 space-x-2 sm:space-x-6 justify-center">
-                <a href="#" onclick="renderPage('home', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap nav-active" data-page="home">
-                    <i class="fas fa-home mr-2"></i>Home
-                </a>
-                <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="videos">
-                    <i class="fas fa-video mr-2"></i>Vídeos
-                </a>
-                <a href="#" onclick="renderPage('filmes', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="filmes">
-                    <i class="fas fa-film mr-2"></i>Filmes
-                </a>
-                <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="hqs">
-                    <i class="fas fa-book-open mr-2"></i>HQs
-                </a>
-                <a href="#" onclick="renderPage('loja', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="loja">
-                    <i class="fas fa-store mr-2"></i>Loja
-                </a>
-                <a href="#" onclick="renderPage('sobre', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="sobre">
-                    <i class="fas fa-info-circle mr-2"></i>Sobre
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Conteúdo Principal -->
-    <main id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
-        <!-- Conteúdo será injetado aqui -->
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Content will be injected here -->
     </main>
 
-    <!-- Footer -->
-    <footer class="glass mt-auto border-t border-white/10 py-8 text-center text-sm text-gray-400">
-        <div class="max-w-7xl mx-auto px-4">
-            <p>&copy; <span id="current-year"></span> Wolf Studios Produções. Todos os direitos reservados.</p>
-            <p class="mt-2">Feito com <i class="fas fa-heart text-red-400"></i> por Jeff</p>
-        </div>
-    </footer>
-
-    <!-- Modal Login -->
-    <div id="login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000] hidden items-center justify-center p-4">
-        <div class="glass max-w-md w-full rounded-3xl p-8 border border-white/20 shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-black text-lime-400">Entrar</h2>
-                <button onclick="closeModal('login')" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+    <!-- Upload Modal (Admin Only) -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('uploadModal')">×</button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold">Adicionar Novo Conteúdo</h2>
             </div>
-            <form onsubmit="handleLogin(event)" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Email</label>
-                    <input type="email" id="login-email" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-lime-400 focus:outline-none transition-all text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Senha</label>
-                    <input type="password" id="login-password" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-lime-400 focus:outline-none transition-all text-white">
-                </div>
-                <button type="submit" class="w-full py-4 gradient-lime text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                    Entrar na Loja
-                </button>
-            </form>
+            <div class="modal-body">
+                <form id="uploadForm" onsubmit="handleUpload(event)">
+                    <div class="form-group">
+                        <label class="form-label">Categoria</label>
+                        <select class="form-select" id="uploadCategory" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="filmes">Filmes</option>
+                            <option value="series">Séries</option>
+                            <option value="hqs">HQs</option>
+                            <option value="documentarios">Documentários</option>
+                            <option value="loja">Loja</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-input" id="uploadTitle" placeholder="Nome do conteúdo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <textarea class="form-textarea" id="uploadDescription" placeholder="Descrição breve do conteúdo"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preço (R$)</label>
+                        <input type="number" class="form-input" id="uploadPrice" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Imagem de Capa</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-lime-400 mb-3"></i>
+                            <p class="text-lg mb-2">Clique ou arraste uma imagem</p>
+                            <p class="text-sm text-gray-500">PNG, JPG até 5MB</p>
+                            <input type="file" id="uploadFile" accept="image/*" style="display: none;">
+                        </div>
+                        <div id="filePreview" class="mt-4" style="display: none;">
+                            <img id="previewImage" style="max-width: 100%; border-radius: 8px;">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-upload mr-2"></i>
+                        Adicionar Conteúdo
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('uploadModal')">
+                        Cancelar
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Modal Registro -->
-    <div id="register-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000] hidden items-center justify-center p-4">
-        <div class="glass max-w-md w-full rounded-3xl p-8 border border-white/20 shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-black text-yellow-400">Criar Conta</h2>
-                <button onclick="closeModal('register')" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold">Entrar</h2>
             </div>
-            <form onsubmit="handleRegister(event)" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Nome</label>
-                    <input type="text" id="register-name" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400 focus:outline-none transition-all text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Email</label>
-                    <input type="email" id="register-email" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400 focus:outline-none transition-all text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">Senha</label>
-                    <input type="password" id="register-password" required minlength="6" class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400 focus:outline-none transition-all text-white">
-                </div>
-                <button type="submit" class="w-full py-4 gradient-gold text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                    Criar Minha Conta
-                </button>
-            </form>
+            <div class="modal-body">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('loginModal'); openModal('registerModal')">
+                        Criar Conta
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('registerModal')">×</button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold">Criar Conta</h2>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nome</label>
+                        <input type="text" class="form-input" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" id="registerPassword" minlength="6" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Criar Conta</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('registerModal'); openModal('loginModal')">
+                        Já tenho conta
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
-        const WHATSAPP_NUMBER = "41998984617";
-        let users = JSON.parse(localStorage.getItem('wolfStudioUsers')) || {};
-        let currentUser = JSON.parse(localStorage.getItem('wolfStudioCurrentUser')) || null;
+        // Constants
+        const WHATSAPP = "41998984617";
+        const ADMIN_EMAIL = "admin@wolfstudios.com";
         
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        function getWhatsappLink(product = '') {
-            const msg = product ? `Olá! Gostaria de comprar: ${product}` : 'Olá! Gostaria de saber mais sobre os produtos da Wolf Studios';
-            return `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+        // State
+        let users = JSON.parse(localStorage.getItem('wolfUsers')) || {};
+        let currentUser = JSON.parse(localStorage.getItem('wolfCurrentUser')) || null;
+        let content = JSON.parse(localStorage.getItem('wolfContent')) || {
+            filmes: [],
+            series: [],
+            hqs: [],
+            documentarios: [],
+            loja: []
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            renderPage('home');
+            setupScrollHeader();
+            setupFileUpload();
+        });
+        
+        // Scroll Header Effect
+        function setupScrollHeader() {
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
         }
-
-        function openModal(type) {
-            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.remove('hidden');
-            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.add('flex');
+        
+        // File Upload Setup
+        function setupFileUpload() {
+            const area = document.getElementById('fileUploadArea');
+            const input = document.getElementById('uploadFile');
+            
+            area.addEventListener('click', () => input.click());
+            
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            });
+            
+            area.addEventListener('dragleave', () => {
+                area.classList.remove('dragover');
+            });
+            
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleFileSelect(file);
+                }
+            });
+            
+            input.addEventListener('change', (e) => {
+                if (e.target.files[0]) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('previewImage').src = e.target.result;
+                document.getElementById('filePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
-        function closeModal(type) {
-            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.add('hidden');
-            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.remove('flex');
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
             document.body.style.overflow = '';
         }
-
-        function handleRegister(event) {
-            event.preventDefault();
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-
-            if (users[email]) {
-                alert('Este email já está cadastrado!');
-                return;
-            }
-
-            users[email] = { name, password };
-            localStorage.setItem('wolfStudioUsers', JSON.stringify(users));
-            alert('Conta criada com sucesso!');
-            closeModal('register');
-            openModal('login');
-        }
-
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
+        
+        // Auth Functions
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
             if (!users[email] || users[email].password !== password) {
                 alert('Email ou senha incorretos!');
                 return;
             }
-
-            currentUser = { email, name: users[email].name };
-            localStorage.setItem('wolfStudioCurrentUser', JSON.stringify(currentUser));
+            
+            currentUser = { email, name: users[email].name, isAdmin: email === ADMIN_EMAIL };
+            localStorage.setItem('wolfCurrentUser', JSON.stringify(currentUser));
             updateAuthUI();
-            closeModal('login');
+            closeModal('loginModal');
             alert(`Bem-vindo(a), ${currentUser.name}!`);
+            renderPage('home');
         }
-
+        
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            if (users[email]) {
+                alert('Este email já está cadastrado!');
+                return;
+            }
+            
+            users[email] = { name, password };
+            localStorage.setItem('wolfUsers', JSON.stringify(users));
+            alert('Conta criada com sucesso!');
+            closeModal('registerModal');
+            openModal('loginModal');
+        }
+        
         function logout() {
             currentUser = null;
-            localStorage.removeItem('wolfStudioCurrentUser');
+            localStorage.removeItem('wolfCurrentUser');
             updateAuthUI();
-            alert('Logout realizado com sucesso!');
-        }
-
-        function updateAuthUI() {
-            if (currentUser) {
-                document.getElementById('auth-buttons').classList.add('hidden');
-                document.getElementById('user-info').classList.remove('hidden');
-                document.getElementById('user-info').classList.add('flex');
-                document.getElementById('username-display').textContent = currentUser.name;
-            } else {
-                document.getElementById('auth-buttons').classList.remove('hidden');
-                document.getElementById('user-info').classList.add('hidden');
-                document.getElementById('user-info').classList.remove('flex');
-            }
-        }
-
-        function renderPage(page, linkElement) {
-            // Atualiza navegação ativa
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('nav-active');
-            });
-            if (linkElement) {
-                linkElement.classList.add('nav-active');
-            }
-
-            const contentArea = document.getElementById('content-area');
-            
-            const pages = {
-                home: `
-                    <div class="hero-banner text-center mb-20 py-20 rounded-3xl">
-                        <div class="inline-block p-4 glass rounded-3xl mb-6">
-                            <svg class="hero-logo" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <linearGradient id="heroShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
-                                        <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
-                                    </linearGradient>
-                                    <linearGradient id="heroWolfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-                                        <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
-                                        <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
-                                    </linearGradient>
-                                </defs>
-                                <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
-                                      fill="url(#heroShieldGrad)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
-                                <g fill="url(#heroWolfGrad)">
-                                    <path d="M110 80 L90 50 L100 80 Z"/>
-                                    <path d="M190 80 L210 50 L200 80 Z"/>
-                                    <ellipse cx="150" cy="110" rx="50" ry="45"/>
-                                    <ellipse cx="150" cy="130" rx="35" ry="30"/>
-                                    <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
-                                    <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
-                                    <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
-                                    <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
-                                    <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
-                                    <path d="M120 90 L115 75 M130 85 L128 70 M140 82 L140 67" stroke="url(#heroWolfGrad)" stroke-width="2" fill="none"/>
-                                    <path d="M180 90 L185 75 M170 85 L172 70 M160 82 L160 67" stroke="url(#heroWolfGrad)" stroke-width="2" fill="none"/>
-                                    <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" stroke="url(#heroWolfGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
-                                </g>
-                                <text x="150" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="2">PRODUÇÃO DE</text>
-                                <text x="150" y="245" font-family="Arial, sans-serif" font-size="42" font-weight="900" fill="#fbbf24" text-anchor="middle" letter-spacing="4">WOLF</text>
-                                <text x="150" y="275" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="6">STUDIOS</text>
-                            </svg>
-                        </div>
-                        <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent mb-6 leading-tight">
-                            Wolf Studios<br><span class="text-4xl md:text-5xl">Produções Premium</span>
-                        </h1>
-                        <p class="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto mb-10 leading-relaxed px-4">
-                            Filmes épicos, quadrinhos lendários e conteúdo exclusivo criado por Jeff. 
-                            <strong class="text-lime-400">Compre agora e apoie a arte independente!</strong>
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center px-4">
-                            <a href="#" onclick="renderPage('loja'); return false;" class="group flex-1 max-w-sm mx-auto px-8 py-4 gradient-lime text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
-                                <i class="fas fa-shopping-cart mr-3 group-hover:animate-bounce"></i>
-                                Comprar Agora
-                            </a>
-                            <a href="${getWhatsappLink()}" target="_blank" class="group flex-1 max-w-sm mx-auto px-8 py-4 glass border-2 border-lime-400 text-lime-400 font-bold text-lg rounded-2xl hover:bg-lime-400/10 transition-all duration-300">
-                                <i class="fab fa-whatsapp mr-3 text-2xl"></i>
-                                WhatsApp
-                            </a>
-                        </div>
-                    </div>
-
-                    <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="card-hover glass p-8 rounded-3xl border border-white/10">
-                            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl gradient-lime flex items-center justify-center">
-                                <i class="fas fa-film text-3xl text-black"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-center text-white mb-4">Filmes Premium</h3>
-                            <p class="text-gray-400 text-center mb-6">Narrativas épicas em alta qualidade</p>
-                            <div class="text-3xl font-black text-center text-lime-400 mb-4">R$ 25</div>
-                            <a href="${getWhatsappLink('Filme Premium')}" target="_blank" class="block w-full py-3 gradient-lime text-white font-bold text-center rounded-xl hover:shadow-xl transition-all duration-300">
-                                Comprar
-                            </a>
-                        </div>
-                        <div class="card-hover glass p-8 rounded-3xl border border-white/10">
-                            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
-                                <i class="fas fa-book-open text-3xl text-white"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-center text-white mb-4">Quadrinhos</h3>
-                            <p class="text-gray-400 text-center mb-6">Edições colecionáveis exclusivas</p>
-                            <div class="text-3xl font-black text-center text-yellow-400 mb-4">R$ 35</div>
-                            <a href="${getWhatsappLink('Quadrinho')}" target="_blank" class="block w-full py-3 gradient-gold text-white font-bold text-center rounded-xl hover:shadow-xl transition-all duration-300">
-                                Comprar
-                            </a>
-                        </div>
-                        <div class="card-hover glass p-8 rounded-3xl border border-white/10">
-                            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center">
-                                <i class="fas fa-video text-3xl text-white"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-center text-white mb-4">Vídeos Exclusivos</h3>
-                            <p class="text-gray-400 text-center mb-6">Conteúdo behind-the-scenes</p>
-                            <div class="text-3xl font-black text-center text-red-400 mb-4">R$ 15</div>
-                            <a href="${getWhatsappLink('Vídeo Exclusivo')}" target="_blank" class="block w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                                Comprar
-                            </a>
-                        </div>
-                    </section>
-                `,
-                
-                videos: `
-                    <div class="mb-12">
-                        <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">
-                            <i class="fas fa-video mr-3"></i>Vídeos Exclusivos
-                        </h2>
-                        <p class="text-xl text-gray-300">Conteúdo behind-the-scenes e making-of das produções Wolf Studios</p>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        ${[1,2,3,4,5,6].map(i => `
-                            <div class="card-hover glass rounded-3xl overflow-hidden border border-white/10">
-                                <div class="aspect-video bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center">
-                                    <i class="fas fa-play-circle text-6xl text-red-400"></i>
-                                </div>
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold text-white mb-2">Making Of Vídeo ${i}</h3>
-                                    <p class="text-gray-400 mb-4">Bastidores exclusivos da produção</p>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-2xl font-black text-red-400">R$ 15</span>
-                                        <a href="${getWhatsappLink(`Making Of Vídeo ${i}`)}" target="_blank" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition">
-                                            Comprar
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `,
-                
-                filmes: `
-                    <div class="mb-12">
-                        <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">
-                            <i class="fas fa-film mr-3"></i>Filmes Premium
-                        </h2>
-                        <p class="text-xl text-gray-300">Produções cinematográficas épicas da Wolf Studios</p>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        ${[
-                            {title: 'A Lenda do Lobo', desc: 'Uma jornada épica'},
-                            {title: 'Sombras da Noite', desc: 'Thriller sobrenatural'},
-                            {title: 'O Último Guardian', desc: 'Ação e aventura'},
-                            {title: 'Ecos do Passado', desc: 'Drama intenso'},
-                            {title: 'Além do Horizonte', desc: 'Ficção científica'},
-                            {title: 'Renascimento', desc: 'Fantasia épica'}
-                        ].map(filme => `
-                            <div class="card-hover glass rounded-3xl overflow-hidden border border-white/10">
-                                <div class="aspect-video bg-gradient-to-br from-lime-500/20 to-green-500/20 flex items-center justify-center">
-                                    <i class="fas fa-film text-6xl text-lime-400"></i>
-                                </div>
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold text-white mb-2">${filme.title}</h3>
-                                    <p class="text-gray-400 mb-4">${filme.desc}</p>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-2xl font-black text-lime-400">R$ 25</span>
-                                        <a href="${getWhatsappLink(filme.title)}" target="_blank" class="px-6 py-2 gradient-lime text-white font-bold rounded-lg transition hover:shadow-xl">
-                                            Comprar
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `,
-                
-                hqs: `
-                    <div class="mb-12">
-                        <h2 class="text-4xl md:text-5xl font-black text-yellow-400 mb-4">
-                            <i class="fas fa-book-open mr-3"></i>Quadrinhos
-                        </h2>
-                        <p class="text-xl text-gray-300">Histórias em quadrinhos exclusivas e colecionáveis</p>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        ${[
-                            {title: 'Wolf Origins', vol: '#1'},
-                            {title: 'Dark Tales', vol: '#2'},
-                            {title: 'Heroes Rise', vol: '#3'},
-                            {title: 'Shadow Warriors', vol: '#4'},
-                            {title: 'Epic Quest', vol: '#5'},
-                            {title: 'Final Chapter', vol: '#6'},
-                            {title: 'New Beginning', vol: '#7'},
-                            {title: 'Legacy', vol: '#8'}
-                        ].map(hq => `
-                            <div class="card-hover glass rounded-3xl overflow-hidden border border-white/10">
-                                <div class="aspect-[3/4] bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
-                                    <div class="text-center">
-                                        <i class="fas fa-book text-5xl text-yellow-400 mb-3"></i>
-                                        <div class="text-2xl font-black text-white">${hq.vol}</div>
-                                    </div>
-                                </div>
-                                <div class="p-4">
-                                    <h3 class="text-lg font-bold text-white mb-2">${hq.title}</h3>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-xl font-black text-yellow-400">R$ 35</span>
-                                        <a href="${getWhatsappLink(`HQ ${hq.title}`)}" target="_blank" class="px-4 py-2 gradient-gold text-white font-bold rounded-lg transition hover:shadow-xl text-sm">
-                                            Comprar
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `,
-                
-                loja: `
-                    <div class="mb-12">
-                        <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">
-                            <i class="fas fa-store mr-3"></i>Loja Completa
-                        </h2>
-                        <p class="text-xl text-gray-300">Todos os produtos Wolf Studios em um só lugar</p>
-                    </div>
-                    
-                    <div class="grid gap-8">
-                        <div class="glass p-8 rounded-3xl border border-white/10">
-                            <div class="flex flex-col md:flex-row items-center gap-8">
-                                <div class="w-32 h-32 rounded-2xl gradient-lime flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-box-open text-5xl text-black"></i>
-                                </div>
-                                <div class="flex-1 text-center md:text-left">
-                                    <h3 class="text-3xl font-bold text-white mb-3">Pack Completo</h3>
-                                    <p class="text-gray-300 mb-4">Todos os filmes + todos os HQs + vídeos exclusivos</p>
-                                    <ul class="text-gray-400 space-y-2 mb-4">
-                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>6 Filmes Premium</li>
-                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>8 HQs Exclusivas</li>
-                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>6 Vídeos Behind-the-Scenes</li>
-                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>Suporte direto do criador</li>
-                                    </ul>
-                                </div>
-                                <div class="text-center flex-shrink-0">
-                                    <div class="text-sm text-gray-400 line-through mb-1">R$ 520</div>
-                                    <div class="text-4xl font-black text-lime-400 mb-4">R$ 350</div>
-                                    <a href="${getWhatsappLink('Pack Completo')}" target="_blank" class="block px-8 py-4 gradient-lime text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                                        Comprar Pack
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid md:grid-cols-3 gap-6">
-                            <div class="glass p-6 rounded-2xl border border-white/10">
-                                <div class="text-center mb-4">
-                                    <i class="fas fa-film text-4xl text-lime-400 mb-3"></i>
-                                    <h4 class="text-xl font-bold text-white">Pack Filmes</h4>
-                                </div>
-                                <p class="text-gray-400 text-center mb-4">Todos os 6 filmes</p>
-                                <div class="text-2xl font-black text-center text-lime-400 mb-4">R$ 120</div>
-                                <a href="${getWhatsappLink('Pack Filmes')}" target="_blank" class="block py-3 gradient-lime text-white font-bold text-center rounded-xl transition">Comprar</a>
-                            </div>
-                            
-                            <div class="glass p-6 rounded-2xl border border-white/10">
-                                <div class="text-center mb-4">
-                                    <i class="fas fa-book-open text-4xl text-yellow-400 mb-3"></i>
-                                    <h4 class="text-xl font-bold text-white">Pack HQs</h4>
-                                </div>
-                                <p class="text-gray-400 text-center mb-4">Todas as 8 edições</p>
-                                <div class="text-2xl font-black text-center text-yellow-400 mb-4">R$ 200</div>
-                                <a href="${getWhatsappLink('Pack HQs')}" target="_blank" class="block py-3 gradient-gold text-white font-bold text-center rounded-xl transition">Comprar</a>
-                            </div>
-                            
-                            <div class="glass p-6 rounded-2xl border border-white/10">
-                                <div class="text-center mb-4">
-                                    <i class="fas fa-video text-4xl text-red-400 mb-3"></i>
-                                    <h4 class="text-xl font-bold text-white">Pack Vídeos</h4>
-                                </div>
-                                <p class="text-gray-400 text-center mb-4">Todos os 6 making-of</p>
-                                <div class="text-2xl font-black text-center text-red-400 mb-4">R$ 70</div>
-                                <a href="${getWhatsappLink('Pack Vídeos')}" target="_blank" class="block py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-center rounded-xl transition">Comprar</a>
-                            </div>
-                        </div>
-                    </div>
-                `,
-                
-                sobre: `
-                    <div class="max-w-4xl mx-auto">
-                        <div class="text-center mb-12">
-                            <div class="inline-block p-4 glass rounded-3xl mb-6">
-                                <svg style="width: 140px; height: 140px; filter: drop-shadow(0 0 30px rgba(163, 230, 53, 0.7));" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="aboutShieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
-                                            <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
-                                        </linearGradient>
-                                        <linearGradient id="aboutWolfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-                                            <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
-                                          fill="url(#aboutShieldGrad)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
-                                    <g fill="url(#aboutWolfGrad)">
-                                        <path d="M110 80 L90 50 L100 80 Z"/>
-                                        <path d="M190 80 L210 50 L200 80 Z"/>
-                                        <ellipse cx="150" cy="110" rx="50" ry="45"/>
-                                        <ellipse cx="150" cy="130" rx="35" ry="30"/>
-                                        <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
-                                        <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
-                                        <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
-                                        <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
-                                        <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
-                                        <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" stroke="url(#aboutWolfGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
-                                    </g>
-                                    <text x="150" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="2">PRODUÇÃO DE</text>
-                                    <text x="150" y="245" font-family="Arial, sans-serif" font-size="42" font-weight="900" fill="#fbbf24" text-anchor="middle" letter-spacing="4">WOLF</text>
-                                    <text x="150" y="275" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#a3e635" text-anchor="middle" letter-spacing="6">STUDIOS</text>
-                                </svg>
-                            </div>
-                            <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">Sobre Wolf Studios</h2>
-                        </div>
-                        
-                        <div class="glass p-8 md:p-12 rounded-3xl border border-white/10 mb-8">
-                            <h3 class="text-2xl font-bold text-white mb-4">Nossa História</h3>
-                            <p class="text-gray-300 leading-relaxed mb-6">
-                                A Wolf Studios nasceu da paixão de Jeff pela arte de contar histórias. Com anos de experiência 
-                                em produção audiovisual e quadrinhos, criamos conteúdo premium que emociona e inspira.
-                            </p>
-                            <p class="text-gray-300 leading-relaxed">
-                                Cada filme, HQ e vídeo é produzido com dedicação absoluta, buscando sempre a excelência 
-                                artística e narrativa. Nosso objetivo é criar universos imersivos que permaneçam na memória 
-                                do público.
-                            </p>
-                        </div>
-                        
-                        <div class="grid md:grid-cols-3 gap-6 mb-8">
-                            <div class="glass p-6 rounded-2xl border border-white/10 text-center">
-                                <i class="fas fa-award text-4xl text-yellow-400 mb-3"></i>
-                                <h4 class="text-xl font-bold text-white mb-2">Qualidade Premium</h4>
-                                <p class="text-gray-400">Produções de alta qualidade em todos os aspectos</p>
-                            </div>
-                            <div class="glass p-6 rounded-2xl border border-white/10 text-center">
-                                <i class="fas fa-heart text-4xl text-red-400 mb-3"></i>
-                                <h4 class="text-xl font-bold text-white mb-2">Feito com Amor</h4>
-                                <p class="text-gray-400">Cada projeto recebe atenção e cuidado especial</p>
-                            </div>
-                            <div class="glass p-6 rounded-2xl border border-white/10 text-center">
-                                <i class="fas fa-users text-4xl text-lime-400 mb-3"></i>
-                                <h4 class="text-xl font-bold text-white mb-2">Comunidade</h4>
-                                <p class="text-gray-400">Apoie a arte independente brasileira</p>
-                            </div>
-                        </div>
-                        
-                        <div class="glass p-8 rounded-3xl border border-white/10 text-center">
-                            <h3 class="text-2xl font-bold text-white mb-4">Entre em Contato</h3>
-                            <p class="text-gray-300 mb-6">Tem alguma dúvida ou quer saber mais sobre nossos projetos?</p>
-                            <a href="${getWhatsappLink()}" target="_blank" class="inline-block px-8 py-4 gradient-lime text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                                <i class="fab fa-whatsapp mr-2 text-2xl"></i>
-                                Falar no WhatsApp
-                            </a>
-                        </div>
-                    </div>
-                `
-            };
-
-            contentArea.innerHTML = pages[page] || pages.home;
-        }
-
-        // Inicialização
-        updateAuthUI();
-        renderPage('home');
-    </script>
-</body>
-</html>
+            renderPage('home');
+            alert('Logout
