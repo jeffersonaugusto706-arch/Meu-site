@@ -15,6 +15,18 @@
         .card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .card-hover:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 32px 64px rgba(163, 230, 53, 0.3); }
         .nav-active { color: #a3e635 !important; border-bottom: 3px solid #a3e635; }
+        .logo-shield { 
+            width: 80px; 
+            height: 80px; 
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(163, 230, 53, 0.4));
+        }
+        .hero-banner {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.ibb.co/9ZXMbqY/image.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
     </style>
 </head>
 <body class="min-h-screen text-gray-200 overflow-x-hidden">
@@ -23,7 +35,7 @@
     <header class="glass sticky top-0 z-50 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <i class="fas fa-fw fa-paw text-3xl text-lime-400"></i>
+                <img src="https://i.ibb.co/9ZXMbqY/image.png" alt="Wolf Studios Logo" class="logo-shield">
                 <h1 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">
                     Wolf Studios
                 </h1>
@@ -229,18 +241,18 @@
             
             const pages = {
                 home: `
-                    <div class="text-center mb-20">
-                        <div class="inline-block p-2 glass rounded-2xl mb-6">
-                            <i class="fas fa-crown text-2xl text-yellow-400"></i>
+                    <div class="hero-banner text-center mb-20 py-20 rounded-3xl">
+                        <div class="inline-block p-4 glass rounded-3xl mb-6">
+                            <img src="https://i.ibb.co/9ZXMbqY/image.png" alt="Wolf Studios" class="w-32 h-32 object-contain">
                         </div>
                         <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent mb-6 leading-tight">
                             Wolf Studios<br><span class="text-4xl md:text-5xl">Produções Premium</span>
                         </h1>
-                        <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                        <p class="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto mb-10 leading-relaxed px-4">
                             Filmes épicos, quadrinhos lendários e conteúdo exclusivo criado por Jeff. 
                             <strong class="text-lime-400">Compre agora e apoie a arte independente!</strong>
                         </p>
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center px-4">
                             <a href="#" onclick="renderPage('loja'); return false;" class="group flex-1 max-w-sm mx-auto px-8 py-4 gradient-lime text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
                                 <i class="fas fa-shopping-cart mr-3 group-hover:animate-bounce"></i>
                                 Comprar Agora
@@ -466,7 +478,7 @@
                     <div class="max-w-4xl mx-auto">
                         <div class="text-center mb-12">
                             <div class="inline-block p-4 glass rounded-3xl mb-6">
-                                <i class="fas fa-paw text-5xl text-lime-400"></i>
+                                <img src="https://i.ibb.co/9ZXMbqY/image.png" alt="Wolf Studios" class="w-32 h-32 object-contain">
                             </div>
                             <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">Sobre Wolf Studios</h2>
                         </div>
@@ -522,5 +534,4 @@
         renderPage('home');
     </script>
 </body>
-</html><video src="algum-video.mp4" controls></video>
-
+</html>
