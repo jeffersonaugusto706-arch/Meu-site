@@ -3,195 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios Produções</title>
+    <title>Wolf Studios Loja | Produções Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #0a0a0a;
-        }
-        #content-area {
-            flex-grow: 1;
-        }
-        .active-nav-link {
-            color: #ffffff !important;
-            border-bottom: 2px solid #a3e635;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .modal.active {
-            display: flex;
-        }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); }
+        .glass { backdrop-filter: blur(20px); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        .gradient-lime { background: linear-gradient(135deg, #a3e635 0%, #84cc16 100%); }
+        .gradient-gold { background: linear-gradient(135deg, #eab308 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .card-hover:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 32px 64px rgba(163, 230, 53, 0.3); }
+        .nav-active { color: #a3e635 !important; border-bottom: 3px solid #a3e635; }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-200">
+<body class="min-h-screen text-gray-200 overflow-x-hidden">
 
-    <header class="bg-black shadow-lg sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center flex-wrap gap-4">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-100 tracking-wider">
-                Wolf Studios Produções
-            </h1>
-            <div id="auth-buttons" class="flex gap-2 sm:gap-3">
-                <button onclick="openModal('login')" class="px-3 sm:px-4 py-2 bg-lime-600 hover:bg-lime-700 text-white text-sm font-medium rounded-lg transition duration-300">
-                    Login
-                </button>
-                <button onclick="openModal('register')" class="px-3 sm:px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition duration-300">
-                    Cadastre-se
-                </button>
+    <!-- Header Premium -->
+    <header class="glass sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-fw fa-paw text-3xl text-lime-400"></i>
+                <h1 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">
+                    Wolf Studios
+                </h1>
             </div>
-            <div id="user-info" class="hidden items-center gap-3">
-                <span class="text-lime-400 font-semibold text-sm sm:text-base">Olá, <span id="username-display"></span>!</span>
-                <button onclick="logout()" class="px-3 sm:px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition duration-300">
-                    Sair
-                </button>
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <div id="auth-buttons" class="flex gap-2">
+                    <button onclick="openModal('login')" class="px-4 py-2 glass text-sm font-bold rounded-xl hover:bg-white/10 transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Login
+                    </button>
+                    <button onclick="openModal('register')" class="px-4 py-2 gradient-gold text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                        <i class="fas fa-user-plus mr-1"></i>Cadastre-se
+                    </button>
+                </div>
+                <div id="user-info" class="hidden items-center gap-3 glass px-4 py-2 rounded-xl">
+                    <i class="fas fa-user-circle text-lime-400 text-xl"></i>
+                    <span class="font-semibold text-sm">Olá, <span id="username-display"></span>!</span>
+                    <button onclick="logout()" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition duration-300">
+                        Sair
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <nav class="bg-gray-900 border-b border-gray-700 shadow-md">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div class="flex space-x-4 overflow-x-auto justify-center py-3">
-                <a href="#" onclick="renderPage('home', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out active-nav-link" data-page="home">Home</a>
-                <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="videos">Vídeos</a>
-                <a href="#" onclick="renderPage('filmes', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="filmes">Filmes</a>
-                <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="hqs">Quadrinhos</a>
-                <a href="#" onclick="renderPage('loja', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="loja">Loja</a>
-                <a href="#" onclick="renderPage('sobre', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="sobre">Sobre</a>
-                <a href="#" onclick="renderPage('contato', this); return false;" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md transition duration-300 ease-in-out" data-page="contato">Contato</a>
+    <!-- Nav Moderna -->
+    <nav class="glass backdrop-blur-xl shadow-xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex overflow-x-auto pb-4 pt-6 -mb-4 space-x-2 sm:space-x-6 justify-center">
+                <a href="#" onclick="renderPage('home', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap nav-active" data-page="home">
+                    <i class="fas fa-home mr-2"></i>Home
+                </a>
+                <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="videos">
+                    <i class="fas fa-video mr-2"></i>Vídeos
+                </a>
+                <a href="#" onclick="renderPage('filmes', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="filmes">
+                    <i class="fas fa-film mr-2"></i>Filmes
+                </a>
+                <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="hqs">
+                    <i class="fas fa-book-open mr-2"></i>HQs
+                </a>
+                <a href="#" onclick="renderPage('loja', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="loja">
+                    <i class="fas fa-store mr-2"></i>Loja
+                </a>
+                <a href="#" onclick="renderPage('sobre', this); return false;" class="nav-link flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-300 whitespace-nowrap" data-page="sobre">
+                    <i class="fas fa-info-circle mr-2"></i>Sobre
+                </a>
             </div>
         </div>
     </nav>
 
-    <!-- MODAL DE LOGIN -->
-    <div id="login-modal" class="modal">
-        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full mx-4 border border-gray-700 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-lime-400">Login</h2>
-                <button onclick="closeModal('login')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
-            </div>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                    <input type="email" id="login-email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-lime-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
-                    <input type="password" id="login-password" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-lime-500">
-                </div>
-                <button type="submit" class="w-full py-3 bg-lime-600 hover:bg-lime-700 text-white font-bold rounded-lg transition duration-300">
-                    Entrar
-                </button>
-                <p class="text-center text-sm text-gray-400">
-                    Não tem conta? <a href="#" onclick="closeModal('login'); openModal('register'); return false;" class="text-lime-400 hover:text-lime-300">Cadastre-se aqui</a>
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL DE CADASTRO -->
-    <div id="register-modal" class="modal">
-        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full mx-4 border border-gray-700 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-yellow-400">Cadastre-se</h2>
-                <button onclick="closeModal('register')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
-            </div>
-            <form onsubmit="handleRegister(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Nome Completo</label>
-                    <input type="text" id="register-name" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                    <input type="email" id="register-email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
-                    <input type="password" id="register-password" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Confirmar Senha</label>
-                    <input type="password" id="register-password-confirm" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500">
-                </div>
-                <button type="submit" class="w-full py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition duration-300">
-                    Criar Conta
-                </button>
-                <p class="text-center text-sm text-gray-400">
-                    Já tem conta? <a href="#" onclick="closeModal('register'); openModal('login'); return false;" class="text-yellow-400 hover:text-yellow-300">Faça login aqui</a>
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <main id="content-area" class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Conteúdo Principal -->
+    <main id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <!-- Conteúdo será injetado aqui -->
     </main>
 
-    <footer class="mt-auto bg-black text-center py-4 border-t border-gray-700 text-gray-400 text-sm">
-        Wolf Studios Produções © <span id="current-year"></span>
+    <!-- Footer -->
+    <footer class="glass mt-auto border-t border-white/10 py-8 text-center text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>&copy; <span id="current-year"></span> Wolf Studios Produções. Todos os direitos reservados.</p>
+            <p class="mt-2">Feito com <i class="fas fa-heart text-red-400"></i> por Jeff</p>
+        </div>
     </footer>
+
+    <!-- Modal Login -->
+    <div id="login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000] hidden items-center justify-center p-4">
+        <div class="glass max-w-md w-full rounded-3xl p-8 border border-white/20 shadow-2xl">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-black text-lime-400">Entrar</h2>
+                <button onclick="closeModal('login')" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-3">Email</label>
+                    <input type="email" id="login-email" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-lime-400 focus:outline-none transition-all text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-3">Senha</label>
+                    <input type="password" id="login-password" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-lime-400 focus:outline-none transition-all text-white">
+                </div>
+                <button type="submit" class="w-full py-4 gradient-lime text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                    Entrar na Loja
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Registro -->
+    <div id="register-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000] hidden items-center justify-center p-4">
+        <div class="glass max-w-md w-full rounded-3xl p-8 border border-white/20 shadow-2xl">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-black text-yellow-400">Criar Conta</h2>
+                <button onclick="closeModal('register')" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <form onsubmit="handleRegister(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-3">Nome</label>
+                    <input type="text" id="register-name" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400 focus:outline-none transition-all text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-3">Email</label>
+                    <input type="email" id="register-email" required class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400 focus:outline-none transition-all text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-3">Senha</label>
+                    <input type="password" id="register-password" required minlength="6" class="w-full px-5 py-3 glass rounded-xl border border-white/20 focus:border-yellow-400 focus:outline-none transition-all text-white">
+                </div>
+                <button type="submit" class="w-full py-4 gradient-gold text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                    Criar Minha Conta
+                </button>
+            </form>
+        </div>
+    </div>
 
     <script>
         const WHATSAPP_NUMBER = "41998984617";
-        const EMAIL_ADDRESS = "wolfstudiosproducoes@gmail.com";
-
-        let users = {};
-        let currentUser = null;
-
+        let users = JSON.parse(localStorage.getItem('wolfStudioUsers')) || {};
+        let currentUser = JSON.parse(localStorage.getItem('wolfStudioCurrentUser')) || null;
+        
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        const getWhatsappLink = () => `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
+        function getWhatsappLink(product = '') {
+            const msg = product ? `Olá! Gostaria de comprar: ${product}` : 'Olá! Gostaria de saber mais sobre os produtos da Wolf Studios';
+            return `https://wa.me/55${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+        }
 
         function openModal(type) {
-            const modalId = type === 'login' ? 'login-modal' : 'register-modal';
-            document.getElementById(modalId).classList.add('active');
+            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.remove('hidden');
+            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal(type) {
-            const modalId = type === 'login' ? 'login-modal' : 'register-modal';
-            document.getElementById(modalId).classList.remove('active');
+            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.add('hidden');
+            document.getElementById(type === 'login' ? 'login-modal' : 'register-modal').classList.remove('flex');
+            document.body.style.overflow = '';
         }
 
         function handleRegister(event) {
             event.preventDefault();
-            
             const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-            const passwordConfirm = document.getElementById('register-password-confirm').value;
-
-            if (password !== passwordConfirm) {
-                alert('As senhas não coincidem!');
-                return;
-            }
 
             if (users[email]) {
                 alert('Este email já está cadastrado!');
@@ -199,256 +173,353 @@
             }
 
             users[email] = { name, password };
-            alert('Cadastro realizado com sucesso! Faça login para continuar.');
+            localStorage.setItem('wolfStudioUsers', JSON.stringify(users));
+            alert('Conta criada com sucesso!');
             closeModal('register');
             openModal('login');
-            
-            document.getElementById('register-name').value = '';
-            document.getElementById('register-email').value = '';
-            document.getElementById('register-password').value = '';
-            document.getElementById('register-password-confirm').value = '';
         }
 
         function handleLogin(event) {
             event.preventDefault();
-            
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            if (!users[email]) {
-                alert('Usuário não encontrado! Cadastre-se primeiro.');
-                return;
-            }
-
-            if (users[email].password !== password) {
-                alert('Senha incorreta!');
+            if (!users[email] || users[email].password !== password) {
+                alert('Email ou senha incorretos!');
                 return;
             }
 
             currentUser = { email, name: users[email].name };
+            localStorage.setItem('wolfStudioCurrentUser', JSON.stringify(currentUser));
             updateAuthUI();
             closeModal('login');
             alert(`Bem-vindo(a), ${currentUser.name}!`);
-            
-            document.getElementById('login-email').value = '';
-            document.getElementById('login-password').value = '';
         }
 
         function logout() {
-            if (confirm('Deseja realmente sair?')) {
-                currentUser = null;
-                updateAuthUI();
-                alert('Você saiu da sua conta.');
-            }
+            currentUser = null;
+            localStorage.removeItem('wolfStudioCurrentUser');
+            updateAuthUI();
+            alert('Logout realizado com sucesso!');
         }
 
         function updateAuthUI() {
-            const authButtons = document.getElementById('auth-buttons');
-            const userInfo = document.getElementById('user-info');
-            const usernameDisplay = document.getElementById('username-display');
-
             if (currentUser) {
-                authButtons.classList.add('hidden');
-                userInfo.classList.remove('hidden');
-                userInfo.classList.add('flex');
-                usernameDisplay.textContent = currentUser.name;
+                document.getElementById('auth-buttons').classList.add('hidden');
+                document.getElementById('user-info').classList.remove('hidden');
+                document.getElementById('user-info').classList.add('flex');
+                document.getElementById('username-display').textContent = currentUser.name;
             } else {
-                authButtons.classList.remove('hidden');
-                userInfo.classList.add('hidden');
-                userInfo.classList.remove('flex');
+                document.getElementById('auth-buttons').classList.remove('hidden');
+                document.getElementById('user-info').classList.add('hidden');
+                document.getElementById('user-info').classList.remove('flex');
             }
         }
 
-        const pages = {
-            home: `
-                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 transition duration-500 hover:shadow-gray-700/50">
-                    <h2 class="text-3xl font-extrabold text-lime-400 mb-4">Bem-vindo(a) à Wolf Studios</h2>
-                    <p class="text-lg mb-6 text-gray-300">A casa da sua criatividade — Filmes, Quadrinhos e Multimídia produzidos por Jeff. Explore nossas narrativas épicas!</p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#" onclick="renderPage('filmes', this); return false;" class="flex-1 text-center py-3 px-6 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-[1.02]">
-                            Ver Filmes
-                        </a>
-                        <a href="#" onclick="renderPage('hqs', this); return false;" class="flex-1 text-center py-3 px-6 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-[1.02]">
-                            Ver Quadrinhos
-                        </a>
-                    </div>
-                </div>
-            `,
-            filmes: `
-                <h2 class="text-4xl font-bold text-center text-red-500 mb-8">Catálogo de Filmes Wolf Studios</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/1e293b/a3a3a3?text=CAPA+DO+FILME+1" class="w-full h-auto rounded-lg mb-4 shadow-xl">
-                        <h3 class="text-2xl font-semibold text-white mb-2">A Lenda do Lobo Cinzento</h3>
-                        <p class="text-gray-400 mb-3">Um épico de fantasia e ação dirigido por Jeff, explorando um mundo de magia e mistério.</p>
-                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 15,00</p>
-                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
-                            Comprar via WhatsApp
-                        </a>
-                    </div>
-                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/292524/a3a3a3?text=CAPA+DO+FILME+2" class="w-full h-auto rounded-lg mb-4 shadow-xl">
-                        <h3 class="text-2xl font-semibold text-white mb-2">O Enigma Temporal</h3>
-                        <p class="text-gray-400 mb-3">Thriller de ficção científica com viagem no tempo e reviravoltas surpreendentes.</p>
-                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 18,00</p>
-                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
-                            Comprar via WhatsApp
-                        </a>
-                    </div>
-                </div>
-            `,
-            hqs: `
-                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-8">Nossas Histórias em Quadrinhos</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/374151/a3a3a3?text=CAPA+DA+HQ+1" class="w-full h-auto rounded-lg mb-4 shadow-xl">
-                        <h3 class="text-2xl font-semibold text-white mb-2">O Despertar da Cidade</h3>
-                        <p class="text-gray-400 mb-3">Uma graphic novel distópica com arte incrível e um roteiro eletrizante.</p>
-                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 10,00</p>
-                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
-                            Comprar via WhatsApp
-                        </a>
-                    </div>
-                    <div class="p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                        <img src="https://placehold.co/900x400/525252/a3a3a3?text=CAPA+DA+HQ+2" class="w-full h-auto rounded-lg mb-4 shadow-xl">
-                        <h3 class="text-2xl font-semibold text-white mb-2">Caminhos da Sombra</h3>
-                        <p class="text-gray-400 mb-3">A história de um anti-herói em busca de redenção em um mundo sombrio.</p>
-                        <p class="text-xl font-bold text-yellow-400 mb-4">Preço: R$ 12,00</p>
-                        <a href="${getWhatsappLink()}" target="_blank" class="block w-full text-center py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-300">
-                            Comprar via WhatsApp
-                        </a>
-                    </div>
-                </div>
-            `,
-            loja: `
-                <h2 class="text-4xl font-bold text-center text-yellow-400 mb-8">Loja Wolf Studios - Compre Agora!</h2>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-3xl font-semibold text-red-500 mb-6 border-b border-gray-700 pb-2">Filmes</h3>
-                        <div class="space-y-6">
-                            <div class="p-4 bg-gray-800 rounded-lg shadow-xl flex flex-col sm:flex-row items-center gap-4">
-                                <img src="https://placehold.co/100x100/1e293b/a3a3a3?text=Filme+1" class="w-20 h-20 rounded-md object-cover">
-                                <div class="flex-1">
-                                    <h4 class="text-xl font-bold">A Lenda do Lobo Cinzento</h4>
-                                    <p class="text-sm text-gray-400">Épico de fantasia e ação.</p>
-                                    <p class="text-lg font-bold text-yellow-400 mt-1">R$ 15,00</p>
-                                    <a href="${getWhatsappLink()}" target="_blank" class="mt-2 text-sm inline-block py-1.5 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300">Comprar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-semibold text-cyan-400 mb-6 border-b border-gray-700 pb-2">Quadrinhos (HQs)</h3>
-                        <div class="space-y-6">
-                            <div class="p-4 bg-gray-800 rounded-lg shadow-xl flex flex-col sm:flex-row items-center gap-4">
-                                <img src="https://placehold.co/100x100/374151/a3a3a3?text=HQ+1" class="w-20 h-20 rounded-md object-cover">
-                                <div class="flex-1">
-                                    <h4 class="text-xl font-bold">O Despertar da Cidade</h4>
-                                    <p class="text-sm text-gray-400">Graphic novel distópica.</p>
-                                    <p class="text-lg font-bold text-yellow-400 mt-1">R$ 10,00</p>
-                                    <a href="${getWhatsappLink()}" target="_blank" class="mt-2 text-sm inline-block py-1.5 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300">Comprar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `,
-            videos: `
-                <h2 class="text-4xl font-bold text-center text-orange-400 mb-8">Vídeos e Trailers Oficiais</h2>
-                <div class="space-y-8">
-                    <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Trailer Oficial: A Lenda do Lobo Cinzento</h3>
-                        <div class="video-container">
-                            <iframe 
-                                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                        <p class="text-gray-400 mt-4">Assista ao trailer épico do nosso mais novo filme!</p>
-                    </div>
-                    <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Bastidores da Produção</h3>
-                        <div class="video-container">
-                            <iframe 
-                                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                        <p class="text-gray-400 mt-4">Veja como criamos os efeitos visuais de 'O Despertar da Cidade'.</p>
-                    </div>
-                </div>
-            `,
-            sobre: `
-                <h2 class="text-4xl font-bold text-center text-purple-400 mb-8">Sobre a Wolf Studios Produções</h2>
-                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
-                    <h3 class="text-2xl font-semibold text-white mb-4">A Visão</h3>
-                    <p class="text-lg text-gray-300 mb-4">Wolf Studios Produções é uma produtora independente criada por Jeff, focada em filmes, quadrinhos, efeitos especiais e, acima de tudo, em <strong>narrativas criativas e impactantes</strong>.</p>
-                    
-                    <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Compromisso</h3>
-                    <p class="text-lg text-gray-300 mb-4">Todos os filmes e HQs vendidos nesta plataforma são <strong>produções originais</strong> com o selo de qualidade e paixão da Wolf Studios. Acreditamos no poder da imaginação e em contar histórias que ficam com você.</p>
-                    
-                    <h3 class="text-2xl font-semibold text-white mb-4 mt-6">O Criador</h3>
-                    <p class="text-lg text-gray-300">Jeff é a mente criativa por trás da Wolf Studios, combinando habilidades em roteiro, direção e arte para dar vida a mundos únicos.</p>
-                </div>
-            `,
-            contato: `
-                <h2 class="text-4xl font-bold text-center text-blue-400 mb-8">Fale Conosco</h2>
-                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 max-w-lg mx-auto">
-                    <h3 class="text-2xl font-semibold text-white mb-4">Detalhes de Contato</h3>
-                    <ul class="space-y-3 text-lg">
-                        <li class="flex items-center gap-3">
-                            <span class="text-green-500 font-bold">WhatsApp:</span> 
-                            <strong>(41) ${WHATSAPP_NUMBER}</strong>
-                            <a href="${getWhatsappLink()}" target="_blank" class="text-sm text-blue-400 hover:text-blue-300 transition duration-300">(Enviar Mensagem)</a>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="text-yellow-500 font-bold">Email:</span> 
-                            <strong>${EMAIL_ADDRESS}</strong>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="text-pink-500 font-bold">Instagram:</span> 
-                            <a href="https://instagram.com/wolfstudios24" target="_blank" class="text-blue-400 hover:text-blue-300 transition duration-300">@wolfstudios24</a>
-                        </li>
-                    </ul>
-
-                    <a class="mt-8 block w-full text-center py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition duration-300 ease-in-out transform hover:scale-[1.02]" href="${getWhatsappLink()}" target="_blank">
-                        Entrar em Contato Agora
-                    </a>
-                </div>
-            `
-        };
-
-        const contentArea = document.getElementById('content-area');
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        function renderPage(pageId, clickedElement = null) {
-            contentArea.innerHTML = pages[pageId] || pages.home;
-            
-            navLinks.forEach(link => link.classList.remove('active-nav-link'));
-
-            if (clickedElement) {
-                clickedElement.classList.add('active-nav-link');
-            } else {
-                const initialLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-                if (initialLink) {
-                    initialLink.classList.add('active-nav-link');
-                }
+        function renderPage(page, linkElement) {
+            // Atualiza navegação ativa
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('nav-active');
+            });
+            if (linkElement) {
+                linkElement.classList.add('nav-active');
             }
-            
-            history.pushState({ page: pageId }, '', `#${pageId}`);
-        }
-        
-        window.addEventListener('popstate', (event) => {
-            const page = event.state ? event.state.page : 'home';
-            renderPage(page);
-        });
 
-        const initialPage = window.location.hash.substring(1) || 'home';
-        renderPage(initialPage);
+            const contentArea = document.getElementById('content-area');
+            
+            const pages = {
+                home: `
+                    <div class="text-center mb-20">
+                        <div class="inline-block p-2 glass rounded-2xl mb-6">
+                            <i class="fas fa-crown text-2xl text-yellow-400"></i>
+                        </div>
+                        <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent mb-6 leading-tight">
+                            Wolf Studios<br><span class="text-4xl md:text-5xl">Produções Premium</span>
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                            Filmes épicos, quadrinhos lendários e conteúdo exclusivo criado por Jeff. 
+                            <strong class="text-lime-400">Compre agora e apoie a arte independente!</strong>
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="#" onclick="renderPage('loja'); return false;" class="group flex-1 max-w-sm mx-auto px-8 py-4 gradient-lime text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
+                                <i class="fas fa-shopping-cart mr-3 group-hover:animate-bounce"></i>
+                                Comprar Agora
+                            </a>
+                            <a href="${getWhatsappLink()}" target="_blank" class="group flex-1 max-w-sm mx-auto px-8 py-4 glass border-2 border-lime-400 text-lime-400 font-bold text-lg rounded-2xl hover:bg-lime-400/10 transition-all duration-300">
+                                <i class="fab fa-whatsapp mr-3 text-2xl"></i>
+                                WhatsApp
+                            </a>
+                        </div>
+                    </div>
+
+                    <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="card-hover glass p-8 rounded-3xl border border-white/10">
+                            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl gradient-lime flex items-center justify-center">
+                                <i class="fas fa-film text-3xl text-black"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-center text-white mb-4">Filmes Premium</h3>
+                            <p class="text-gray-400 text-center mb-6">Narrativas épicas em alta qualidade</p>
+                            <div class="text-3xl font-black text-center text-lime-400 mb-4">R$ 25</div>
+                            <a href="${getWhatsappLink('Filme Premium')}" target="_blank" class="block w-full py-3 gradient-lime text-white font-bold text-center rounded-xl hover:shadow-xl transition-all duration-300">
+                                Comprar
+                            </a>
+                        </div>
+                        <div class="card-hover glass p-8 rounded-3xl border border-white/10">
+                            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
+                                <i class="fas fa-book-open text-3xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-center text-white mb-4">Quadrinhos</h3>
+                            <p class="text-gray-400 text-center mb-6">Edições colecionáveis exclusivas</p>
+                            <div class="text-3xl font-black text-center text-yellow-400 mb-4">R$ 35</div>
+                            <a href="${getWhatsappLink('Quadrinho')}" target="_blank" class="block w-full py-3 gradient-gold text-white font-bold text-center rounded-xl hover:shadow-xl transition-all duration-300">
+                                Comprar
+                            </a>
+                        </div>
+                        <div class="card-hover glass p-8 rounded-3xl border border-white/10">
+                            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center">
+                                <i class="fas fa-video text-3xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-center text-white mb-4">Vídeos Exclusivos</h3>
+                            <p class="text-gray-400 text-center mb-6">Conteúdo behind-the-scenes</p>
+                            <div class="text-3xl font-black text-center text-red-400 mb-4">R$ 15</div>
+                            <a href="${getWhatsappLink('Vídeo Exclusivo')}" target="_blank" class="block w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                Comprar
+                            </a>
+                        </div>
+                    </section>
+                `,
+                
+                videos: `
+                    <div class="mb-12">
+                        <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">
+                            <i class="fas fa-video mr-3"></i>Vídeos Exclusivos
+                        </h2>
+                        <p class="text-xl text-gray-300">Conteúdo behind-the-scenes e making-of das produções Wolf Studios</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        ${[1,2,3,4,5,6].map(i => `
+                            <div class="card-hover glass rounded-3xl overflow-hidden border border-white/10">
+                                <div class="aspect-video bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center">
+                                    <i class="fas fa-play-circle text-6xl text-red-400"></i>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-white mb-2">Making Of Vídeo ${i}</h3>
+                                    <p class="text-gray-400 mb-4">Bastidores exclusivos da produção</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-2xl font-black text-red-400">R$ 15</span>
+                                        <a href="${getWhatsappLink(`Making Of Vídeo ${i}`)}" target="_blank" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition">
+                                            Comprar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `,
+                
+                filmes: `
+                    <div class="mb-12">
+                        <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">
+                            <i class="fas fa-film mr-3"></i>Filmes Premium
+                        </h2>
+                        <p class="text-xl text-gray-300">Produções cinematográficas épicas da Wolf Studios</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        ${[
+                            {title: 'A Lenda do Lobo', desc: 'Uma jornada épica'},
+                            {title: 'Sombras da Noite', desc: 'Thriller sobrenatural'},
+                            {title: 'O Último Guardian', desc: 'Ação e aventura'},
+                            {title: 'Ecos do Passado', desc: 'Drama intenso'},
+                            {title: 'Além do Horizonte', desc: 'Ficção científica'},
+                            {title: 'Renascimento', desc: 'Fantasia épica'}
+                        ].map(filme => `
+                            <div class="card-hover glass rounded-3xl overflow-hidden border border-white/10">
+                                <div class="aspect-video bg-gradient-to-br from-lime-500/20 to-green-500/20 flex items-center justify-center">
+                                    <i class="fas fa-film text-6xl text-lime-400"></i>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-white mb-2">${filme.title}</h3>
+                                    <p class="text-gray-400 mb-4">${filme.desc}</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-2xl font-black text-lime-400">R$ 25</span>
+                                        <a href="${getWhatsappLink(filme.title)}" target="_blank" class="px-6 py-2 gradient-lime text-white font-bold rounded-lg transition hover:shadow-xl">
+                                            Comprar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `,
+                
+                hqs: `
+                    <div class="mb-12">
+                        <h2 class="text-4xl md:text-5xl font-black text-yellow-400 mb-4">
+                            <i class="fas fa-book-open mr-3"></i>Quadrinhos
+                        </h2>
+                        <p class="text-xl text-gray-300">Histórias em quadrinhos exclusivas e colecionáveis</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        ${[
+                            {title: 'Wolf Origins', vol: '#1'},
+                            {title: 'Dark Tales', vol: '#2'},
+                            {title: 'Heroes Rise', vol: '#3'},
+                            {title: 'Shadow Warriors', vol: '#4'},
+                            {title: 'Epic Quest', vol: '#5'},
+                            {title: 'Final Chapter', vol: '#6'},
+                            {title: 'New Beginning', vol: '#7'},
+                            {title: 'Legacy', vol: '#8'}
+                        ].map(hq => `
+                            <div class="card-hover glass rounded-3xl overflow-hidden border border-white/10">
+                                <div class="aspect-[3/4] bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <i class="fas fa-book text-5xl text-yellow-400 mb-3"></i>
+                                        <div class="text-2xl font-black text-white">${hq.vol}</div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="text-lg font-bold text-white mb-2">${hq.title}</h3>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xl font-black text-yellow-400">R$ 35</span>
+                                        <a href="${getWhatsappLink(`HQ ${hq.title}`)}" target="_blank" class="px-4 py-2 gradient-gold text-white font-bold rounded-lg transition hover:shadow-xl text-sm">
+                                            Comprar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `,
+                
+                loja: `
+                    <div class="mb-12">
+                        <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">
+                            <i class="fas fa-store mr-3"></i>Loja Completa
+                        </h2>
+                        <p class="text-xl text-gray-300">Todos os produtos Wolf Studios em um só lugar</p>
+                    </div>
+                    
+                    <div class="grid gap-8">
+                        <div class="glass p-8 rounded-3xl border border-white/10">
+                            <div class="flex flex-col md:flex-row items-center gap-8">
+                                <div class="w-32 h-32 rounded-2xl gradient-lime flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-box-open text-5xl text-black"></i>
+                                </div>
+                                <div class="flex-1 text-center md:text-left">
+                                    <h3 class="text-3xl font-bold text-white mb-3">Pack Completo</h3>
+                                    <p class="text-gray-300 mb-4">Todos os filmes + todos os HQs + vídeos exclusivos</p>
+                                    <ul class="text-gray-400 space-y-2 mb-4">
+                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>6 Filmes Premium</li>
+                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>8 HQs Exclusivas</li>
+                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>6 Vídeos Behind-the-Scenes</li>
+                                        <li><i class="fas fa-check text-lime-400 mr-2"></i>Suporte direto do criador</li>
+                                    </ul>
+                                </div>
+                                <div class="text-center flex-shrink-0">
+                                    <div class="text-sm text-gray-400 line-through mb-1">R$ 520</div>
+                                    <div class="text-4xl font-black text-lime-400 mb-4">R$ 350</div>
+                                    <a href="${getWhatsappLink('Pack Completo')}" target="_blank" class="block px-8 py-4 gradient-lime text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                                        Comprar Pack
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="glass p-6 rounded-2xl border border-white/10">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-film text-4xl text-lime-400 mb-3"></i>
+                                    <h4 class="text-xl font-bold text-white">Pack Filmes</h4>
+                                </div>
+                                <p class="text-gray-400 text-center mb-4">Todos os 6 filmes</p>
+                                <div class="text-2xl font-black text-center text-lime-400 mb-4">R$ 120</div>
+                                <a href="${getWhatsappLink('Pack Filmes')}" target="_blank" class="block py-3 gradient-lime text-white font-bold text-center rounded-xl transition">Comprar</a>
+                            </div>
+                            
+                            <div class="glass p-6 rounded-2xl border border-white/10">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-book-open text-4xl text-yellow-400 mb-3"></i>
+                                    <h4 class="text-xl font-bold text-white">Pack HQs</h4>
+                                </div>
+                                <p class="text-gray-400 text-center mb-4">Todas as 8 edições</p>
+                                <div class="text-2xl font-black text-center text-yellow-400 mb-4">R$ 200</div>
+                                <a href="${getWhatsappLink('Pack HQs')}" target="_blank" class="block py-3 gradient-gold text-white font-bold text-center rounded-xl transition">Comprar</a>
+                            </div>
+                            
+                            <div class="glass p-6 rounded-2xl border border-white/10">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-video text-4xl text-red-400 mb-3"></i>
+                                    <h4 class="text-xl font-bold text-white">Pack Vídeos</h4>
+                                </div>
+                                <p class="text-gray-400 text-center mb-4">Todos os 6 making-of</p>
+                                <div class="text-2xl font-black text-center text-red-400 mb-4">R$ 70</div>
+                                <a href="${getWhatsappLink('Pack Vídeos')}" target="_blank" class="block py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-center rounded-xl transition">Comprar</a>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                
+                sobre: `
+                    <div class="max-w-4xl mx-auto">
+                        <div class="text-center mb-12">
+                            <div class="inline-block p-4 glass rounded-3xl mb-6">
+                                <i class="fas fa-paw text-5xl text-lime-400"></i>
+                            </div>
+                            <h2 class="text-4xl md:text-5xl font-black text-lime-400 mb-4">Sobre Wolf Studios</h2>
+                        </div>
+                        
+                        <div class="glass p-8 md:p-12 rounded-3xl border border-white/10 mb-8">
+                            <h3 class="text-2xl font-bold text-white mb-4">Nossa História</h3>
+                            <p class="text-gray-300 leading-relaxed mb-6">
+                                A Wolf Studios nasceu da paixão de Jeff pela arte de contar histórias. Com anos de experiência 
+                                em produção audiovisual e quadrinhos, criamos conteúdo premium que emociona e inspira.
+                            </p>
+                            <p class="text-gray-300 leading-relaxed">
+                                Cada filme, HQ e vídeo é produzido com dedicação absoluta, buscando sempre a excelência 
+                                artística e narrativa. Nosso objetivo é criar universos imersivos que permaneçam na memória 
+                                do público.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                                <i class="fas fa-award text-4xl text-yellow-400 mb-3"></i>
+                                <h4 class="text-xl font-bold text-white mb-2">Qualidade Premium</h4>
+                                <p class="text-gray-400">Produções de alta qualidade em todos os aspectos</p>
+                            </div>
+                            <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                                <i class="fas fa-heart text-4xl text-red-400 mb-3"></i>
+                                <h4 class="text-xl font-bold text-white mb-2">Feito com Amor</h4>
+                                <p class="text-gray-400">Cada projeto recebe atenção e cuidado especial</p>
+                            </div>
+                            <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                                <i class="fas fa-users text-4xl text-lime-400 mb-3"></i>
+                                <h4 class="text-xl font-bold text-white mb-2">Comunidade</h4>
+                                <p class="text-gray-400">Apoie a arte independente brasileira</p>
+                            </div>
+                        </div>
+                        
+                        <div class="glass p-8 rounded-3xl border border-white/10 text-center">
+                            <h3 class="text-2xl font-bold text-white mb-4">Entre em Contato</h3>
+                            <p class="text-gray-300 mb-6">Tem alguma dúvida ou quer saber mais sobre nossos projetos?</p>
+                            <a href="${getWhatsappLink()}" target="_blank" class="inline-block px-8 py-4 gradient-lime text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                                <i class="fab fa-whatsapp mr-2 text-2xl"></i>
+                                Falar no WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                `
+            };
+
+            contentArea.innerHTML = pages[page] || pages.home;
+        }
+
+        // Inicialização
+        updateAuthUI();
+        renderPage('home');
     </script>
 </body>
 </html>
