@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -165,6 +164,10 @@
             border: 2px dashed #4a4a4a;
         }
         
+        .content-card.trailer-card {
+            height: 200px;
+        }
+        
         .content-card.has-content {
             border: none;
             background-size: cover;
@@ -175,6 +178,27 @@
             transform: scale(1.05);
             z-index: 10;
             box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        
+        .trailer-play-icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(163, 230, 53, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .content-card:hover .trailer-play-icon {
+            opacity: 1;
+            transform: scale(1.1);
         }
         
         .card-overlay {
@@ -433,6 +457,48 @@
             border-color: #5a5a5a;
         }
         
+        /* Video Modal */
+        .video-modal-content {
+            background: #000;
+            border-radius: 12px;
+            max-width: 1200px;
+            width: 95%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-info {
+            padding: 30px;
+            background: #141414;
+        }
+        
+        .video-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .video-description {
+            color: #b3b3b3;
+            line-height: 1.6;
+        }
+        
         /* User Menu */
         .user-menu {
             position: relative;
@@ -574,6 +640,7 @@
                     <a href="#" class="nav-link active" onclick="renderPage('home'); return false;">Início</a>
                     <a href="#" class="nav-link" onclick="renderPage('filmes'); return false;">Filmes</a>
                     <a href="#" class="nav-link" onclick="renderPage('series'); return false;">Séries</a>
+                    <a href="#" class="nav-link" onclick="renderPage('trailers'); return false;">Trailers</a>
                     <a href="#" class="nav-link" onclick="renderPage('hqs'); return false;">HQs</a>
                     <a href="#" class="nav-link" onclick="renderPage('loja'); return false;">Loja</a>
                 </nav>
@@ -612,6 +679,7 @@
                             <option value="">Selecione uma categoria</option>
                             <option value="filmes">Filmes</option>
                             <option value="series">Séries</option>
+                            <option value="trailers">Trailers</option>
                             <option value="hqs">HQs</option>
                             <option value="documentarios">Documentários</option>
                             <option value="loja">Loja</option>
@@ -631,6 +699,13 @@
                     <div class="form-group">
                         <label class="form-label">Preço (R$)</label>
                         <input type="number" class="form-input" id="uploadPrice" placeholder="0.00" step="0.01" min="0">
+                        <small class="text-gray-500 text-xs mt-1 block">Deixe em branco ou 0 para conteúdo gratuito</small>
+                    </div>
+                    
+                    <div class="form-group" id="videoUrlGroup">
+                        <label class="form-label">URL do Vídeo (YouTube/Vimeo)</label>
+                        <input type="url" class="form-input" id="uploadVideoUrl" placeholder="https://www.youtube.com/watch?v=...">
+                        <small class="text-gray-500 text-xs mt-1 block">Para trailers, cole o link do YouTube ou Vimeo</small>
                     </div>
                     
                     <div class="form-group">
@@ -714,6 +789,19 @@
         </div>
     </div>
 
+    <!-- Video Player Modal -->
+    <div class="modal" id="videoModal">
+        <div class="video-modal-content">
+            <button class="modal-close" onclick="closeVideoModal()" style="z-index: 10;">×</button>
+            <div class="video-container" id="videoContainer">
+                <!-- Video will be injected here -->
+            </div>
+            <div class="video-info" id="videoInfo">
+                <!-- Video info will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // Constants
         const WHATSAPP = "41998984617";
@@ -725,6 +813,7 @@
         let content = JSON.parse(localStorage.getItem('wolfContent')) || {
             filmes: [],
             series: [],
+            trailers: [],
             hqs: [],
             documentarios: [],
             loja: []
@@ -736,6 +825,7 @@
             renderPage('home');
             setupScrollHeader();
             setupFileUpload();
+            setupCategoryToggle();
         });
         
         // Scroll Header Effect
@@ -778,6 +868,22 @@
             input.addEventListener('change', (e) => {
                 if (e.target.files[0]) {
                     handleFileSelect(e.target.files[0]);
+                }
+            });
+        }
+        
+        // Toggle video URL field based on category
+        function setupCategoryToggle() {
+            const categorySelect = document.getElementById('uploadCategory');
+            const videoUrlGroup = document.getElementById('videoUrlGroup');
+            
+            categorySelect.addEventListener('change', (e) => {
+                if (e.target.value === 'trailers') {
+                    videoUrlGroup.style.display = 'block';
+                    document.getElementById('uploadVideoUrl').required = true;
+                } else {
+                    videoUrlGroup.style.display = 'none';
+                    document.getElementById('uploadVideoUrl').required = false;
                 }
             });
         }
@@ -844,4 +950,378 @@
             localStorage.removeItem('wolfCurrentUser');
             updateAuthUI();
             renderPage('home');
-            alert('Logout
+            alert('Logout realizado!');
+        }
+        
+        function updateAuthUI() {
+            const authSection = document.getElementById('auth-section');
+            
+            if (currentUser) {
+                const initial = currentUser.name.charAt(0).toUpperCase();
+                authSection.innerHTML = `
+                    <div class="user-avatar" onclick="toggleUserMenu()">
+                        ${initial}
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>${currentUser.name}</span>
+                            ${currentUser.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="alert('Configurações em breve!')">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </div>
+                        <div class="dropdown-item" onclick="alert('Minha lista em breve!')">
+                            <i class="fas fa-heart"></i>
+                            <span>Minha Lista</span>
+                        </div>
+                        ${currentUser.isAdmin ? `
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="openModal('uploadModal'); toggleUserMenu();">
+                            <i class="fas fa-upload"></i>
+                            <span>Adicionar Conteúdo</span>
+                        </div>
+                        ` : ''}
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authSection.innerHTML = `
+                    <button onclick="openModal('loginModal')" class="upload-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Entrar
+                    </button>
+                `;
+            }
+        }
+        
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && !userMenu.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Upload Function
+        function handleUpload(e) {
+            e.preventDefault();
+            
+            if (!currentUser || !currentUser.isAdmin) {
+                alert('Apenas administradores podem adicionar conteúdo!');
+                return;
+            }
+            
+            const category = document.getElementById('uploadCategory').value;
+            const title = document.getElementById('uploadTitle').value;
+            const description = document.getElementById('uploadDescription').value;
+            const price = document.getElementById('uploadPrice').value;
+            const videoUrl = document.getElementById('uploadVideoUrl').value;
+            const imageFile = document.getElementById('uploadFile').files[0];
+            
+            if (!imageFile) {
+                alert('Por favor, adicione uma imagem!');
+                return;
+            }
+            
+            if (category === 'trailers' && !videoUrl) {
+                alert('Por favor, adicione a URL do vídeo para trailers!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const newContent = {
+                    id: Date.now(),
+                    title,
+                    description,
+                    price: price ? parseFloat(price) : 0,
+                    image: e.target.result,
+                    videoUrl: videoUrl || null,
+                    createdAt: new Date().toISOString()
+                };
+                
+                content[category].push(newContent);
+                localStorage.setItem('wolfContent', JSON.stringify(content));
+                
+                alert('Conteúdo adicionado com sucesso!');
+                closeModal('uploadModal');
+                document.getElementById('uploadForm').reset();
+                document.getElementById('filePreview').style.display = 'none';
+                document.getElementById('videoUrlGroup').style.display = 'none';
+                renderPage(category);
+            };
+            reader.readAsDataURL(imageFile);
+        }
+        
+        // Render Pages
+        function renderPage(page) {
+            // Update nav active state
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const mainContent = document.getElementById('main-content');
+            
+            switch(page) {
+                case 'home':
+                    renderHome();
+                    break;
+                case 'filmes':
+                case 'series':
+                case 'trailers':
+                case 'hqs':
+                case 'loja':
+                    renderCategory(page);
+                    break;
+            }
+        }
+        
+        function renderHome() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <!-- Hero Banner -->
+                <section class="hero-banner">
+                    <div class="hero-content">
+                        <svg class="hero-logo-large" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="heroShield" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
+                                    <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:0.95" />
+                                </linearGradient>
+                                <linearGradient id="heroWolf" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:#a3e635;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#84cc16;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M150 10 L250 40 L260 160 Q260 240 150 300 Q40 240 40 160 L50 40 Z" 
+                                  fill="url(#heroShield)" stroke="#a3e635" stroke-width="3" opacity="0.8"/>
+                            <g fill="url(#heroWolf)">
+                                <path d="M110 80 L90 50 L100 80 Z"/>
+                                <path d="M190 80 L210 50 L200 80 Z"/>
+                                <ellipse cx="150" cy="110" rx="50" ry="45"/>
+                                <ellipse cx="150" cy="130" rx="35" ry="30"/>
+                                <ellipse cx="150" cy="145" rx="20" ry="15" fill="#0a0a0a"/>
+                                <ellipse cx="135" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                                <ellipse cx="165" cy="105" rx="5" ry="8" fill="#fbbf24"/>
+                                <circle cx="135" cy="105" r="3" fill="#0a0a0a"/>
+                                <circle cx="165" cy="105" r="3" fill="#0a0a0a"/>
+                                <path d="M130 140 L120 180 L130 200 M170 140 L180 180 L170 200" stroke="url(#heroWolf)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                        <h1 class="text-5xl font-black mb-4 leading-tight">
+                            Bem-vindo ao<br>
+                            <span class="bg-gradient-to-r from-lime-400 via-yellow-400 to-red-500 bg-clip-text text-transparent">
+                                Wolf Studios
+                            </span>
+                        </h1>
+                        <p class="text-xl text-gray-300 mb-8 max-w-xl">
+                            Filmes épicos, séries envolventes e quadrinhos exclusivos. Conteúdo premium criado por Jeff.
+                        </p>
+                        <div class="flex gap-4">
+                            <button onclick="renderPage('filmes')" class="px-8 py-3 bg-white text-black font-bold rounded hover:bg-gray-200 transition flex items-center gap-2">
+                                <i class="fas fa-play"></i>
+                                Explorar Agora
+                            </button>
+                            <button onclick="window.open('https://wa.me/55${WHATSAPP}', '_blank')" class="px-8 py-3 bg-gray-700 bg-opacity-80 text-white font-bold rounded hover:bg-opacity-60 transition flex items-center gap-2">
+                                <i class="fab fa-whatsapp"></i>
+                                Contato
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Content Rows -->
+                ${renderContentRow('Filmes Populares', 'filmes')}
+                ${renderContentRow('Séries em Destaque', 'series')}
+                ${renderContentRow('Trailers & Prévias', 'trailers', false, true)}
+                ${renderContentRow('HQs Exclusivas', 'hqs')}
+                ${renderContentRow('Documentários', 'documentarios')}
+                ${renderContentRow('Loja Wolf Studios', 'loja')}
+            `;
+        }
+        
+        function renderCategory(category) {
+            const titles = {
+                filmes: 'Filmes',
+                series: 'Séries',
+                trailers: 'Trailers & Prévias',
+                hqs: 'Quadrinhos',
+                loja: 'Loja'
+            };
+            
+            const mainContent = document.getElementById('main-content');
+            const isTrailers = category === 'trailers';
+            mainContent.innerHTML = `
+                <div style="margin-top: 100px;">
+                    ${renderContentRow(titles[category], category, true, isTrailers)}
+                </div>
+            `;
+        }
+        
+        function renderContentRow(title, category, fullPage = false, isTrailers = false) {
+            const items = content[category] || [];
+            const emptyCount = Math.max(6 - items.length, 0);
+            
+            return `
+                <section class="content-row">
+                    <div class="row-title">
+                        <span>${title}</span>
+                        ${currentUser && currentUser.isAdmin ? `
+                            <button onclick="openUploadModal('${category}', ${isTrailers})" class="upload-btn">
+                                <i class="fas fa-plus"></i>
+                                Adicionar
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="cards-container">
+                        ${items.map(item => {
+                            const itemTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                            const itemDesc = (item.description || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                            const itemVideoUrl = (item.videoUrl || '').replace(/'/g, "\\'");
+                            
+                            return `
+                            <div class="content-card ${isTrailers ? 'trailer-card' : ''} has-content" 
+                                 style="background-image: url('${item.image}');" 
+                                 ${isTrailers && item.videoUrl ? `onclick="playVideo('${itemVideoUrl}', '${itemTitle}', '${itemDesc}')"` : ''}>
+                                ${isTrailers && item.videoUrl ? '<div class="trailer-play-icon"><i class="fas fa-play"></i></div>' : ''}
+                                <div class="card-overlay">
+                                    <div class="card-title">${item.title}</div>
+                                    <div class="card-info">
+                                        ${isTrailers ? '<span><i class="fas fa-video mr-1"></i>Trailer</span>' : ''}
+                                        ${!isTrailers && item.price > 0 ? `<span>R$ ${item.price.toFixed(2)}</span>` : ''}
+                                        ${!isTrailers && item.price === 0 ? '<span>Grátis</span>' : ''}
+                                    </div>
+                                    <div class="card-actions">
+                                        ${!isTrailers ? `
+                                            <div class="btn-play" onclick="event.stopPropagation(); buyContent('${itemTitle}', ${item.price})">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </div>
+                                            <div class="btn-info" onclick="event.stopPropagation(); showContentInfo('${itemTitle}', '${itemDesc}', ${item.price})">
+                                                <i class="fas fa-info"></i>
+                                            </div>
+                                        ` : ''}
+                                        ${currentUser && currentUser.isAdmin ? `
+                                            <div class="btn-info" onclick="event.stopPropagation(); deleteContent('${category}', ${item.id})" style="border-color: #ef4444; color: #ef4444;">
+                                                <i class="fas fa-trash"></i>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `}).join('')}
+                        
+                        ${Array(emptyCount).fill(0).map(() => `
+                            <div class="content-card ${isTrailers ? 'trailer-card' : ''}">
+                                <div class="empty-card-content">
+                                    <i class="fas fa-${isTrailers ? 'video' : 'film'}"></i>
+                                    <p>Em breve</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+        
+        function openUploadModal(category, isTrailers) {
+            openModal('uploadModal');
+            document.getElementById('uploadCategory').value = category;
+            
+            if (isTrailers) {
+                document.getElementById('videoUrlGroup').style.display = 'block';
+                document.getElementById('uploadVideoUrl').required = true;
+            } else {
+                document.getElementById('videoUrlGroup').style.display = 'none';
+                document.getElementById('uploadVideoUrl').required = false;
+            }
+        }
+        
+        function buyContent(title, price) {
+            const cleanTitle = title.replace(/\\/g, '');
+            const msg = `Olá! Gostaria de comprar: ${cleanTitle} - R$ ${price.toFixed(2)}`;
+            window.open(`https://wa.me/55${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+        
+        function showContentInfo(title, description, price) {
+            const cleanTitle = title.replace(/\\/g, '');
+            const cleanDesc = description.replace(/\\/g, '');
+            alert(`${cleanTitle}\n\n${cleanDesc || 'Sem descrição'}\n\nPreço: R$ ${price.toFixed(2)}`);
+        }
+        
+        function deleteContent(category, id) {
+            if (!confirm('Tem certeza que deseja excluir este conteúdo?')) return;
+            
+            content[category] = content[category].filter(item => item.id !== id);
+            localStorage.setItem('wolfContent', JSON.stringify(content));
+            renderPage(category);
+        }
+        
+        // Video Player Functions
+        function playVideo(url, title, description) {
+            const videoId = extractVideoId(url);
+            const embedUrl = getEmbedUrl(url, videoId);
+            
+            if (!embedUrl) {
+                alert('URL de vídeo inválida!');
+                return;
+            }
+            
+            document.getElementById('videoContainer').innerHTML = `
+                <iframe src="${embedUrl}" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+            `;
+            
+            document.getElementById('videoInfo').innerHTML = `
+                <h3 class="video-title">${title}</h3>
+                <p class="video-description">${description || 'Sem descrição disponível'}</p>
+            `;
+            
+            openModal('videoModal');
+        }
+        
+        function closeVideoModal() {
+            closeModal('videoModal');
+            document.getElementById('videoContainer').innerHTML = '';
+        }
+        
+        function extractVideoId(url) {
+            // YouTube
+            let match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            if (match) return match[1];
+            
+            // Vimeo
+            match = url.match(/vimeo\.com\/(?:.*\/)?(\d+)/);
+            if (match) return match[1];
+            
+            return null;
+        }
+        
+        function getEmbedUrl(url, videoId) {
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            } else if (url.includes('vimeo.com')) {
+                return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+            }
+            return null;
+        }
+        
+        // WhatsApp Link
+        function getWhatsappLink() {
+            return `https://wa.me/55${WHATSAPP}`;
+        }
+    </script>
+</body>
+</html>
