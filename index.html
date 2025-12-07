@@ -964,6 +964,143 @@
         </div>
     </div>
 
+    <!-- Media Upload Modal -->
+    <div class="modal" id="mediaUploadModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('mediaUploadModal')">×</button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold">Upload de Mídia</h2>
+            </div>
+            <div class="modal-body">
+                <form id="mediaUploadForm" onsubmit="handleMediaUpload(event)">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Mídia</label>
+                        <select class="form-select" id="mediaType" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="image">Imagem</option>
+                            <option value="audio">Áudio/Música</option>
+                            <option value="document">Documento/Arquivo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-input" id="mediaTitle" placeholder="Nome do arquivo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descrição (opcional)</label>
+                        <textarea class="form-textarea" id="mediaDescription" placeholder="Descrição do arquivo"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Arquivo</label>
+                        <div class="file-upload-area" id="mediaFileUploadArea">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-lime-400 mb-3"></i>
+                            <p class="text-lg mb-2">Clique ou arraste o arquivo</p>
+                            <p class="text-sm text-gray-500" id="fileTypeHint">Todos os tipos de arquivo</p>
+                            <input type="file" id="mediaUploadFile" style="display: none;">
+                        </div>
+                        <div id="mediaFilePreview" class="mt-4" style="display: none;">
+                            <div id="mediaPreviewContent"></div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-upload mr-2"></i>
+                        Fazer Upload
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('mediaUploadModal')">
+                        Cancelar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Media Viewer Modal -->
+    <div class="modal" id="mediaViewerModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <button class="modal-close" onclick="closeModal('mediaViewerModal')">×</button>
+            <div class="modal-body" id="mediaViewerContent">
+                <!-- Media content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Import/Export Modal -->
+    <div class="modal" id="importExportModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('importExportModal')">×</button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold">Importar/Exportar Dados</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Selecione a Categoria</label>
+                    <select class="form-select" id="importExportCategory">
+                        <option value="all">Todos os Dados</option>
+                        <option value="filmes">Filmes</option>
+                        <option value="series">Séries</option>
+                        <option value="trailers">Trailers</option>
+                        <option value="hqs">HQs</option>
+                        <option value="documentarios">Documentários</option>
+                        <option value="loja">Loja</option>
+                        <option value="media">Biblioteca de Mídias</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px;">
+                    <!-- Export Section -->
+                    <div style="background: #1a1a1a; padding: 25px; border-radius: 12px; border: 1px solid #333;">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-download text-lime-400"></i>
+                            Exportar
+                        </h3>
+                        <p class="text-sm text-gray-400 mb-4">Baixe seus dados em formato JSON</p>
+                        <button onclick="exportData()" class="btn-primary">
+                            <i class="fas fa-file-download mr-2"></i>
+                            Exportar Dados
+                        </button>
+                        <div id="exportInfo" class="mt-3 text-xs text-gray-500"></div>
+                    </div>
+
+                    <!-- Import Section -->
+                    <div style="background: #1a1a1a; padding: 25px; border-radius: 12px; border: 1px solid #333;">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-upload text-yellow-400"></i>
+                            Importar
+                        </h3>
+                        <p class="text-sm text-gray-400 mb-4">Carregue dados de um arquivo JSON</p>
+                        <div class="file-upload-area" id="importFileArea" style="padding: 20px; min-height: auto;">
+                            <i class="fas fa-file-import text-2xl text-yellow-400 mb-2"></i>
+                            <p class="text-sm">Clique ou arraste JSON</p>
+                            <input type="file" id="importFile" accept=".json" style="display: none;">
+                        </div>
+                        <div id="importInfo" class="mt-3 text-xs text-gray-500"></div>
+                    </div>
+                </div>
+
+                <div style="background: #1a2a1a; border: 1px solid #2a4a2a; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                    <h4 class="text-sm font-bold mb-2 flex items-center gap-2">
+                        <i class="fas fa-info-circle text-lime-400"></i>
+                        Informações Importantes
+                    </h4>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li>• Exportar cria um backup completo dos dados selecionados</li>
+                        <li>• Importar substitui os dados existentes na categoria</li>
+                        <li>• Use "Todos os Dados" para backup completo do sistema</li>
+                        <li>• Arquivos grandes podem demorar para processar</li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn-secondary" onclick="closeModal('importExportModal')">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Constants
         const WHATSAPP = "41998984617";
@@ -981,6 +1118,12 @@
             loja: []
         };
         
+        let mediaLibrary = JSON.parse(localStorage.getItem('wolfMediaLibrary')) || {
+            images: [],
+            audios: [],
+            documents: []
+        };
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             updateAuthUI();
@@ -988,6 +1131,8 @@
             setupScrollHeader();
             setupFileUpload();
             setupCategoryToggle();
+            setupMediaUpload();
+            setupImportExport();
         });
         
         // Scroll Header Effect
@@ -1144,11 +1289,15 @@
                             <i class="fas fa-heart"></i>
                             <span>Minha Lista</span>
                         </div>
-                        ${currentUser.isAdmin ? `
+                        ${currentUser && currentUser.isAdmin ? `
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item" onclick="openModal('uploadModal'); toggleUserMenu();">
                             <i class="fas fa-upload"></i>
                             <span>Adicionar Conteúdo</span>
+                        </div>
+                        <div class="dropdown-item" onclick="openImportExportModal(); toggleUserMenu();">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Importar/Exportar</span>
                         </div>
                         ` : ''}
                         <div class="dropdown-divider"></div>
@@ -1266,6 +1415,9 @@
                 case 'hqs':
                 case 'loja':
                     renderCategory(page);
+                    break;
+                case 'midias':
+                    renderMediaLibrary();
                     break;
             }
         }
@@ -1513,6 +1665,337 @@
         // WhatsApp Link
         function getWhatsappLink() {
             return `https://wa.me/55${WHATSAPP}`;
+        }
+        
+        // Media Library Functions
+        function renderMediaLibrary() {
+            const mainContent = document.getElementById('main-content');
+            
+            mainContent.innerHTML = `
+                <div style="margin-top: 100px;">
+                    <div style="padding: 0 60px; margin-bottom: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h1 class="text-4xl font-black text-lime-400">Biblioteca de Mídias</h1>
+                            ${currentUser && currentUser.isAdmin ? `
+                                <button onclick="openModal('mediaUploadModal')" class="upload-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Upload de Mídia
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="media-tabs" id="mediaTabs">
+                        <div class="media-tab active" onclick="switchMediaTab('images')">
+                            <i class="fas fa-image mr-2"></i>Imagens
+                        </div>
+                        <div class="media-tab" onclick="switchMediaTab('audios')">
+                            <i class="fas fa-music mr-2"></i>Áudios
+                        </div>
+                        <div class="media-tab" onclick="switchMediaTab('documents')">
+                            <i class="fas fa-file mr-2"></i>Documentos
+                        </div>
+                    </div>
+                    
+                    <div id="mediaContent">
+                        ${renderMediaGrid('images')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function switchMediaTab(type) {
+            document.querySelectorAll('.media-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.closest('.media-tab').classList.add('active');
+            document.getElementById('mediaContent').innerHTML = renderMediaGrid(type);
+        }
+        
+        function renderMediaGrid(type) {
+            const items = mediaLibrary[type] || [];
+            
+            if (items.length === 0) {
+                return `
+                    <div class="empty-media-state">
+                        <i class="fas fa-${type === 'images' ? 'image' : type === 'audios' ? 'music' : 'file'}"></i>
+                        <h3 class="text-2xl font-bold mb-2">Nenhum ${type === 'images' ? 'imagem' : type === 'audios' ? 'áudio' : 'documento'} ainda</h3>
+                        <p class="text-gray-500">
+                            ${currentUser && currentUser.isAdmin ? 
+                                'Clique no botão "Upload de Mídia" para adicionar arquivos' : 
+                                'Nenhum arquivo disponível no momento'}
+                        </p>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="media-grid">
+                    ${items.map(item => {
+                        const itemTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        const itemDesc = (item.description || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        if (type === 'images') {
+                            return `
+                                <div class="media-item" onclick="viewMedia('${type}', ${item.id})">
+                                    <img src="${item.data}" alt="${item.title}">
+                                    <div class="media-item-overlay">
+                                        <div class="media-item-title">${item.title}</div>
+                                        <div class="media-item-info">${item.size}</div>
+                                        ${currentUser && currentUser.isAdmin ? `
+                                            <div class="media-item-actions">
+                                                <div class="btn-info" onclick="event.stopPropagation(); downloadMedia('${item.data}', '${itemTitle}')" style="width: auto; padding: 0 12px;">
+                                                    <i class="fas fa-download"></i>
+                                                </div>
+                                                <div class="btn-info" onclick="event.stopPropagation(); deleteMedia('${type}', ${item.id})" style="border-color: #ef4444; color: #ef4444; width: auto; padding: 0 12px;">
+                                                    <i class="fas fa-trash"></i>
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        } else if (type === 'audios') {
+                            return `
+                                <div class="media-item audio-item" onclick="viewMedia('${type}', ${item.id})">
+                                    <i class="media-icon fas fa-music"></i>
+                                    <div class="media-item-overlay">
+                                        <div class="media-item-title">${item.title}</div>
+                                        <div class="media-item-info">${item.size}</div>
+                                        ${currentUser && currentUser.isAdmin ? `
+                                            <div class="media-item-actions">
+                                                <div class="btn-info" onclick="event.stopPropagation(); downloadMedia('${item.data}', '${itemTitle}')" style="width: auto; padding: 0 12px;">
+                                                    <i class="fas fa-download"></i>
+                                                </div>
+                                                <div class="btn-info" onclick="event.stopPropagation(); deleteMedia('${type}', ${item.id})" style="border-color: #ef4444; color: #ef4444; width: auto; padding: 0 12px;">
+                                                    <i class="fas fa-trash"></i>
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            return `
+                                <div class="media-item document-item" onclick="viewMedia('${type}', ${item.id})">
+                                    <i class="media-icon fas fa-file-alt"></i>
+                                    <div class="media-item-overlay">
+                                        <div class="media-item-title">${item.title}</div>
+                                        <div class="media-item-info">${item.size}</div>
+                                        ${currentUser && currentUser.isAdmin ? `
+                                            <div class="media-item-actions">
+                                                <div class="btn-info" onclick="event.stopPropagation(); downloadMedia('${item.data}', '${itemTitle}')" style="width: auto; padding: 0 12px;">
+                                                    <i class="fas fa-download"></i>
+                                                </div>
+                                                <div class="btn-info" onclick="event.stopPropagation(); deleteMedia('${type}', ${item.id})" style="border-color: #ef4444; color: #ef4444; width: auto; padding: 0 12px;">
+                                                    <i class="fas fa-trash"></i>
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }).join('')}
+                </div>
+            `;
+        }
+        
+        function setupMediaUpload() {
+            const mediaTypeSelect = document.getElementById('mediaType');
+            const fileInput = document.getElementById('mediaUploadFile');
+            const uploadArea = document.getElementById('mediaFileUploadArea');
+            const fileTypeHint = document.getElementById('fileTypeHint');
+            
+            mediaTypeSelect.addEventListener('change', (e) => {
+                const type = e.target.value;
+                if (type === 'image') {
+                    fileInput.accept = 'image/*';
+                    fileTypeHint.textContent = 'PNG, JPG, GIF, WEBP';
+                } else if (type === 'audio') {
+                    fileInput.accept = 'audio/*';
+                    fileTypeHint.textContent = 'MP3, WAV, OGG, M4A';
+                } else if (type === 'document') {
+                    fileInput.accept = '.pdf,.doc,.docx,.txt,.zip,.rar';
+                    fileTypeHint.textContent = 'PDF, DOC, TXT, ZIP, RAR';
+                }
+            });
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) handleMediaFileSelect(file);
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files[0]) handleMediaFileSelect(e.target.files[0]);
+            });
+        }
+        
+        function handleMediaFileSelect(file) {
+            const mediaType = document.getElementById('mediaType').value;
+            const preview = document.getElementById('mediaFilePreview');
+            const previewContent = document.getElementById('mediaPreviewContent');
+            
+            if (!mediaType) {
+                alert('Por favor, selecione o tipo de mídia primeiro!');
+                return;
+            }
+            
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            if (file.size > maxSize) {
+                alert('Arquivo muito grande! Tamanho máximo: 10MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.style.display = 'block';
+                
+                if (mediaType === 'image') {
+                    previewContent.innerHTML = `
+                        <img src="${e.target.result}" style="max-width: 100%; border-radius: 8px;">
+                        <p class="text-sm text-gray-500 mt-2">${file.name} (${formatFileSize(file.size)})</p>
+                    `;
+                } else if (mediaType === 'audio') {
+                    previewContent.innerHTML = `
+                        <audio controls style="width: 100%;">
+                            <source src="${e.target.result}">
+                        </audio>
+                        <p class="text-sm text-gray-500 mt-2">${file.name} (${formatFileSize(file.size)})</p>
+                    `;
+                } else {
+                    previewContent.innerHTML = `
+                        <div style="text-align: center; padding: 20px; background: #1a1a1a; border-radius: 8px;">
+                            <i class="fas fa-file-alt text-4xl text-lime-400 mb-3"></i>
+                            <p class="font-semibold">${file.name}</p>
+                            <p class="text-sm text-gray-500">${formatFileSize(file.size)}</p>
+                        </div>
+                    `;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function handleMediaUpload(e) {
+            e.preventDefault();
+            
+            if (!currentUser || !currentUser.isAdmin) {
+                alert('Apenas administradores podem fazer upload de mídias!');
+                return;
+            }
+            
+            const mediaType = document.getElementById('mediaType').value;
+            const title = document.getElementById('mediaTitle').value;
+            const description = document.getElementById('mediaDescription').value;
+            const file = document.getElementById('mediaUploadFile').files[0];
+            
+            if (!file) {
+                alert('Por favor, selecione um arquivo!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const newMedia = {
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    data: e.target.result,
+                    fileName: file.name,
+                    size: formatFileSize(file.size),
+                    mimeType: file.type,
+                    createdAt: new Date().toISOString()
+                };
+                
+                const typeKey = mediaType + 's';
+                mediaLibrary[typeKey].push(newMedia);
+                localStorage.setItem('wolfMediaLibrary', JSON.stringify(mediaLibrary));
+                
+                alert('Mídia enviada com sucesso!');
+                closeModal('mediaUploadModal');
+                document.getElementById('mediaUploadForm').reset();
+                document.getElementById('mediaFilePreview').style.display = 'none';
+                renderMediaLibrary();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function viewMedia(type, id) {
+            const item = mediaLibrary[type].find(m => m.id === id);
+            if (!item) return;
+            
+            const viewerContent = document.getElementById('mediaViewerContent');
+            
+            if (type === 'images') {
+                viewerContent.innerHTML = `
+                    <img src="${item.data}" style="max-width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                    <h3 class="text-2xl font-bold mb-2">${item.title}</h3>
+                    <p class="text-gray-400 mb-4">${item.description || 'Sem descrição'}</p>
+                    <p class="text-sm text-gray-500">Tamanho: ${item.size}</p>
+                `;
+            } else if (type === 'audios') {
+                viewerContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <i class="fas fa-music text-6xl text-lime-400 mb-6"></i>
+                        <h3 class="text-2xl font-bold mb-4">${item.title}</h3>
+                        <audio controls style="width: 100%; margin-bottom: 20px;">
+                            <source src="${item.data}" type="${item.mimeType}">
+                        </audio>
+                        <p class="text-gray-400 mb-4">${item.description || 'Sem descrição'}</p>
+                        <p class="text-sm text-gray-500">Tamanho: ${item.size}</p>
+                    </div>
+                `;
+            } else {
+                viewerContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <i class="fas fa-file-alt text-6xl text-lime-400 mb-6"></i>
+                        <h3 class="text-2xl font-bold mb-4">${item.title}</h3>
+                        <p class="text-gray-400 mb-4">${item.description || 'Sem descrição'}</p>
+                        <p class="text-sm text-gray-500 mb-6">Arquivo: ${item.fileName} (${item.size})</p>
+                        <button onclick="downloadMedia('${item.data}', '${item.fileName}')" class="btn-primary" style="max-width: 300px; margin: 0 auto;">
+                            <i class="fas fa-download mr-2"></i>
+                            Download
+                        </button>
+                    </div>
+                `;
+            }
+            
+            openModal('mediaViewerModal');
+        }
+        
+        function downloadMedia(data, filename) {
+            const link = document.createElement('a');
+            link.href = data;
+            link.download = filename;
+            link.click();
+        }
+        
+        function deleteMedia(type, id) {
+            if (!confirm('Tem certeza que deseja excluir esta mídia?')) return;
+            
+            mediaLibrary[type] = mediaLibrary[type].filter(item => item.id !== id);
+            localStorage.setItem('wolfMediaLibrary', JSON.stringify(mediaLibrary));
+            renderMediaLibrary();
+            switchMediaTab(type);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
         }
     </script>
 </body>
