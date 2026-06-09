@@ -1803,6 +1803,41 @@
     "id": "OUTRO_ID_AQUI",
     "titulo": "Nome do Vídeo 2",
     "descricao": "Outro vídeo do canal."
+  }[
+  {
+    "id": "jNQXAC9IVRw",
+    "titulo": "Nome do Vídeo 1",
+    "descricao": "Descrição rápida do conteúdo."
+  },
+  {
+    "id": "OUTRO_ID_AQUI",
+    "titulo": "Nome do Vídeo 2",
+    "descricao": "Outro vídeo do canal."
   }
 ]
+]<div class="cards-container" id="containerVideos">
+    </div>
+}// Função que lê o JSON e monta os cards
+async function carregarVideos() {
+    try {
+        const resposta = await fetch('videos.json');
+        const listaVideos = await resposta.json();
+        const container = document.getElementById('containerVideos');
+        
+        container.innerHTML = listaVideos.map(video => `
+            <div class="content-card has-content" style="background-image: url('https://img.youtube.com/vi/${video.id}/hqdefault.jpg')">
+                <div class="card-overlay">
+                    <p class="card-title">${video.titulo}</p>
+                    <button class="btn-play" onclick="abrirVideo('${video.id}')">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    } catch (e) {
+        console.log("Erro ao carregar vídeos:", e);
+    }
 }
+
+// Chama a função ao abrir o site
+carregarVideos();
