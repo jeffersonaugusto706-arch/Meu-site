@@ -1,78 +1,68 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Wolf Studios Produções | Streaming</title>
+    <title>Wolf Studios Produções</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #141414; color: white; font-family: sans-serif; }
-        .logo-text { color: #a3e635; font-weight: 800; letter-spacing: 2px; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 40px; }
-        .card { background: #202020; border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid #333; }
-        .card:hover { transform: scale(1.03); border-color: #a3e635; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; }
+        .modal { display: none; }
         .modal.active { display: flex; }
     </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white p-10">
 
-    <header class="p-8 border-b border-zinc-800">
-        <h1 class="text-4xl logo-text">WOLF STUDIOS PRODUÇÕES</h1>
-    </header>
+    <h1 class="text-3xl font-bold mb-8">Wolf Studios Produções</h1>
 
-    <main class="grid-container" id="content-grid"></main>
+    <!-- Grade de Conteúdo -->
+    <div id="grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
 
-    <div id="modal" class="modal" onclick="fecharMidia()">
-        <div class="w-11/12 max-w-4xl" onclick="event.stopPropagation()">
-            <div id="modal-content" class="aspect-video bg-black flex items-center justify-center rounded-lg"></div>
+    <!-- Modal (Onde abre o vídeo ou a HQ) -->
+    <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-90 items-center justify-center p-4">
+        <div class="relative w-full h-[90vh] max-w-[1000px]">
+            <button onclick="fecharModal()" class="absolute -top-10 right-0 text-white font-bold">FECHAR (X)</button>
+            <div id="modal-content" class="w-full h-full"></div>
         </div>
     </div>
 
     <script>
-    // --- BASE DE DADOS ---
-const biblioteca = [
-    { tipo: 'video', id: 'lFqCWO2hfYc', titulo: 'Doctor Who: The Death Trainer' },
-    { tipo: 'hq', 
-    id: 'https://docs.google.com/viewer?url=https://drive.google.com/uc?export=view&id=1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz&embedded=true', 
-    titulo: 'Doctor Who: Extinção Skorm'' }
+        const biblioteca = [
+            { tipo: 'video', id: 'lFqCWO2hfYc', titulo: 'Doctor Who: The Death Trainer' },
+            { 
+                tipo: 'hq', 
+                id: 'https://docs.google.com/viewer?url=https://drive.google.com/uc?export=view&id=1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz&embedded=true', 
+                titulo: 'Doctor Who: Extinção Skorm' 
+            }
+        ];
 
-     
+        function renderizar() {
+            const grid = document.getElementById('grid');
+            biblioteca.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-800 p-4 rounded cursor-pointer hover:bg-gray-700";
+                card.innerHTML = `<h2 class="text-xl">${item.titulo}</h2><p class="text-sm text-gray-400">${item.tipo.toUpperCase()}</p>`;
+                card.onclick = () => abrirMidia(item);
+                grid.appendChild(card);
+            });
+        }
 
-
- const grid = document.getElementById('content-grid');
-
-        // --- RENDERIZAÇÃO ---
-        biblioteca.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <img src="${item.tipo === 'video' ? 'https://img.youtube.com/vi/'+item.id+'/hqdefault.jpg' : 'https://via.placeholder.com/300x170?text=HQ+Wolf+Studios'}" class="w-full">
-                <div class="p-4">
-                    <h3 class="font-bold">${item.titulo}</h3>
-                    <span class="text-xs text-lime-400">${item.tipo.toUpperCase()}</span>
-                </div>
-            `;
-            card.onclick = () => abrirMidia(item);
-            grid.appendChild(card);
-        });
-
-        // --- LÓGICA DE MÍDIA ---
         function abrirMidia(item) {
             const modal = document.getElementById('modal');
             const content = document.getElementById('modal-content');
+            modal.classList.add('active');
             
             if(item.tipo === 'video') {
-                content.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${item.id}?autoplay=1" allowfullscreen></iframe>`;
+                content.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${item.id}" allowfullscreen></iframe>`;
             } else {
-                content.innerHTML = `<iframe class="w-full h-full" src="${item.id}"></iframe>`;
+                content.innerHTML = `<iframe class="w-full h-full" src="${item.id}" frameborder="0"></iframe>`;
             }
-            modal.classList.add('active');
         }
 
-        function fecharMidia() {
+        function fecharModal() {
             document.getElementById('modal').classList.remove('active');
             document.getElementById('modal-content').innerHTML = '';
         }
+
+        renderizar();
     </script>
 </body>
 </html>
