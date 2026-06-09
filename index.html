@@ -2,106 +2,74 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios | Streaming Premium</title>
+    <title>Wolf Studios Produções | Streaming</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #141414; color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
-        
-        /* Container Principal */
-        .content-row { padding: 40px 60px; }
-        .row-title { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
-        
-        /* Grid de Cards */
-        .cards-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        
-        /* Estilo do Card */
-        .content-card { 
-            aspect-ratio: 16/9; 
-            background: #2a2a2a; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            overflow: hidden; 
-            position: relative; 
-            transition: transform 0.3s;
-            background-size: cover;
-            background-position: center;
-        }
-        .content-card:hover { transform: scale(1.05); }
-        .card-overlay { 
-            position: absolute; inset: 0; 
-            background: rgba(0,0,0,0.6); 
-            display: flex; flex-direction: column; justify-content: flex-end; 
-            padding: 20px; opacity: 0; transition: opacity 0.3s;
-        }
-        .content-card:hover .card-overlay { opacity: 1; }
-        
-        /* Modal de Video */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        body { background: #141414; color: white; font-family: sans-serif; }
+        .logo-text { color: #a3e635; font-weight: 800; letter-spacing: 2px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 40px; }
+        .card { background: #202020; border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid #333; }
+        .card:hover { transform: scale(1.03); border-color: #a3e635; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-content { width: 90%; max-width: 900px; position: relative; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-wrapper iframe { position: absolute; top:0; left:0; width: 100%; height: 100%; border: none; }
-        .close-modal { position: absolute; top: -40px; right: 0; cursor: pointer; font-size: 24px; }
     </style>
 </head>
 <body>
 
-    <header class="p-8"><h1 class="text-3xl font-bold text-lime-400">WOLF STUDIOS</h1></header>
+    <header class="p-8 border-b border-zinc-800">
+        <h1 class="text-4xl logo-text">WOLF STUDIOS PRODUÇÕES</h1>
+    </header>
 
-    <main class="content-row">
-        <h2 class="row-title">Conteúdo Disponível</h2>
-        <div class="cards-container" id="lista-videos">
-            </div>
-    </main>
+    <main class="grid-container" id="content-grid"></main>
 
-    <div id="modal-video" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="fecharVideo()"><i class="fas fa-times"></i></span>
-            <div class="video-wrapper" id="container-iframe"></div>
+    <div id="modal" class="modal" onclick="fecharMidia()">
+        <div class="w-11/12 max-w-4xl" onclick="event.stopPropagation()">
+            <div id="modal-content" class="aspect-video bg-black flex items-center justify-center rounded-lg"></div>
         </div>
     </div>
 
     <script>
-        // --- PAINEL DE CONTROLE: Adicione seus vídeos aqui ---
-      // --- PAINEL DE CONTROLE: Seus vídeos estão aqui ---
-// --- PAINEL DE CONTROLE: Adicione seus vídeos aqui ---
-const meusVideos = [
-    { id: "lFqCWO2hfYc", titulo: "Doctor Who: The Death Trainer (Minisode)" },
-    { id: "jNQXAC9IVRw", titulo: "Apresentação Wolf Studios" }
-];
+        // --- BASE DE DADOS ---
+        const biblioteca = [
+            { tipo: 'video', id: 'lFqCWO2hfYc', titulo: 'Doctor Who: The Death Trainer' },
+            { tipo: 'video', id: 'jNQXAC9IVRw', titulo: 'Apresentação Wolf Studios' },
+            { tipo: 'hq', id: 'URL_DA_SUA_HQ', titulo: 'HQ: Edição #01' }
         ];
 
-        // --- LÓGICA DE RENDERIZAÇÃO ---
-        const container = document.getElementById('lista-videos');
+        const grid = document.getElementById('content-grid');
 
-        meusVideos.forEach(video => {
+        // --- RENDERIZAÇÃO ---
+        biblioteca.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'content-card';
-            card.style.backgroundImage = `url('https://img.youtube.com/vi/${video.id}/hqdefault.jpg')`;
+            card.className = 'card';
             card.innerHTML = `
-                <div class="card-overlay">
-                    <p class="text-lg font-bold">${video.titulo}</p>
-                    <button class="mt-2 text-lime-400"><i class="fas fa-play-circle fa-2x"></i></button>
+                <img src="${item.tipo === 'video' ? 'https://img.youtube.com/vi/'+item.id+'/hqdefault.jpg' : 'https://via.placeholder.com/300x170?text=HQ+Wolf+Studios'}" class="w-full">
+                <div class="p-4">
+                    <h3 class="font-bold">${item.titulo}</h3>
+                    <span class="text-xs text-lime-400">${item.tipo.toUpperCase()}</span>
                 </div>
             `;
-            card.onclick = () => abrirVideo(video.id);
-            container.appendChild(card);
+            card.onclick = () => abrirMidia(item);
+            grid.appendChild(card);
         });
 
-        function abrirVideo(id) {
-            document.getElementById('container-iframe').innerHTML = 
-                `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" allowfullscreen></iframe>`;
-            document.getElementById('modal-video').classList.add('active');
+        // --- LÓGICA DE MÍDIA ---
+        function abrirMidia(item) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modal-content');
+            
+            if(item.tipo === 'video') {
+                content.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${item.id}?autoplay=1" allowfullscreen></iframe>`;
+            } else {
+                content.innerHTML = `<iframe class="w-full h-full" src="${item.id}"></iframe>`;
+            }
+            modal.classList.add('active');
         }
 
-        function fecharVideo() {
-            document.getElementById('container-iframe').innerHTML = '';
-            document.getElementById('modal-video').classList.remove('active');
+        function fecharMidia() {
+            document.getElementById('modal').classList.remove('active');
+            document.getElementById('modal-content').innerHTML = '';
         }
     </script>
 </body>
-</html>// Exemplo de chamada direta para o seu site
-renderizarMidia('video', 'lFqCWO2hfYc', 'Doctor Who: The Death Trainer', 'Minisode');<div class="content-card" onclick="renderizarMidia('video', 'lFqCWO2hfYc', 'Doctor Who: The Death Trainer', 'Minisode')">
-    </div>
+</html>
