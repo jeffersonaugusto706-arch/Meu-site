@@ -1,68 +1,90 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wolf Studios Produções</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .modal { display: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #e5e5e5; }
+        .logo-silver { color: #c0c0c0; text-shadow: 0 0 10px rgba(192, 192, 192, 0.3); }
+        .active-nav-link { color: #ffffff !important; border-bottom: 2px solid #c0c0c0; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
         .modal.active { display: flex; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
     </style>
 </head>
-<body class="bg-gray-900 text-white p-10">
+<body>
 
-    <h1 class="text-3xl font-bold mb-8">Wolf Studios Produções</h1>
-
-    <!-- Grade de Conteúdo -->
-    <div id="grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-
-    <!-- Modal (Onde abre o vídeo ou a HQ) -->
-    <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-90 items-center justify-center p-4">
-        <div class="relative w-full h-[90vh] max-w-[1000px]">
-            <button onclick="fecharModal()" class="absolute -top-10 right-0 text-white font-bold">FECHAR (X)</button>
-            <div id="modal-content" class="w-full h-full"></div>
+    <header class="bg-black border-b border-gray-800 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-tighter logo-silver">Wolf Studios Produções</h1>
+            <div id="auth-buttons" class="flex gap-3">
+                <button onclick="openModal('login')" class="px-5 py-2 border border-gray-700 hover:bg-gray-800 rounded transition">Login</button>
+            </div>
         </div>
-    </div>
+    </header>
+
+    <nav class="bg-black border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 flex justify-center gap-8 py-4">
+            <a href="#" onclick="renderPage('home', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="home">Home</a>
+            <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="videos">Vídeos</a>
+            <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="hqs">Quadrinhos</a>
+            <a href="#" onclick="renderPage('contato', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="contato">Contato</a>
+        </div>
+    </nav>
+
+    <main id="content-area" class="max-w-7xl mx-auto px-4 py-12"></main>
 
     <script>
-        const biblioteca = [
-            { tipo: 'video', id: 'lFqCWO2hfYc', titulo: 'Doctor Who: The Death Trainer' },
-            { 
-                tipo: 'hq', 
-                id: 'https://docs.google.com/viewer?url=https://drive.google.com/uc?export=view&id=1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz&embedded=true', 
-                titulo: 'Doctor Who: Extinção Skorm' 
-            }
+        const WHATSAPP_NUMBER = "41998984617";
+        
+        // --- MOTOR DE VÍDEO E PÁGINAS ---
+        const videos = [
+            { titulo: "Trailer: Extinção Skorm", id: "lFqCWO2hfYc" }, // Exemplo
+            { titulo: "Bastidores", id: "dQw4w9WgXcQ" }
         ];
 
-        function renderizar() {
-            const grid = document.getElementById('grid');
-            biblioteca.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-gray-800 p-4 rounded cursor-pointer hover:bg-gray-700";
-                card.innerHTML = `<h2 class="text-xl">${item.titulo}</h2><p class="text-sm text-gray-400">${item.tipo.toUpperCase()}</p>`;
-                card.onclick = () => abrirMidia(item);
-                grid.appendChild(card);
-            });
-        }
+        const pages = {
+            home: `
+                <div class="text-center py-20">
+                    <h2 class="text-5xl font-bold mb-6">Criatividade sem Limites</h2>
+                    <p class="text-gray-400 text-xl max-w-2xl mx-auto">Produções independentes de alta qualidade. Filmes, HQs e muito mais.</p>
+                </div>
+            `,
+            videos: `
+                <h2 class="text-3xl font-bold mb-8">Nossos Vídeos</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="video-grid"></div>
+            `,
+            hqs: `<h2 class="text-3xl font-bold">Quadrinhos</h2><p class="text-gray-400">Em breve novos lançamentos.</p>`,
+            contato: `<h2 class="text-3xl font-bold">Contato</h2><p class="text-gray-400">WhatsApp: ${WHATSAPP_NUMBER}</p>`
+        };
 
-        function abrirMidia(item) {
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modal-content');
-            modal.classList.add('active');
+        function renderPage(pageId, clickedElement) {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = pages[pageId];
             
-            if(item.tipo === 'video') {
-                content.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${item.id}" allowfullscreen></iframe>`;
-            } else {
-                content.innerHTML = `<iframe class="w-full h-full" src="${item.id}" frameborder="0"></iframe>`;
+            // Renderizar vídeos se for a página de vídeos
+            if(pageId === 'videos') {
+                const grid = document.getElementById('video-grid');
+                videos.forEach(v => {
+                    grid.innerHTML += `
+                        <div class="bg-gray-900 p-4 rounded-lg">
+                            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen></iframe></div>
+                            <h3 class="mt-4 font-bold">${v.titulo}</h3>
+                        </div>
+                    `;
+                });
             }
+
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-nav-link'));
+            if(clickedElement) clickedElement.classList.add('active-nav-link');
         }
 
-        function fecharModal() {
-            document.getElementById('modal').classList.remove('active');
-            document.getElementById('modal-content').innerHTML = '';
-        }
-
-        renderizar();
+        // Iniciar
+        renderPage('home');
     </script>
 </body>
 </html>
