@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -345,51 +345,53 @@
     </nav>
 
     <main id="content-area"></main>
-<!-- ── SEÇÃO: BIBLIOTECA DIGITAL ── -->
+<!-- ── SEÇÃO: BIBLIOTECA DIGITAL (MODO WEBTOON) ── -->
 <div class="section-header">
     <h2 class="section-title">Biblioteca Digital</h2>
-    <span class="section-count">// LEITURA ONLINE</span>
+    <span class="section-count">// LEITURA VERTICAL</span>
 </div>
 
-<!-- ── ESTRUTURA DA BIBLIOTECA ── -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
     
-    <!-- LADO ESQUERDO: CAPA E DETALHES -->
-    <div class="video-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; padding: 1.5rem;">
-        <div class="relative overflow-hidden mb-4" style="padding-bottom: 140%; height: 0;">
-            <img src="capas/doctor-who-extincao.jpg" alt="Capa Doctor Who" class="absolute top-0 left-0 w-full h-full object-cover">
-        </div>
-
+    <!-- LADO ESQUERDO: INFORMAÇÕES DA HQ (Fica fixo na tela) -->
+    <div class="video-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; padding: 1.5rem; position: sticky; top: 80px;">
         <div class="video-tag" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red-wolf); margin-bottom: 0.4rem;">WOLF STUDIOS FANFIC</div>
         <h3 class="video-title" style="font-size: 1.4rem; font-weight: 600; color: #fff; line-height: 1.3; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em;">DOCTOR WHO: A EXTINÇÃO DO TEMPO</h3>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5; font-family: 'Inter', sans-serif; margin-bottom: 1.5rem;">Acompanhe a ira do Senhor do Tempo em uma aventura espacial desenhada totalmente à mão!</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5; font-family: 'Inter', sans-serif; margin-bottom: 1.5rem;">Use a barra de rolagem ao lado para acompanhar a ira do Senhor do Tempo em uma aventura espacial desenhada totalmente à mão!</p>
         
-        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; margin-bottom: 1rem;">
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; margin-bottom: 1.5rem;">
             STATUS: <span style="color: #28a745;">GRÁTIS (COMPLETO)</span>
         </div>
 
-        <!-- Botão para Baixar Direto -->
+        <!-- Botão alternativo de Download via Google Drive (Deixei configurado com seu link) -->
         <a href="https://google.com" style="display: block; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.6rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
-            📥 Baixar PDF Original
+            📥 Baixar PDF Completo
         </a>
     </div>
 
-    <!-- LADO DIREITO: O LEITOR TRAVADO NO SITE -->
-    <div class="lg:col-span-2 video-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
-        <div class="hq-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem;">
-            <div class="hq-dot"></div>
-            <div class="hq-label">PAINEL DE LEITURA INTERATIVA</div>
-        </div>
+    <!-- LADO DIREITO: AS 18 PÁGINAS DA HQ EM HTML (Rolagem Contínua) -->
+    <div class="lg:col-span-2 flex flex-col items-center gap-0" style="max-height: 85vh; overflow-y: auto; background: #000; padding: 15px; border: 1px solid var(--border); border-radius: 4px; box-shadow: inset 0px 4px 20px rgba(0,0,0,0.8);">
         
-        <!-- O segredo está no link com "&embedded=true" e no atributo sandbox que impede a saída do site -->
-        <div style="position: relative; padding-bottom: 130%; height: 0; overflow: hidden;">
-            <iframe 
-                src="https://google.com" 
-                class="absolute top-0 left-0 w-full h-full" 
-                style="border: none;" 
-                sandbox="allow-scripts allow-same-origin allow-forms">
-            </iframe>
-        </div>
+        <!-- Todas as 18 páginas mapeadas e organizadas -->
+        <img src="paginas/pagina01.jpg" alt="Capa - A Extinção do Tempo" style="width: 100%; height: auto; display: block; margin-bottom: 4px; border-bottom: 1px solid #222;">
+        <img src="paginas/pagina02.jpg" alt="Página 2" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina03.jpg" alt="Página 3" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina04.jpg" alt="Página 4" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina05.jpg" alt="Página 5" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina06.jpg" alt="Página 6" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina07.jpg" alt="Página 7" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina08.jpg" alt="Página 8" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina09.jpg" alt="Página 9" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina10.jpg" alt="Página 10" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina11.jpg" alt="Página 11" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina12.jpg" alt="Página 12" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina13.jpg" alt="Página 13" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina14.jpg" alt="Página 14" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina15.jpg" alt="Página 15" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina16.jpg" alt="Página 16" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina17.jpg" alt="Página 17" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+        <img src="paginas/pagina18.jpg" alt="Página 18 - Créditos" style="width: 100%; height: auto; display: block; margin-bottom: 4px;">
+
     </div>
 
 </div>
@@ -487,4 +489,5 @@
 </body>
 </html>
         
+      
    
