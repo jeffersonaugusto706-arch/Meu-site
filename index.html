@@ -1,50 +1,81 @@
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wolf Studios Produções</title>
     <style>
-        body { font-family: 'Arial', sans-serif; margin: 0; background: #111; color: #fff; }
-        header { padding: 20px; text-align: center; background: #000; }
-        .logo { max-width: 200px; }
-        nav { background: #222; padding: 10px; text-align: center; }
-        nav a { color: #fff; margin: 0 15px; text-decoration: none; font-weight: bold; }
-        .hero { height: 400px; background: url('caminho_da_sua_foto_de_capa.jpg') center/cover; }
-        .container { padding: 20px; max-width: 1000px; margin: auto; }
-        .video-box { margin-bottom: 30px; }
+        /* Reset e Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #e0e0e0; line-height: 1.6; }
+        
+        /* Cabeçalho e Logo */
+        header { padding: 20px; text-align: center; background: #000; border-bottom: 2px solid #333; }
+        .logo { width: 150px; }
+        
+        /* Navegação */
+        nav { display: flex; justify-content: center; gap: 20px; padding: 15px; background: #111; position: sticky; top: 0; z-index: 1000; }
+        nav a { color: #aaa; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        nav a:hover { color: #fff; }
+
+        /* Capa (Banner) */
+        .banner { width: 100%; height: 60vh; background: url('SUA_IMAGEM_CAPA.jpg') center/cover; display: flex; align-items: center; justify-content: center; }
+        
+        /* Seções */
+        section { padding: 50px 20px; max-width: 1000px; margin: auto; }
+        h2 { border-left: 4px solid #b8860b; padding-left: 10px; margin-bottom: 30px; text-transform: uppercase; }
+
+        /* Grade de Vídeos (Youtube) */
+        .grid-video { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .video-item { background: #1a1a1a; padding: 10px; border-radius: 8px; }
+
+        /* Leitor de HQ (Simulado) */
+        .hq-container { display: flex; gap: 20px; overflow-x: auto; padding: 20px; background: #050505; }
+        .hq-card { min-width: 200px; cursor: pointer; transition: 0.3s; }
+        .hq-card:hover { transform: scale(1.05); }
+
+        footer { text-align: center; padding: 40px; font-size: 0.8em; color: #555; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="logo_wolf_studios.png" class="logo" alt="Wolf Studios">
-</header>
+    <header>
+        <img src="SEU_LOGO.png" alt="Wolf Studios" class="logo">
+    </header>
 
-<nav>
-    <a href="#lar">Lar</a>
-    <a href="#filmes">Filmes</a>
-    <a href="#fanfilms">Fanfilms</a>
-    <a href="#hqs">HQs</a>
-</nav>
+    <nav>
+        <a href="#inicio">Início</a>
+        <a href="#filmes">Filmes</a>
+        <a href="#fanfilms">Fanfilms</a>
+        <a href="#hqs">HQs</a>
+    </nav>
 
-<section id="lar" class="hero"></section>
+    <div id="inicio" class="banner"></div>
 
-<div class="container">
     <section id="filmes">
-        <h2>Filmes</h2>
-        <div class="video-box">
-            <iframe width="100%" height="500" src="https://www.youtube.com/embed/SEU_ID_DO_VIDEO" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <h2>Filmes e Fanfilms</h2>
+        <div class="grid-video">
+            <div class="video-item">
+                <iframe width="100%" height="200" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+                <p>Título do Filme</p>
+            </div>
+            </div>
     </section>
 
     <section id="hqs">
-        <h2>Leitura de HQs</h2>
-        <p>Clique abaixo para abrir nossa biblioteca de quadrinhos:</p>
-        <a href="sua_hq.pdf" target="_blank" style="color: #ffcc00;">Abrir HQ em tela cheia</a>
+        <h2>Biblioteca de HQs</h2>
+        <p>Clique em uma capa para começar a ler:</p>
+        <div class="hq-container">
+            <div class="hq-card" onclick="alert('Abrir leitor de PDF')">
+                <img src="capa_hq1.jpg" width="200" alt="HQ">
+                <p>Volume 01</p>
+            </div>
+        </div>
     </section>
-</div>
+
+    <footer>
+        &copy; 2026 Wolf Studios Produções. Todos os direitos reservados.
+    </footer>
 
 </body>
 </html>
-      
-   
