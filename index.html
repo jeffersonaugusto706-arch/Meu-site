@@ -345,54 +345,55 @@
     </nav>
 
     <main id="content-area"></main>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <!-- Seus scripts, fontes e estilos CSS atuais ficam aqui... -->
-</head>
-<body>
+<!-- ── SEÇÃO: BIBLIOTECA DIGITAL ── -->
+<div class="section-header">
+    <h2 class="section-title">Biblioteca Digital</h2>
+    <span class="section-count">// LANÇAMENTOS</span>
+</div>
 
-    <!-- Seu HEADER (Logo) atual fica aqui -->
-    <header> ... </header>
+<!-- ── GRADE DE PRODUTOS/HQS ── -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-    <!-- Seu NAV (Links de Navegação) atual fica aqui -->
-    <nav> ... </nav>
-
-    <!-- ── INÍCIO DA ÁREA DE CONTEÚDO PRINCIPAL ── -->
-    <main id="content-area">
-
-        <!-- 1. O seu HERO (Banner Principal) atual fica aqui -->
-        <div class="hero"> ... </div>
-
-        <!-- 2. A sua GRADE DE VÍDEOS atual fica aqui -->
-        <div class="section-header"> ... </div>
-        <div class="video-grid"> ... </div>
-
-        <!-- 3. O seu DECODIFICADOR / VISUALIZADOR DE PDF atual fica aqui -->
-        <div class="hq-card"> ... </div>
-
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <!--  COLE O NOVO CÓDIGO DA BIBLIOTECA EXATAMENTE AQUI!      -->
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <div class="section-header">
-            <h2 class="section-title">Biblioteca Digital</h2>
-            <span class="section-count">// LANÇAMENTOS</span>
+    <!-- CARTÃO DA HQ: DOCTOR WHO ── -->
+    <div class="video-card flex flex-col justify-between" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
+        
+        <!-- Área da Capa da HQ -->
+        <div class="relative overflow-hidden" style="padding-bottom: 140%; height: 0;">
+            <!-- DICA: Suba a foto da sua capa no GitHub e coloque o caminho dela aqui -->
+            <img src="capas/doctor-who-extincao.jpg" alt="Capa Doctor Who: A Extinção do Tempo" class="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Cartão da HQ com a capa e os botões... -->
-            <div class="video-card flex flex-col justify-between" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
-                <!-- ... resto do código fornecido no passo anterior ... -->
+        <!-- Informações da HQ -->
+        <div class="video-info flex-grow flex flex-col justify-between" style="padding: 1.25rem;">
+            <div>
+                <div class="video-tag" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red-wolf); margin-bottom: 0.4rem;">WOLF STUDIOS FANFIC</div>
+                <h3 class="video-title" style="font-size: 1.2rem; font-weight: 600; color: #fff; line-height: 1.3; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em;">DOCTOR WHO: A EXTINÇÃO DO TEMPO</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5; font-family: 'Inter', sans-serif;">Acompanhe a ira do Senhor do Tempo em uma aventura espacial desenhada totalmente à mão! Enfrente os perigos cósmicos e testemunhe o nascimento de um novo Doutor.</p>
+            </div>
+
+            <!-- Preço e Botões de Ação -->
+            <div class="mt-5">
+                <div style="font-size: 1.2rem; font-weight: 700; color: #fff; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+                    VALOR: <span style="color: var(--red-wolf);">R$ 14,90</span> <!-- Altere o preço se quiser -->
+                </div>
+                
+                <div class="flex flex-col gap-2">
+                    <!-- O link do seu decodificador abrindo o PDF da sua prévia (ex: páginas 1 a 4) -->
+                    <a href="seu-visualizador-atual.html?file=previa-doctor-who.pdf" style="display: block; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.6rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+                        📖 Ler Prévia Grátis
+                    </a>
+                    
+                    <!-- Seu link de vendas da Kiwify/Hotmart onde o cliente compra e baixa o PDF completo -->
+                    <a href="SEU_LINK_DE_PAGAMENTO_AQUI" target="_blank" style="display: block; text-align: center; background: var(--red-wolf); color: #fff; padding: 0.6rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: background 0.2s;" onmouseover="this.style.background='#ff2a2a'" onmouseout="this.style.background='var(--red-wolf)'">
+                        💰 Comprar Edição Completa
+                    </a>
+                </div>
             </div>
         </div>
-        <!-- ═══════════════════════════════════════════════════════ -->
+    </div>
+    <!-- FIM DO CARTÃO DA HQ ── -->
 
-    </main>
-    <!-- ── FIM DA ÁREA DE CONTEÚDO PRINCIPAL ── -->
-
-    <!-- Seus scripts do final da página e rodapé (se houver) -->
-</body>
-</html>
+</div>
 
     <footer>
         <span>© 2025 Wolf Studios Produções — Todos os direitos reservados</span>
@@ -486,5 +487,7 @@
     </script>
 </body>
 </html>
+        
+   
         
     
