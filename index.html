@@ -2,80 +2,55 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios Produções</title>
+    <title>Wolf Studios Produções | Portal de Conteúdo</title>
     <style>
-        /* Reset e Base */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #e0e0e0; line-height: 1.6; }
+        :root { --cor-primaria: #b8860b; --fundo: #0d0d0d; --card: #1a1a1a; }
+        body { font-family: 'Roboto', sans-serif; background: var(--fundo); color: #fff; margin: 0; }
         
-        /* Cabeçalho e Logo */
-        header { padding: 20px; text-align: center; background: #000; border-bottom: 2px solid #333; }
-        .logo { width: 150px; }
+        /* Cabeçalho Estilo Portal */
+        header { background: #000; padding: 15px; border-bottom: 3px solid var(--cor-primaria); display: flex; align-items: center; justify-content: space-between; }
+        .logo { height: 60px; }
         
-        /* Navegação */
-        nav { display: flex; justify-content: center; gap: 20px; padding: 15px; background: #111; position: sticky; top: 0; z-index: 1000; }
-        nav a { color: #aaa; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        nav a:hover { color: #fff; }
+        /* Menu de Categorias */
+        nav { background: #222; padding: 10px; display: flex; justify-content: center; gap: 20px; }
+        nav a { color: #fff; text-decoration: none; font-weight: bold; padding: 5px 15px; border-radius: 4px; }
+        nav a:hover { background: var(--cor-primaria); }
 
-        /* Capa (Banner) */
-        .banner { width: 100%; height: 60vh; background: url('SUA_IMAGEM_CAPA.jpg') center/cover; display: flex; align-items: center; justify-content: center; }
-        
-        /* Seções */
-        section { padding: 50px 20px; max-width: 1000px; margin: auto; }
-        h2 { border-left: 4px solid #b8860b; padding-left: 10px; margin-bottom: 30px; text-transform: uppercase; }
+        /* Grade de Conteúdo (Estilo Rede Canais) */
+        .catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 20px; }
+        .card { background: var(--card); border-radius: 5px; overflow: hidden; transition: 0.3s; }
+        .card:hover { transform: scale(1.03); border: 1px solid var(--cor-primaria); }
+        .card img { width: 100%; height: 300px; object-fit: cover; }
+        .card h3 { padding: 10px; font-size: 1em; text-align: center; }
 
-        /* Grade de Vídeos (Youtube) */
-        .grid-video { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .video-item { background: #1a1a1a; padding: 10px; border-radius: 8px; }
-
-        /* Leitor de HQ (Simulado) */
-        .hq-container { display: flex; gap: 20px; overflow-x: auto; padding: 20px; background: #050505; }
-        .hq-card { min-width: 200px; cursor: pointer; transition: 0.3s; }
-        .hq-card:hover { transform: scale(1.05); }
-
-        footer { text-align: center; padding: 40px; font-size: 0.8em; color: #555; }
+        /* Player Embed */
+        .player-area { max-width: 900px; margin: 20px auto; background: #000; padding: 10px; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="SEU_LOGO.png" alt="Wolf Studios" class="logo">
+        <img src="logo.png" class="logo" alt="Wolf Studios">
+        <input type="text" placeholder="Buscar conteúdo...">
     </header>
 
     <nav>
-        <a href="#inicio">Início</a>
-        <a href="#filmes">Filmes</a>
-        <a href="#fanfilms">Fanfilms</a>
-        <a href="#hqs">HQs</a>
+        <a href="#">Início</a>
+        <a href="#">Filmes</a>
+        <a href="#">Fanfilms</a>
+        <a href="#">HQs</a>
     </nav>
 
-    <div id="inicio" class="banner"></div>
-
-    <section id="filmes">
-        <h2>Filmes e Fanfilms</h2>
-        <div class="grid-video">
-            <div class="video-item">
-                <iframe width="100%" height="200" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
-                <p>Título do Filme</p>
-            </div>
-            </div>
-    </section>
-
-    <section id="hqs">
-        <h2>Biblioteca de HQs</h2>
-        <p>Clique em uma capa para começar a ler:</p>
-        <div class="hq-container">
-            <div class="hq-card" onclick="alert('Abrir leitor de PDF')">
-                <img src="capa_hq1.jpg" width="200" alt="HQ">
-                <p>Volume 01</p>
-            </div>
+    <main class="catalogo">
+        <div class="card">
+            <img src="capa_filme.jpg" alt="Capa">
+            <h3>Nome do Filme</h3>
         </div>
-    </section>
-
-    <footer>
-        &copy; 2026 Wolf Studios Produções. Todos os direitos reservados.
-    </footer>
+        <div class="card">
+            <img src="capa_hq.jpg" alt="Capa HQ">
+            <h3>Nome da HQ</h3>
+        </div>
+    </main>
 
 </body>
 </html>
