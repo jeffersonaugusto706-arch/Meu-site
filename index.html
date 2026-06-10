@@ -3,304 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios Produções - Biblioteca de HQs</title>
+    <title>Wolf Studios Produções</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --silver: #c0c0c0;
-            --silver-dim: #888;
-            --red-wolf: #cc1a1a;
-            --bg: #0a0a0a;
-            --bg-card: #111111;
-            --bg-card-hover: #1a1a1a;
-            --border: rgba(255,255,255,0.07);
-            --text: #e5e5e5;
-            --text-muted: #888;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* ── HEADER ── */
-        header {
-            background: rgba(10,10,10,0.95);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            backdrop-filter: blur(12px);
-        }
-        .header-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo-group { display: flex; align-items: center; gap: 1rem; }
-        .logo-text {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.6rem;
-            letter-spacing: 0.08em;
-            color: #fff;
-            line-height: 1;
-        }
-        .logo-text span { color: var(--red-wolf); }
-
-        /* ── NAV ── */
-        nav {
-            background: rgba(10,10,10,0.9);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            justify-content: center;
-            gap: 0;
-        }
-        .nav-link {
-            display: inline-block;
-            padding: 0.875rem 1.5rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            transition: color 0.2s, border-color 0.2s;
-            border-bottom: 2px solid transparent;
-        }
-        .nav-link:hover { color: #fff; }
-        .active-nav-link { color: #fff !important; border-bottom: 2px solid var(--red-wolf); }
-
-        /* ── MAIN ── */
-        #content-area {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem 5rem;
-        }
-
-        /* ── HOME HERO ── */
-        .hero {
-            text-align: center;
-            padding: 5rem 0 4rem;
-        }
-        .hero-eyebrow {
-            display: inline-block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--red-wolf);
-            margin-bottom: 1.5rem;
-        }
-        .hero-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            line-height: 0.95;
-            letter-spacing: 0.02em;
-            color: #fff;
-            margin-bottom: 1.5rem;
-        }
-        .hero-sub {
-            font-size: 1rem;
-            color: var(--text-muted);
-            max-width: 580px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.7;
-        }
-        .hero-divider {
-            width: 48px;
-            height: 2px;
-            background: var(--red-wolf);
-            margin: 0 auto 3rem;
-        }
-
-        /* ── SECTION HEADER ── */
-        .section-header {
-            margin-bottom: 2.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: baseline;
-            gap: 1rem;
-        }
-        .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.2rem;
-            letter-spacing: 0.05em;
-            color: #fff;
-        }
-        .section-count {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            color: var(--red-wolf);
-            text-transform: uppercase;
-        }
-
-        /* ── HQ CARDS / GRID ── */
-        .hq-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 4rem;
-        }
-        .hq-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-            transition: border-color 0.2s, background 0.2s;
-            cursor: pointer;
-        }
-        .hq-card:hover {
-            border-color: rgba(255,255,255,0.15);
-            background: var(--bg-card-hover);
-        }
-        .hq-cover-wrap {
-            position: relative;
-            padding-bottom: 140%; /* Proporção de capa de quadrinhos */
-            background: #222;
-            overflow: hidden;
-        }
-        .hq-cover-wrap img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .hq-info { padding: 1rem 1.25rem; }
-        .hq-tag {
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--red-wolf);
-            margin-bottom: 0.4rem;
-        }
-        .hq-title { font-size: 0.95rem; font-weight: 600; color: #fff; line-height: 1.4; }
-        .hq-author { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-
-        /* ── HQ VIEWER (LEITOR INTEGRADO) ── */
-        .hq-viewer-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 2rem;
-        }
-        .hq-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .hq-header-left { display: flex; align-items: center; gap: 0.75rem; }
-        .hq-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red-wolf); }
-        .hq-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        
-        /* Área de leitura por scroll vertical (padrão Webtoon/Fliptru) */
-        .hq-reader-pages {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            background: #000;
-        }
-        .hq-page-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* ── COMMUNITY / CONTACT CARDS ── */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-        .contact-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 1.5rem;
-            transition: border-color 0.2s;
-        }
-        .contact-card:hover { border-color: rgba(255,255,255,0.15); }
-        .contact-card-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--red-wolf);
-            margin-bottom: 0.6rem;
-        }
-        .contact-card-value { font-size: 1.05rem; font-weight: 600; color: #fff; }
-        .contact-card-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-        .contact-btn {
-            display: inline-block;
-            margin-top: 0.875rem;
-            padding: 0.5rem 1rem;
-            background: var(--red-wolf);
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 2px;
-            transition: opacity 0.2s;
-        }
-        .contact-btn:hover { opacity: 0.85; }
-
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 2rem 1.5rem;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #e5e5e5; }
+        .logo-silver { color: #c0c0c0; text-shadow: 0 0 10px rgba(192, 192, 192, 0.3); }
+        .active-nav-link { color: #ffffff !important; border-bottom: 2px solid #c0c0c0; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 0.5rem; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-inner">
-            <div class="logo-group">
-                <div class="logo-text">WOLF <span>STUDIOS</span></div>
-            </div>
-            <div class="text-xs font-semibold tracking-wider text-gray-400">BIBLIOTECA INDEPENDENTE</div>
+    <header class="bg-black border-b border-gray-800 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-tighter logo-silver">Wolf Studios Produções</h1>
         </div>
     </header>
 
-    <nav>
-        <div class="nav-inner">
-            <a href="#explorar" class="nav-link active-nav-link">Explorar HQs</a>
-            <a href="#leitor" class="nav-link">Leitor Integrado</a>
-            <a href="#comunidade" class="nav-link">Publicar Obra</a>
+    <nav class="bg-black border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 flex justify-center gap-8 py-4">
+            <a href="#" onclick="renderPage('home', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="home">Home</a>
+            <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="videos">Vídeos</a>
+            <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="hqs">Quadrinhos</a>
+            <a href="#" onclick="renderPage('contato', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="contato">Contato</a>
         </div>
     </nav>
 
-    <main id="content-area">
+    <main id="content-area" class="max-w-7xl mx-auto px-4 py-12"></main>
 
-        <section class="hero">
-            <span class="hero-eyebrow">Plataforma Stark de Quadrinhos</span>
-            <h1 class="hero-title">WOLF <em>STUDIOS</em></h1>
-            <p class="hero-sub">Descubra universos originais criados por autores independentes. Leia capítulos
+    <script>
+        const WHATSAPP_NUMBER = "41998984617";
+        const HQ_ID = "1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz";
+
+        const videos = [
+            { titulo: "Doctor Who fanfilm minisode", id: "lFqCWO2hfYc" }
+        ];
+
+        const pages = {
+            home: `<div class="text-center py-20"><h2 class="text-5xl font-bold mb-6">Criatividade sem Limites</h2><p class="text-gray-400 text-xl">Produções independentes de alta qualidade.</p></div>`,
+            videos: `<h2 class="text-3xl font-bold mb-8">Nossos Vídeos</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="video-grid"></div>`,
+            hqs: `
+                <h2 class="text-3xl font-bold mb-8">Quadrinhos</h2>
+                <div class="bg-gray-900 p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">Doctor Who: Extinção Skorm</h3>
+                    <div class="video-wrapper">
+                        <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://drive.google.com/uc?export=download&id=${HQ_ID}" class="w-full h-full"></iframe>
+                    </div>
+                </div>
+            `,
+            contato: `<h2 class="text-3xl font-bold">Contato</h2><p class="text-gray-400">WhatsApp: ${WHATSAPP_NUMBER}</p>`
+        };
+
+        function renderPage(pageId, clickedElement) {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = pages[pageId];
+            
+            if(pageId === 'videos') {
+                const grid = document.getElementById('video-grid');
+                videos.forEach(v => {
+                    grid.innerHTML += `
+                        <div class="bg-gray-900 p-4 rounded-lg">
+                            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen></iframe></div>
+                            <h3 class="mt-4 font-bold">${v.titulo}</h3>
+                        </div>
+                    `;
+                });
+            }
+
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-nav-link'));
+            if(clickedElement) clickedElement.classList.add('active-nav-link');
+        }
+
+        renderPage('home');
+    </script>
+</body>
+</html>
