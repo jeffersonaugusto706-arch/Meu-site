@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -348,52 +348,49 @@
 <!-- ── SEÇÃO: BIBLIOTECA DIGITAL ── -->
 <div class="section-header">
     <h2 class="section-title">Biblioteca Digital</h2>
-    <span class="section-count">// LANÇAMENTOS</span>
+    <span class="section-count">// LEITURA ONLINE</span>
 </div>
 
-<!-- ── GRADE DE PRODUTOS/HQS ── -->
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-    <!-- CARTÃO DA HQ: DOCTOR WHO ── -->
-    <div class="video-card flex flex-col justify-between" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
-        
-        <!-- Área da Capa da HQ -->
-        <div class="relative overflow-hidden" style="padding-bottom: 140%; height: 0;">
-            <!-- DICA: Se você tiver a imagem da capa no GitHub, mude o src para o caminho dela (ex: capas/doctor-who.jpg) -->
-            <img src="capas/doctor-who-extincao.jpg" alt="Capa Doctor Who" class="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+<!-- ── ESTRUTURA DA BIBLIOTECA ── -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    
+    <!-- LADO ESQUERDO: CAPA E DETALHES -->
+    <div class="video-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; padding: 1.5rem;">
+        <div class="relative overflow-hidden mb-4" style="padding-bottom: 140%; height: 0;">
+            <img src="capas/doctor-who-extincao.jpg" alt="Capa Doctor Who" class="absolute top-0 left-0 w-full h-full object-cover">
         </div>
 
-        <!-- Informações da HQ -->
-        <div class="video-info flex-grow flex flex-col justify-between" style="padding: 1.25rem;">
-            <div>
-                <div class="video-tag" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red-wolf); margin-bottom: 0.4rem;">WOLF STUDIOS FANFIC</div>
-                <h3 class="video-title" style="font-size: 1.2rem; font-weight: 600; color: #fff; line-height: 1.3; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em;">DOCTOR WHO: A EXTINÇÃO DO TEMPO</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5; font-family: 'Inter', sans-serif;">Acompanhe a ira do Senhor do Tempo em uma aventura espacial desenhada totalmente à mão! Entre na TARDIS de graça.</p>
-            </div>
+        <div class="video-tag" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red-wolf); margin-bottom: 0.4rem;">WOLF STUDIOS FANFIC</div>
+        <h3 class="video-title" style="font-size: 1.4rem; font-weight: 600; color: #fff; line-height: 1.3; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em;">DOCTOR WHO: A EXTINÇÃO DO TEMPO</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5; font-family: 'Inter', sans-serif; margin-bottom: 1.5rem;">Acompanhe a ira do Senhor do Tempo em uma aventura espacial desenhada totalmente à mão!</p>
+        
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; margin-bottom: 1rem;">
+            STATUS: <span style="color: #28a745;">GRÁTIS (COMPLETO)</span>
+        </div>
 
-            <!-- Botões de Ação com Google Drive -->
-            <div class="mt-5">
-                <div style="font-size: 1rem; font-weight: 700; color: var(--text-muted); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
-                    STATUS: <span style="color: #28a745;">GRÁTIS</span>
-                </div>
-                
-                <div class="flex flex-col gap-2">
-                    <!-- BOTÃO 1: Abre a HQ para leitura direta no visualizador do Google Drive -->
-                    <a href="https://google.com" target="_blank" style="display: block; text-align: center; background: var(--red-wolf); color: #fff; padding: 0.6rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: background 0.2s;" onmouseover="this.style.background='#ff2a2a'" onmouseout="this.style.background='var(--red-wolf)'">
-                        <!-- Link convertido para o modo de visualização oficial do Drive -->
-                        CNPJ 📖 Ler Online (Drive)
-                    </a>
-                    
-                    <!-- BOTÃO 2: Link direto para baixar o arquivo sem abrir o Drive -->
-                    <a href="https://google.com" style="display: block; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.6rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
-                        <!-- Link convertido para download direto automático -->
-                        📥 Baixar PDF
-                    </a>
-                </div>
-            </div>
+        <!-- Botão para Baixar Direto -->
+        <a href="https://google.com" style="display: block; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.6rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+            📥 Baixar PDF Original
+        </a>
+    </div>
+
+    <!-- LADO DIREITO: O LEITOR TRAVADO NO SITE -->
+    <div class="lg:col-span-2 video-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
+        <div class="hq-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem;">
+            <div class="hq-dot"></div>
+            <div class="hq-label">PAINEL DE LEITURA INTERATIVA</div>
+        </div>
+        
+        <!-- O segredo está no link com "&embedded=true" e no atributo sandbox que impede a saída do site -->
+        <div style="position: relative; padding-bottom: 130%; height: 0; overflow: hidden;">
+            <iframe 
+                src="https://google.com" 
+                class="absolute top-0 left-0 w-full h-full" 
+                style="border: none;" 
+                sandbox="allow-scripts allow-same-origin allow-forms">
+            </iframe>
         </div>
     </div>
-    <!-- FIM DO CARTÃO ── -->
 
 </div>
 
@@ -491,5 +488,3 @@
 </html>
         
    
-        
-    
