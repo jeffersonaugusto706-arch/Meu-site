@@ -5,68 +5,420 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wolf Studios Produções</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #e5e5e5; }
-        .logo-img { height: 60px; width: auto; } /* Ajusta o tamanho da logo */
-        .active-nav-link { color: #ffffff !important; border-bottom: 2px solid #c0c0c0; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 0.5rem; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --silver: #c0c0c0;
+            --silver-dim: #888;
+            --red-wolf: #cc1a1a;
+            --bg: #0a0a0a;
+            --bg-card: #111111;
+            --bg-card-hover: #1a1a1a;
+            --border: rgba(255,255,255,0.07);
+            --text: #e5e5e5;
+            --text-muted: #888;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: rgba(10,10,10,0.95);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo-img { height: 48px; width: auto; }
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0.08em;
+            color: #fff;
+            line-height: 1;
+        }
+        .logo-text span { color: var(--red-wolf); }
+
+        /* ── NAV ── */
+        nav {
+            background: rgba(10,10,10,0.9);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: color 0.2s, border-color 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover { color: #fff; }
+        .active-nav-link { color: #fff !important; border-bottom: 2px solid var(--red-wolf); }
+
+        /* ── MAIN ── */
+        #content-area {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        /* ── HOME HERO ── */
+        .hero {
+            text-align: center;
+            padding: 5rem 0 4rem;
+        }
+        .hero-eyebrow {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--red-wolf);
+            margin-bottom: 1.5rem;
+        }
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: 0.02em;
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title em {
+            font-style: normal;
+            color: var(--silver);
+        }
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 480px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .hero-divider {
+            width: 48px;
+            height: 2px;
+            background: var(--red-wolf);
+            margin: 0 auto 3rem;
+        }
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 0.5rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: 0.05em;
+            color: #fff;
+        }
+        .section-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--red-wolf);
+            text-transform: uppercase;
+        }
+
+        /* ── VIDEO CARDS ── */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .video-card:hover {
+            border-color: rgba(255,255,255,0.15);
+            background: var(--bg-card-hover);
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+        .video-info {
+            padding: 1rem 1.25rem;
+        }
+        .video-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--red-wolf);
+            margin-bottom: 0.4rem;
+        }
+        .video-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.4;
+        }
+
+        /* ── HQ VIEWER ── */
+        .hq-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .hq-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .hq-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red-wolf); }
+        .hq-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+        .hq-viewer-wrap {
+            position: relative;
+            padding-bottom: 75%;
+            height: 0;
+            overflow: hidden;
+        }
+        .hq-viewer-wrap iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+
+        /* ── CONTACT ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+        .contact-card:hover { border-color: rgba(255,255,255,0.15); }
+        .contact-card-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--red-wolf);
+            margin-bottom: 0.6rem;
+        }
+        .contact-card-value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .contact-card-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        .contact-btn {
+            display: inline-block;
+            margin-top: 0.875rem;
+            padding: 0.5rem 1rem;
+            background: var(--red-wolf);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 2px;
+            transition: opacity 0.2s;
+        }
+        .contact-btn:hover { opacity: 0.85; }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body>
 
-    <header class="bg-black border-b border-gray-800 sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <img src="logo.jpg" alt="Wolf Studios Logo" class="logo-img">
+    <header>
+        <div class="header-inner">
+            <img src="logo.jpg" alt="Wolf Studios Logo" class="logo-img"
+                 onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block'">
+            <div id="logo-fallback" style="display:none">
+                <span class="logo-text">WOLF<span>.</span>STUDIOS</span>
+            </div>
         </div>
     </header>
 
-    <nav class="bg-black border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 flex justify-center gap-8 py-4">
-            <a href="#" onclick="renderPage('home', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="home">Home</a>
-            <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="videos">Vídeos</a>
-            <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="hqs">Quadrinhos</a>
-            <a href="#" onclick="renderPage('contato', this); return false;" class="nav-link text-gray-400 hover:text-white transition" data-page="contato">Contato</a>
+    <nav>
+        <div class="nav-inner">
+            <a href="#" onclick="renderPage('home', this); return false;" class="nav-link active-nav-link" data-page="home">Home</a>
+            <a href="#" onclick="renderPage('videos', this); return false;" class="nav-link" data-page="videos">Vídeos</a>
+            <a href="#" onclick="renderPage('hqs', this); return false;" class="nav-link" data-page="hqs">Quadrinhos</a>
+            <a href="#" onclick="renderPage('contato', this); return false;" class="nav-link" data-page="contato">Contato</a>
         </div>
     </nav>
 
-    <main id="content-area" class="max-w-7xl mx-auto px-4 py-12"></main>
+    <main id="content-area"></main>
+
+    <footer>
+        <span>© 2025 Wolf Studios Produções — Todos os direitos reservados</span>
+    </footer>
 
     <script>
         const WHATSAPP_NUMBER = "41998984617";
         const HQ_ID = "1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz";
 
-        const videos = [{ titulo: "Doctor Who fanfilm minisode", id: "lFqCWO2hfYc" }];
+        const videos = [
+            { titulo: "Doctor Who fanfilm minisode", id: "lFqCWO2hfYc", tag: "Fan Film" }
+        ];
 
         const pages = {
-            home: `<div class="text-center py-20"><h2 class="text-5xl font-bold mb-6">Criatividade sem Limites</h2></div>`,
-            videos: `<h2 class="text-3xl font-bold mb-8">Nossos Vídeos</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="video-grid"></div>`,
-            hqs: `
-                <h2 class="text-3xl font-bold mb-8">Quadrinhos</h2>
-                <div class="bg-gray-900 p-6 rounded-lg">
-                    <div class="video-wrapper">
-                        <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://drive.google.com/uc?export=download&id=${HQ_ID}" class="w-full h-full"></iframe>
+            home: () => `
+                <div class="hero">
+                    <span class="hero-eyebrow">Wolf Studios Produções</span>
+                    <h1 class="hero-title">Criatividade<br><em>sem Limites</em></h1>
+                    <div class="hero-divider"></div>
+                    <p class="hero-sub">Vídeos, quadrinhos e histórias que saem do ordinário. Produção independente com alma.</p>
+                    <div class="hero-badges">
+                        <span class="badge">Fan Films</span>
+                        <span class="badge">Quadrinhos</span>
+                        <span class="badge">Produção Independente</span>
                     </div>
                 </div>
             `,
-            contato: `<h2 class="text-3xl font-bold">Contato</h2><p class="text-gray-400">WhatsApp: ${WHATSAPP_NUMBER}</p>`
+            videos: () => `
+                <div class="section-header">
+                    <h2 class="section-title">Vídeos</h2>
+                    <span class="section-count">${videos.length} produção${videos.length !== 1 ? 'ões' : ''}</span>
+                </div>
+                <div class="video-grid" id="video-grid"></div>
+            `,
+            hqs: () => `
+                <div class="section-header">
+                    <h2 class="section-title">Quadrinhos</h2>
+                </div>
+                <div class="hq-card">
+                    <div class="hq-header">
+                        <span class="hq-dot"></span>
+                        <span class="hq-label">Leitor de HQ</span>
+                    </div>
+                    <div class="hq-viewer-wrap">
+                        <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://drive.google.com/uc?export=download&id=${HQ_ID}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `,
+            contato: () => `
+                <div class="section-header">
+                    <h2 class="section-title">Contato</h2>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <p class="contact-card-label">WhatsApp</p>
+                        <p class="contact-card-value">(41) 99898-4617</p>
+                        <p class="contact-card-sub">Atendimento via mensagem</p>
+                        <a class="contact-btn" href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" rel="noopener">Enviar mensagem</a>
+                    </div>
+                </div>
+            `
         };
 
         function renderPage(pageId, clickedElement) {
             const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = pages[pageId];
-            if(pageId === 'videos') {
+            contentArea.innerHTML = pages[pageId]();
+
+            if (pageId === 'videos') {
                 const grid = document.getElementById('video-grid');
                 videos.forEach(v => {
-                    grid.innerHTML += `<div class="bg-gray-900 p-4 rounded-lg"><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen></iframe></div><h3 class="mt-4 font-bold">${v.titulo}</h3></div>`;
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                        <div class="video-info">
+                            <p class="video-tag">${v.tag || 'Vídeo'}</p>
+                            <h3 class="video-title">${v.titulo}</h3>
+                        </div>
+                    `;
+                    grid.appendChild(card);
                 });
             }
+
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-nav-link'));
-            if(clickedElement) clickedElement.classList.add('active-nav-link');
+            if (clickedElement) clickedElement.classList.add('active-nav-link');
         }
 
-        renderPage('home');
+        renderPage('home', document.querySelector('[data-page="home"]'));
     </script>
 </body>
 </html>
