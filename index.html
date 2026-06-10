@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #000000; color: #e5e5e5; }
-        .logo-silver { color: #c0c0c0; text-shadow: 0 0 10px rgba(192, 192, 192, 0.3); }
+        .logo-img { height: 60px; width: auto; } /* Ajusta o tamanho da logo */
         .active-nav-link { color: #ffffff !important; border-bottom: 2px solid #c0c0c0; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 0.5rem; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -17,8 +17,8 @@
 <body>
 
     <header class="bg-black border-b border-gray-800 sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-            <h1 class="text-3xl font-bold tracking-tighter logo-silver">Wolf Studios Produções</h1>
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <img src="logo.jpg" alt="Wolf Studios Logo" class="logo-img">
         </div>
     </header>
 
@@ -37,17 +37,14 @@
         const WHATSAPP_NUMBER = "41998984617";
         const HQ_ID = "1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz";
 
-        const videos = [
-            { titulo: "Doctor Who fanfilm minisode", id: "lFqCWO2hfYc" }
-        ];
+        const videos = [{ titulo: "Doctor Who fanfilm minisode", id: "lFqCWO2hfYc" }];
 
         const pages = {
-            home: `<div class="text-center py-20"><h2 class="text-5xl font-bold mb-6">Criatividade sem Limites</h2><p class="text-gray-400 text-xl">Produções independentes de alta qualidade.</p></div>`,
+            home: `<div class="text-center py-20"><h2 class="text-5xl font-bold mb-6">Criatividade sem Limites</h2></div>`,
             videos: `<h2 class="text-3xl font-bold mb-8">Nossos Vídeos</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="video-grid"></div>`,
             hqs: `
                 <h2 class="text-3xl font-bold mb-8">Quadrinhos</h2>
                 <div class="bg-gray-900 p-6 rounded-lg">
-                    <h3 class="text-xl font-bold mb-4">Doctor Who: Extinção Skorm</h3>
                     <div class="video-wrapper">
                         <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://drive.google.com/uc?export=download&id=${HQ_ID}" class="w-full h-full"></iframe>
                     </div>
@@ -59,19 +56,12 @@
         function renderPage(pageId, clickedElement) {
             const contentArea = document.getElementById('content-area');
             contentArea.innerHTML = pages[pageId];
-            
             if(pageId === 'videos') {
                 const grid = document.getElementById('video-grid');
                 videos.forEach(v => {
-                    grid.innerHTML += `
-                        <div class="bg-gray-900 p-4 rounded-lg">
-                            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen></iframe></div>
-                            <h3 class="mt-4 font-bold">${v.titulo}</h3>
-                        </div>
-                    `;
+                    grid.innerHTML += `<div class="bg-gray-900 p-4 rounded-lg"><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen></iframe></div><h3 class="mt-4 font-bold">${v.titulo}</h3></div>`;
                 });
             }
-
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-nav-link'));
             if(clickedElement) clickedElement.classList.add('active-nav-link');
         }
