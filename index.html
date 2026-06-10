@@ -3,58 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Studios Produções</title>
+    <title>Wolf Studios Produções - Biblioteca de HQs</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
+            --silver: #c0c0c0;
+            --silver-dim: #888;
             --red-wolf: #cc1a1a;
             --bg: #0a0a0a;
             --bg-card: #111111;
+            --bg-card-hover: #1a1a1a;
             --border: rgba(255,255,255,0.07);
+            --text: #e5e5e5;
             --text-muted: #888;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #e5e5e5; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: rgba(10,10,10,0.95);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo-group { display: flex; align-items: center; gap: 1rem; }
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0.08em;
+            color: #fff;
+            line-height: 1;
+        }
         .logo-text span { color: var(--red-wolf); }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* ── NAV ── */
+        nav {
+            background: rgba(10,10,10,0.9);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: color 0.2s, border-color 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover { color: #fff; }
+        .active-nav-link { color: #fff !important; border-bottom: 2px solid var(--red-wolf); }
+
+        /* ── MAIN ── */
+        #content-area {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        /* ── HOME HERO ── */
+        .hero {
+            text-align: center;
+            padding: 5rem 0 4rem;
+        }
+        .hero-eyebrow {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--red-wolf);
+            margin-bottom: 1.5rem;
+        }
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: 0.02em;
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .hero-divider {
+            width: 48px;
+            height: 2px;
+            background: var(--red-wolf);
+            margin: 0 auto 3rem;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: 0.05em;
+            color: #fff;
+        }
+        .section-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--red-wolf);
+            text-transform: uppercase;
+        }
+
+        /* ── HQ CARDS / GRID ── */
+        .hq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        .hq-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+        .hq-card:hover {
+            border-color: rgba(255,255,255,0.15);
+            background: var(--bg-card-hover);
+        }
+        .hq-cover-wrap {
+            position: relative;
+            padding-bottom: 140%; /* Proporção de capa de quadrinhos */
+            background: #222;
+            overflow: hidden;
+        }
+        .hq-cover-wrap img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .hq-info { padding: 1rem 1.25rem; }
+        .hq-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--red-wolf);
+            margin-bottom: 0.4rem;
+        }
+        .hq-title { font-size: 0.95rem; font-weight: 600; color: #fff; line-height: 1.4; }
+        .hq-author { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        /* ── HQ VIEWER (LEITOR INTEGRADO) ── */
+        .hq-viewer-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        .hq-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .hq-header-left { display: flex; align-items: center; gap: 0.75rem; }
+        .hq-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red-wolf); }
+        .hq-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+        
+        /* Área de leitura por scroll vertical (padrão Webtoon/Fliptru) */
+        .hq-reader-pages {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            background: #000;
+        }
+        .hq-page-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ── COMMUNITY / CONTACT CARDS ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+        .contact-card:hover { border-color: rgba(255,255,255,0.15); }
+        .contact-card-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--red-wolf);
+            margin-bottom: 0.6rem;
+        }
+        .contact-card-value { font-size: 1.05rem; font-weight: 600; color: #fff; }
+        .contact-card-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .contact-btn {
+            display: inline-block;
+            margin-top: 0.875rem;
+            padding: 0.5rem 1rem;
+            background: var(--red-wolf);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 2px;
+            transition: opacity 0.2s;
+        }
+        .contact-btn:hover { opacity: 0.85; }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body>
 
-    <header class="sticky top-0 z-50 bg-black/95 border-b border-white/10 backdrop-blur-md">
-        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="logo-text text-2xl font-bold tracking-widest">WOLF<span>STUDIOS</span></div>
-            <nav class="flex gap-6">
-                <a href="#" class="text-xs uppercase font-bold text-gray-400 hover:text-white border-b-2 border-red-600">Home</a>
-                <a href="#" class="text-xs uppercase font-bold text-gray-400 hover:text-white">Portfólio</a>
-                <a href="#" class="text-xs uppercase font-bold text-gray-400 hover:text-white">Contato</a>
-            </nav>
+    <header>
+        <div class="header-inner">
+            <div class="logo-group">
+                <div class="logo-text">WOLF <span>STUDIOS</span></div>
+            </div>
+            <div class="text-xs font-semibold tracking-wider text-gray-400">BIBLIOTECA INDEPENDENTE</div>
         </div>
     </header>
 
-    <main id="content-area" class="max-w-6xl mx-auto py-12 px-6">
-        <section class="hero text-center py-20">
-            <h1 class="text-6xl md:text-8xl font-black uppercase text-white mb-6">Wolf Studios</h1>
-            <p class="text-gray-400 max-w-lg mx-auto">Produção audiovisual de alto impacto para marcas e criadores.</p>
-        </section>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-[#111] border border-white/10 rounded overflow-hidden">
-                <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-                </div>
-                <div class="p-4">
-                    <p class="text-[10px] font-bold text-red-600 uppercase">Comercial</p>
-                    <h3 class="text-sm font-semibold text-white">Título do Projeto 01</h3>
-                </div>
-            </div>
+    <nav>
+        <div class="nav-inner">
+            <a href="#explorar" class="nav-link active-nav-link">Explorar HQs</a>
+            <a href="#leitor" class="nav-link">Leitor Integrado</a>
+            <a href="#comunidade" class="nav-link">Publicar Obra</a>
         </div>
-    </main>
+    </nav>
 
-    <footer class="border-t border-white/10 py-6 text-center text-xs text-gray-500">
-        &copy; 2026 Wolf Studios Produções. Todos os direitos reservados.
-    </footer>
+    <main id="content-area">
 
-</body>
-</html>
+        <section class="hero">
+            <span class="hero-eyebrow">Plataforma Stark de Quadrinhos</span>
+            <h1 class="hero-title">WOLF <em>STUDIOS</em></h1>
+            <p class="hero-sub">Descubra universos originais criados por autores independentes. Leia capítulos
