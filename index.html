@@ -20,13 +20,22 @@
             text-align: center;
         }
 
+        /* Estilo do Título com a linha de reflexo */
         h1 { 
             color: var(--prata); 
             letter-spacing: 3px; 
             text-transform: uppercase; 
             margin-top: 40px; 
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             font-weight: 300;
+        }
+
+        .reflexo-linha {
+            width: 300px;
+            height: 1px;
+            margin: 0 auto 50px auto;
+            background: linear-gradient(to right, transparent, white, transparent);
+            opacity: 0.5;
         }
 
         h2 { 
@@ -78,6 +87,8 @@
 
     <div class="container">
         <h1>Wolf Studios Produções</h1>
+        <!-- Linha de reflexo -->
+        <div class="reflexo-linha"></div>
 
         <!-- Setor Fanfilms -->
         <section id="fanfilms">
@@ -106,14 +117,12 @@
         <section id="fanfics">
             <h2>Fanfics</h2>
             <div class="grid">
-                <!-- Fanfic 1 -->
                 <div class="card">
                     <h3>A Extinção do Tempo</h3>
                     <p>Skorma: Ira do Senhor do Tempo</p>
                     <a href="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=drive_link" class="btn" target="_blank">Ler HQ</a>
                 </div>
                 
-                <!-- Nova Fanfic -->
                 <div class="card">
                     <h3>Doctor Who: Um Novo Capítulo Começa</h3>
                     <p>Nova aventura no universo Doctor Who</p>
