@@ -20,9 +20,8 @@
             text-align: center;
         }
 
-        /* Estilo da nova logo */
         .wolf-logo {
-            width: 150px; /* Ajuste o tamanho conforme preferir */
+            width: 150px;
             margin-top: 40px;
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
         }
@@ -87,19 +86,24 @@
         }
 
         .btn:hover { background: var(--prata); color: #000; }
+
+        /* Estilo do Rodapé do Contador */
+        footer {
+            margin-top: 60px;
+            padding-bottom: 30px;
+            color: #404040;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Substitua 'caminho_da_sua_imagem/image_f7f34f.png' pelo link real da imagem -->
         <img src="caminho_da_sua_imagem/image_f7f34f.png" alt="Wolf Studios Logo" class="wolf-logo">
 
         <h1>Wolf Studios Produções</h1>
-        <!-- Linha de reflexo -->
         <div class="reflexo-linha"></div>
 
-        <!-- Setor Fanfilms -->
         <section id="fanfilms">
             <h2>Fanfilms</h2>
             <div class="grid">
@@ -110,7 +114,6 @@
             </div>
         </section>
 
-        <!-- Setor HQs -->
         <section id="hqs">
             <h2>HQs Autorais</h2>
             <div class="grid">
@@ -122,7 +125,6 @@
             </div>
         </section>
 
-        <!-- Setor Fanfics -->
         <section id="fanfics">
             <h2>Fanfics</h2>
             <div class="grid">
@@ -139,6 +141,11 @@
                 </div>
             </div>
         </section>
+
+        <footer>
+            <p>Visitantes:</p>
+            <div>COLE_O_CODIGO_AQUI</div>
+        </footer>
     </div>
 
 </body>
