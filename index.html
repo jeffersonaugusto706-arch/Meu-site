@@ -4,13 +4,47 @@
     <meta charset="UTF-8">
     <title>Wolf Studios Produções</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #0b132b; color: white; padding: 20px; text-align: center; }
-        .logo-container { margin-bottom: 20px; }
-        .logo-container img { width: 250px; border-radius: 15px; border: 2px solid #48cae4; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
-        .card { background: #1c2541; padding: 20px; border-radius: 15px; border: 1px solid #48cae4; }
-        .btn { display: inline-block; padding: 15px 30px; background: #0077b6; color: white; text-decoration: none; border-radius: 8px; margin-top: 15px; font-weight: bold; border: 1px solid #48cae4; transition: 0.3s; }
-        .btn:hover { background: #00b4d8; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #0a0a0a; /* Preto profundo */
+            color: #e0e0e0; /* Cinza claro */
+            padding: 20px; 
+            text-align: center; 
+        }
+        h2 { color: #c0c0c0; border-bottom: 1px solid #555; display: inline-block; padding-bottom: 5px; }
+        .logo-container { margin-bottom: 40px; }
+        .logo-container img { width: 250px; border-radius: 15px; border: 2px solid #8c8c8c; }
+        
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            margin-top: 30px; 
+            max-width: 800px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        
+        .card { 
+            background: #1a1a1a; 
+            padding: 20px; 
+            border-radius: 15px; 
+            border: 1px solid #404040; 
+        }
+        
+        .btn { 
+            display: inline-block; 
+            padding: 15px 30px; 
+            background: #2a2a2a; 
+            color: #ffffff; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            font-weight: bold; 
+            border: 1px solid #8c8c8c; 
+            transition: 0.3s; 
+        }
+        .btn:hover { background: #404040; border-color: #ffffff; }
     </style>
 </head>
 <body>
@@ -20,22 +54,29 @@
         <h1>Wolf Studios Produções</h1>
     </div>
 
-    <section id="hqs">
-        <h2>HQs e Fanfics</h2>
+    <!-- Setor Fanfics -->
+    <section id="fanfics">
+        <h2>Fanfics (HQs e Textos)</h2>
         <div class="grid-container">
             <div class="card">
                 <h3>Doctor Who: A Extinção do Tempo</h3>
                 <p>Skorma: Ira do Senhor do Tempo</p>
                 <a href="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=drive_link" class="btn" target="_blank" rel="noopener noreferrer">
-                    📖 Ler HQ Completa (Google Drive)
+                    📖 Ler HQ Completa
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="videos" style="margin-top: 50px;">
-        <h2>Nossos Vídeos</h2>
-        <iframe width="100%" height="450" src="https://www.youtube.com/embed/_db3SqSzCcY" frameborder="0" allowfullscreen></iframe>
+    <!-- Setor Fanfilms -->
+    <section id="fanfilms" style="margin-top: 50px;">
+        <h2>Fanfilms (Vídeos)</h2>
+        <div class="grid-container" style="max-width: 800px; margin: 30px auto;">
+            <div class="card">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/_db3SqSzCcY" frameborder="0" allowfullscreen></iframe>
+                <p>Doctor Who - Fanfilm Project</p>
+            </div>
+        </div>
     </section>
 
 </body>
