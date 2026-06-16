@@ -1,153 +1,182 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Wolf Studios Produções</title>
     <style>
-        :root {
-            --prata: #b0b0b0;
-            --preto-fundo: #0a0a0a;
-            --preto-card: #1a1a1a;
-            --borda: #404040;
-        }
+      :root {
+        --prata: #b0b0b0;
+        --preto-fundo: #0a0a0a;
+        --preto-card: #1a1a1a;
+        --borda: #404040;
+      }
 
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--preto-fundo); 
-            color: #e0e0e0; 
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--preto-fundo);
+        color: #e0e0e0;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
 
-        .wolf-logo {
-            width: 150px;
-            margin-top: 40px;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
-        }
+      .wolf-logo {
+        width: 150px;
+        margin-top: 40px;
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+      }
 
-        h1 { 
-            color: var(--prata); 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            margin-top: 20px; 
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
+      h1 {
+        color: var(--prata);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-weight: 300;
+      }
 
-        .reflexo-linha {
-            width: 300px;
-            height: 1px;
-            margin: 0 auto 50px auto;
-            background: linear-gradient(to right, transparent, white, transparent);
-            opacity: 0.5;
-        }
+      .reflexo-linha {
+        width: 300px;
+        height: 1px;
+        margin: 0 auto 50px auto;
+        background: linear-gradient(to right, transparent, white, transparent);
+        opacity: 0.5;
+      }
 
-        h2 { 
-            color: var(--prata); 
-            border-bottom: 2px solid var(--borda); 
-            display: inline-block; 
-            padding-bottom: 10px; 
-            margin-bottom: 30px; 
-            text-transform: uppercase;
-            font-size: 1.5rem;
-        }
+      h2 {
+        color: var(--prata);
+        border-bottom: 2px solid var(--borda);
+        display: inline-block;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+      }
 
-        .container { max-width: 900px; margin: auto; }
+      .container {
+        max-width: 900px;
+        margin: auto;
+      }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 30px; 
-            margin-bottom: 50px;
-        }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+      }
 
-        .card { 
-            background: var(--preto-card); 
-            padding: 25px; 
-            border-radius: 10px; 
-            border: 1px solid var(--borda);
-            transition: border 0.3s;
-        }
+      .card {
+        background: var(--preto-card);
+        padding: 25px;
+        border-radius: 10px;
+        border: 1px solid var(--borda);
+        transition: border 0.3s;
+      }
 
-        .card:hover { border-color: var(--prata); }
+      .card:hover {
+        border-color: var(--prata);
+      }
 
-        .btn { 
-            display: inline-block; 
-            padding: 12px 25px; 
-            background: transparent; 
-            color: var(--prata); 
-            text-decoration: none; 
-            border: 1px solid var(--prata);
-            border-radius: 5px; 
-            margin-top: 15px; 
-            font-weight: bold;
-            transition: 0.3s;
-        }
+      .btn {
+        display: inline-block;
+        padding: 12px 25px;
+        background: transparent;
+        color: var(--prata);
+        text-decoration: none;
+        border: 1px solid var(--prata);
+        border-radius: 5px;
+        margin-top: 15px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
 
-        .btn:hover { background: var(--prata); color: #000; }
+      .btn:hover {
+        background: var(--prata);
+        color: #000;
+      }
 
-        footer {
-            margin-top: 60px;
-            padding-bottom: 30px;
-            color: #404040;
-            font-size: 0.8rem;
-        }
+      footer {
+        margin-top: 60px;
+        padding-bottom: 30px;
+        color: #404040;
+        font-size: 0.8rem;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="container">
-        <img src="wolf-logo.jpg" alt="Wolf Studios Logo" class="wolf-logo">
+      <img src="wolf-logo.jpg" alt="Wolf Studios Logo" class="wolf-logo" />
 
-        <h1>Wolf Studios Produções</h1>
-        <div class="reflexo-linha"></div>
+      <h1>Wolf Studios Produções</h1>
+      <div class="reflexo-linha"></div>
 
-        <section id="fanfilms">
-            <h2>Fanfilms</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>Doctor Who Project</h3>
-                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/_db3SqSzCcY?modestbranding=1&rel=0" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-        </section>
+      <section id="fanfilms">
+        <h2>Fanfilms</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Doctor Who Project</h3>
+            <iframe
+              width="100%"
+              height="200"
+              src="https://www.youtube.com/embed/_db3SqSzCcY?modestbranding=1&amp;rel=0"
+              frameborder="0"
+              allowfullscreen=""
+            ></iframe>
+          </div>
+        </div>
+      </section>
 
-        <section id="hqs">
-            <h2>HQs Autorais</h2>
-            <div class="grid">
-                <div class="card">
-                    <!-- Imagem da capa adicionada abaixo -->
-                    <img src="A Mascara da vingança._1.jpg" alt="Capa A Máscara da Vingança" style="width: 100%; border-radius: 5px; margin-bottom: 15px;">
-                    <h3>A Máscara da Vingança</h3>
-                    <p>Projeto original de quadrinhos</p>
-                    <a href="https://globalcomix.com/c/a-mascara-da-vingan-a" class="btn" target="_blank">Ler HQ</a>
-                </div>
-            </div>
-        </section>
+      <section id="hqs">
+        <h2>HQs Autorais</h2>
+        <div class="grid">
+          <div class="card">
+            <!-- Imagem da capa adicionada abaixo -->
+            <img
+              src="A Mascara da vingança._1.jpg"
+              alt="Capa A Máscara da Vingança"
+              style="width: 100%; border-radius: 5px; margin-bottom: 15px"
+            />
+            <h3>A Máscara da Vingança</h3>
+            <p>Projeto original de quadrinhos</p>
+            <a href="https://globalcomix.com/c/a-mascara-da-vingan-a" class="btn" target="_blank">Ler HQ</a>
+          </div>
+        </div>
+      </section>
 
-        <section id="fanfics">
-            <h2>Fanfics</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>A Extinção do Tempo</h3>
-                    <p>Skorma: Ira do Senhor do Tempo</p>
-                    <a href="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=drive_link" class="btn" target="_blank">Ler HQ</a>
-                </div>
-                
-                <div class="card">
-                    <h3>Doctor Who: Um Novo Capítulo Começa</h3>
-                    <p>Nova aventura no universo Doctor Who</p>
-                    <a href="https://drive.google.com/file/d/1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa/view?usp=drive_link" class="btn" target="_blank">Ler Fanfic</a>
-                </div>
-            </div>
-        </section>
+      <section id="fanfics">
+        <h2>Fanfics</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>A Extinção do Tempo</h3>
+            <p>Skorma: Ira do Senhor do Tempo</p>
+            <a
+              href="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=drive_link"
+              class="btn"
+              target="_blank"
+            >
+              Ler HQ
+            </a>
+          </div>
 
-        <footer>
-            <p>Visitantes:</p>
-            <div>COLE_O_CODIGO_AQUI</div>
-        </footer>
+          <div class="card">
+            <h3>Doctor Who: Um Novo Capítulo Começa</h3>
+            <p>Nova aventura no universo Doctor Who</p>
+            <a
+              href="https://drive.google.com/file/d/1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa/view?usp=drive_link"
+              class="btn"
+              target="_blank"
+            >
+              Ler Fanfic
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>Visitantes:</p>
+        <div>COLE_O_CODIGO_AQUI</div>
+      </footer>
     </div>
-
-</body>
+  </body>
 </html>
+         
