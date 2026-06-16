@@ -20,12 +20,20 @@
             text-align: center;
         }
 
-        /* Estilo do Título com a linha de reflexo */
+        /* Estilo do Lobo */
+        .wolf-icon {
+            width: 80px;
+            height: 80px;
+            fill: var(--prata);
+            margin-top: 40px;
+            filter: drop-shadow(0 0 10px rgba(176, 176, 176, 0.3));
+        }
+
         h1 { 
             color: var(--prata); 
             letter-spacing: 3px; 
             text-transform: uppercase; 
-            margin-top: 40px; 
+            margin-top: 10px; 
             margin-bottom: 20px;
             font-weight: 300;
         }
@@ -86,6 +94,11 @@
 <body>
 
     <div class="container">
+        <!-- Silhueta do Lobo -->
+        <svg class="wolf-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1L3 8v13h18V8l-9-7zm0 2.5l7 5.25V19H5V8.75L12 3.5zM12 11c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+        </svg>
+
         <h1>Wolf Studios Produções</h1>
         <!-- Linha de reflexo -->
         <div class="reflexo-linha"></div>
