@@ -4,86 +4,89 @@
     <meta charset="UTF-8">
     <title>Wolf Studios Produções</title>
     <style>
+        :root {
+            --prata: #b0b0b0;
+            --preto-fundo: #0a0a0a;
+            --preto-card: #1a1a1a;
+            --borda: #404040;
+        }
+
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            /* Aplica a imagem como fundo do site inteiro */
-            background-image: url('A Mascara da vingança._15.jpg');
-            background-size: cover; /* Faz a imagem cobrir todo o espaço */
-            background-position: center; /* Centraliza a imagem */
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* Mantém a imagem fixa ao rolar a página */
+            background-color: var(--preto-fundo); 
             color: #e0e0e0; 
-            padding: 20px; 
-            text-align: center; 
-            min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            text-align: center;
         }
 
-        /* Criamos uma camada escura semi-transparente para o texto ficar legível sobre a imagem */
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.7); /* 70% opacidade preta */
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 900px;
-            margin: 0 auto;
+        h1 { 
+            color: var(--prata); 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            margin-top: 40px; 
+            margin-bottom: 50px;
+            font-weight: 300;
         }
 
-        h1 { color: #ffffff; }
-        h2 { color: #c0c0c0; border-bottom: 1px solid #555; display: inline-block; padding-bottom: 5px; }
-        
-        .grid-container { 
+        h2 { 
+            color: var(--prata); 
+            border-bottom: 2px solid var(--borda); 
+            display: inline-block; 
+            padding-bottom: 10px; 
+            margin-bottom: 30px; 
+            text-transform: uppercase;
+            font-size: 1.5rem;
+        }
+
+        .container { max-width: 900px; margin: auto; }
+
+        .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
             gap: 30px; 
-            margin-top: 30px; 
+            margin-bottom: 50px;
         }
-        
+
         .card { 
-            background: rgba(26, 26, 26, 0.8); /* Fundo levemente transparente */
-            padding: 20px; 
-            border-radius: 15px; 
-            border: 1px solid #404040; 
+            background: var(--preto-card); 
+            padding: 25px; 
+            border-radius: 10px; 
+            border: 1px solid var(--borda);
+            transition: border 0.3s;
         }
-        
+
+        .card:hover { border-color: var(--prata); }
+
         .btn { 
             display: inline-block; 
-            padding: 15px 30px; 
-            background: #2a2a2a; 
-            color: #ffffff; 
+            padding: 12px 25px; 
+            background: transparent; 
+            color: var(--prata); 
             text-decoration: none; 
-            border-radius: 8px; 
+            border: 1px solid var(--prata);
+            border-radius: 5px; 
             margin-top: 15px; 
-            font-weight: bold; 
-            border: 1px solid #8c8c8c; 
-            transition: 0.3s; 
+            font-weight: bold;
+            transition: 0.3s;
         }
-        .btn:hover { background: #404040; border-color: #ffffff; }
+
+        .btn:hover { background: var(--prata); color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="overlay">
+    <div class="container">
         <h1>Wolf Studios Produções</h1>
 
-        <section id="fanfics">
-            <h2>Fanfics</h2>
-            <div class="grid-container">
+        <!-- Setor HQs -->
+        <section id="hqs">
+            <h2>HQs</h2>
+            <div class="grid">
                 <div class="card">
-                    <h3>Doctor Who: A Extinção do Tempo</h3>
-                    <p>Skorma: Ira do Senhor do Tempo</p>
-                    <a href="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=drive_link" class="btn" target="_blank" rel="noopener noreferrer">
-                        📖 Ler HQ Completa
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="fanfilms" style="margin-top: 50px;">
-            <h2>Fanfilms</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/_db3SqSzCcY" frameborder="0" allowfullscreen></iframe>
-                    <p>Doctor Who - Fanfilm Project</p>
+                    <h3>Fenix</h3>
+                    <p>Projeto original de quadrinhos</p>
+                    <a href="https://drive.google.com/drive/folders/seu-link-aqui" class="btn" target="_blank">Acessar Pasta de HQs</a>
                 </div>
             </div>
         </section>
