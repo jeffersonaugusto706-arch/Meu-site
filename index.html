@@ -1,45 +1,147 @@
+      
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wolf Studios Produções</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --prata: #b0b0b0;
-        --preto-fundo: #0a0a0a;
-        --preto-card: #1a1a1a;
-        --borda: #404040;
+        --preto-fundo: #08090a;
+        --preto-card: #141516;
+        --preto-card-hover: #1b1d1f;
+        --borda: #2e3133;
+        --borda-hover: #6e7376;
+        --prata: #b8bcbe;
+        --prata-brilho: #f2f3f3;
+        --luar: #8ea3b3;
+        --texto: #d6d8d9;
+        --texto-dim: #7a7e80;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+        }
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
-        font-family: "Segoe UI", sans-serif;
+        font-family: "Inter", "Segoe UI", sans-serif;
         background-color: var(--preto-fundo);
-        color: #e0e0e0;
+        background-image: radial-gradient(
+          ellipse 900px 500px at 50% -10%,
+          rgba(142, 163, 179, 0.12),
+          transparent 60%
+        );
+        color: var(--texto);
         margin: 0;
-        padding: 20px;
+        padding: 0;
         text-align: center;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--luar);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--luar);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      /* ---------- Navegação ---------- */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        gap: 36px;
+        padding: 18px 20px;
+        background: rgba(8, 9, 10, 0.75);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--borda);
+      }
+
+      .nav a {
+        color: var(--prata);
+        text-decoration: none;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 500;
+        padding-bottom: 4px;
+        border-bottom: 1px solid transparent;
+        transition: color 0.25s, border-color 0.25s;
+      }
+
+      .nav a:hover,
+      .nav a:focus-visible {
+        color: var(--prata-brilho);
+        border-color: var(--luar);
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        padding: 60px 20px 10px;
+        position: relative;
+      }
+
+      .wolf-logo-wrap {
+        position: relative;
+        display: inline-block;
+      }
+
+      .wolf-logo-wrap::before {
+        content: "";
+        position: absolute;
+        inset: -40px;
+        background: radial-gradient(circle, rgba(220, 224, 226, 0.18), transparent 70%);
+        filter: blur(10px);
+        z-index: -1;
       }
 
       .wolf-logo {
         width: 150px;
-        margin-top: 40px;
-        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+        display: block;
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
       }
 
       h1 {
         color: var(--prata);
-        letter-spacing: 3px;
+        letter-spacing: 4px;
         text-transform: uppercase;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        font-weight: 300;
+        margin-top: 28px;
+        margin-bottom: 22px;
+        font-family: "Cinzel", "Segoe UI", serif;
+        font-weight: 600;
+        font-size: clamp(1.4rem, 4vw, 2.1rem);
       }
 
       .reflexo-linha {
         width: 300px;
+        max-width: 70vw;
         height: 1px;
         margin: 0 auto 50px auto;
-        background: linear-gradient(to right, transparent, white, transparent);
+        background: linear-gradient(to right, transparent, var(--prata-brilho), transparent);
         opacity: 0.5;
       }
 
@@ -48,79 +150,169 @@
         border-bottom: 2px solid var(--borda);
         display: inline-block;
         padding-bottom: 10px;
-        margin-bottom: 30px;
+        margin-bottom: 36px;
         text-transform: uppercase;
-        font-size: 1.5rem;
+        font-family: "Cinzel", "Segoe UI", serif;
+        font-weight: 600;
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+      }
+
+      h3 {
+        color: var(--prata-brilho);
+        font-weight: 600;
+        margin: 0 0 8px;
+        font-size: 1.1rem;
       }
 
       .container {
-        max-width: 900px;
+        max-width: 980px;
         margin: auto;
+        padding: 0 20px;
+      }
+
+      section {
+        scroll-margin-top: 76px;
+        margin-bottom: 64px;
       }
 
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        margin-bottom: 50px;
+        gap: 28px;
+      }
+
+      .grid-narrow {
+        max-width: 460px;
+        margin: 0 auto;
       }
 
       .card {
         background: var(--preto-card);
-        padding: 25px;
+        padding: 24px;
         border-radius: 10px;
         border: 1px solid var(--borda);
-        transition: border 0.3s;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        transition: border-color 0.3s, transform 0.3s, background 0.3s, box-shadow 0.3s;
       }
 
       .card:hover {
-        border-color: var(--prata);
+        border-color: var(--borda-hover);
+        background: var(--preto-card-hover);
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.6);
+      }
+
+      .card h3,
+      .card p {
+        text-align: center;
+      }
+
+      .card p {
+        color: var(--texto-dim);
+        margin: 0 0 6px;
+        font-size: 0.95rem;
+      }
+
+      .card-media {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 0;
+        border-radius: 6px;
+        margin-bottom: 16px;
+      }
+
+      .card-cover {
+        width: 100%;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        display: block;
       }
 
       .btn {
         display: inline-block;
+        align-self: center;
         padding: 12px 25px;
         background: transparent;
         color: var(--prata);
         text-decoration: none;
         border: 1px solid var(--prata);
         border-radius: 5px;
-        margin-top: 15px;
-        font-weight: bold;
-        transition: 0.3s;
+        margin-top: 16px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: background 0.25s, color 0.25s, border-color 0.25s;
       }
 
-      .btn:hover {
+      .btn:hover,
+      .btn:focus-visible {
         background: var(--prata);
         color: #000;
+        border-color: var(--prata);
       }
 
       footer {
         margin-top: 60px;
-        padding-bottom: 30px;
-        color: #404040;
+        padding: 28px 20px 36px;
+        border-top: 1px solid var(--borda);
+        color: var(--texto-dim);
         font-size: 0.8rem;
+      }
+
+      footer p {
+        margin: 0 0 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      @media (max-width: 480px) {
+        .nav {
+          gap: 18px;
+          padding: 14px 12px;
+        }
+        .nav a {
+          font-size: 0.7rem;
+          letter-spacing: 1px;
+        }
+        .wolf-logo {
+          width: 110px;
+        }
+        .hero {
+          padding: 40px 16px 0;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <img src="wolf-logo.jpg" alt="Wolf Studios Logo" class="wolf-logo" />
+    <nav class="nav" aria-label="Navegação principal">
+      <a href="#fanfilms">Fanfilms</a>
+      <a href="#hqs">HQs Autorais</a>
+      <a href="#fanfics">Fanfics</a>
+    </nav>
 
-      <h1>Wolf Studios Produções</h1>
-      <div class="reflexo-linha"></div>
+    <div class="container">
+      <div class="hero">
+        <div class="wolf-logo-wrap">
+          <img src="wolf-logo.jpg" alt="Wolf Studios Logo" class="wolf-logo" loading="lazy" />
+        </div>
+
+        <h1>Wolf Studios Produções</h1>
+        <div class="reflexo-linha"></div>
+      </div>
 
       <section id="fanfilms">
         <h2>Fanfilms</h2>
-        <div class="grid">
+        <div class="grid grid-narrow">
           <div class="card">
             <h3>Doctor Who Project</h3>
             <iframe
-              width="100%"
-              height="200"
+              class="card-media"
               src="https://www.youtube.com/embed/_db3SqSzCcY?modestbranding=1&amp;rel=0"
-              frameborder="0"
-              allowfullscreen=""
+              title="Doctor Who Project"
+              allowfullscreen
+              loading="lazy"
             ></iframe>
           </div>
         </div>
@@ -128,17 +320,18 @@
 
       <section id="hqs">
         <h2>HQs Autorais</h2>
-        <div class="grid">
+        <div class="grid grid-narrow">
           <div class="card">
             <!-- Imagem da capa adicionada abaixo -->
             <img
               src="A Mascara da vingança._1.jpg"
               alt="Capa A Máscara da Vingança"
-              style="width: 100%; border-radius: 5px; margin-bottom: 15px"
+              class="card-cover"
+              loading="lazy"
             />
             <h3>A Máscara da Vingança</h3>
             <p>Projeto original de quadrinhos</p>
-            <a href="https://globalcomix.com/c/a-mascara-da-vingan-a" class="btn" target="_blank">Ler HQ</a>
+            <a href="https://globalcomix.com/c/a-mascara-da-vingan-a" class="btn" target="_blank" rel="noopener noreferrer">Ler HQ</a>
           </div>
         </div>
       </section>
@@ -153,6 +346,7 @@
               href="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=drive_link"
               class="btn"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Ler HQ
             </a>
@@ -165,6 +359,7 @@
               href="https://drive.google.com/file/d/1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa/view?usp=drive_link"
               class="btn"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Ler Fanfic
             </a>
@@ -179,4 +374,3 @@
     </div>
   </body>
 </html>
-         
