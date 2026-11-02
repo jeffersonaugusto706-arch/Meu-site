@@ -2,410 +2,979 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wolf Studios Produções Independentes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10151d">
+<title>Wolf Studios Produções</title>
 <style>
-:root {
-  --bg:#080b12;
-  --panel:#111722;
-  --blue:#2878f0;
-  --gold:#d7b56d;
-  --text:#f4f6fa;
-  --muted:#9ba9bb;
-  --line:#273448;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
-header{background:#080b12;border-bottom:1px solid var(--line);padding:18px;position:sticky;top:0;z-index:10}
-.nav{max-width:1200px;margin:auto;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
-.brand{font-size:22px;font-weight:bold}
-.brand span{color:var(--gold)}
-nav{display:flex;gap:18px;flex:1}
-nav a{color:var(--muted);text-decoration:none}
-button{background:var(--blue);color:white;border:0;padding:11px 16px;border-radius:7px;cursor:pointer;font-weight:bold}
-.secondary{background:#182231;border:1px solid var(--line)}
-main{max-width:1200px;margin:auto;padding:25px 20px}
-.hero{padding:55px 35px;border-radius:16px;background:radial-gradient(ellipse at 85% 20%,#173b70,transparent 45%),linear-gradient(120deg,#121b2b,#090d15);border:1px solid var(--line)}
-.hero h1{font-size:48px;line-height:1.1;margin:12px 0}
-.hero p{color:var(--muted);max-width:600px;line-height:1.6}
-.eyebrow{color:var(--gold);letter-spacing:2px;font-weight:bold}
-h2{margin-top:35px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.poster{height:140px;background:linear-gradient(135deg,#17263c,#0c111b);display:flex;align-items:center;justify-content:center;color:#70829a;font-size:35px}
-.poster video,.poster img{width:100%;height:100%;object-fit:cover}
-.card-body{padding:14px}
-.card p{color:var(--muted);font-size:13px}
-.pill{color:var(--gold);font-size:11px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin:25px 0}
-label{display:block;color:var(--muted);margin:12px 0 5px}
-input,textarea,select{width:100%;padding:11px;background:#0b111b;color:white;border:1px solid var(--line);border-radius:7px}
-textarea{min-height:80px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+:root{color-scheme:dark;--bg:#0b1017;--panel:#141d28;--panel2:#1b2734;--line:#2b3949;--text:#f3f6fa;--muted:#a4b1c0;--accent:#e3a83b;--danger:#ff7777}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}
+header{position:sticky;top:0;z-index:5;background:#0b1017ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.top{max-width:1180px;margin:auto;padding:14px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{font-size:23px;font-weight:900;letter-spacing:.04em;text-decoration:none}.brand span{color:var(--accent)}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav a{padding:7px 10px;color:var(--muted);text-decoration:none;border-radius:7px}nav a:hover{background:var(--panel2);color:var(--text)}
+#account{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+main{max-width:1180px;margin:auto;padding:28px 20px 60px}
+.hero{padding:42px 30px;margin-bottom:34px;border:1px solid var(--line);border-radius:16px;background:radial-gradient(ellipse at 90% 20%,#4b3a1d55,transparent 45%),linear-gradient(135deg,#172332,#10151d)}
+.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:9px 0 12px}h2{font-size:27px;margin:0}.hero p{max-width:650px;color:var(--muted);margin:0}
+.section{margin:34px 0}.section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:15px}.section-head small{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:17px}
+.card{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--panel);min-width:0}
+.cover{aspect-ratio:2/3;background:linear-gradient(145deg,#26384b,#111923);display:grid;place-items:center;overflow:hidden;color:#91a2b5}
+.cover img{width:100%;height:100%;object-fit:cover}.cover .placeholder{text-align:center;padding:18px;font-weight:800;letter-spacing:.08em}
+.card-info{padding:12px}.card-title{font-weight:800;line-height:1.25;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin-top:5px}
+.card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.btn{border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);padding:8px 12px;font-weight:700}
+.btn:hover{border-color:var(--accent)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#1b160c}.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.empty{padding:24px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);grid-column:1/-1}
+footer{border-top:1px solid var(--line);padding:25px 20px;text-align:center;color:var(--muted);font-size:13px}
+dialog{width:min(760px,calc(100% - 24px));max-height:90vh;overflow:auto;border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--text);padding:0}
+dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
+.modal-head{position:sticky;top:0;background:var(--panel);padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;z-index:1}
+.modal-body{padding:18px}.detail-media{width:100%;max-height:420px;background:#05080c;display:grid;place-items:center;margin-bottom:15px;border-radius:9px;overflow:hidden}
+.detail-media video,.detail-media img{max-width:100%;max-height:420px}
+.pages{display:grid;gap:8px}.pages img{width:100%;height:auto}
+.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:13px;color:var(--muted);font-weight:700}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#0d141d;color:var(--text)}
+textarea{min-height:90px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.full{grid-column:1/-1}
+.comment{border-top:1px solid var(--line);padding:12px 0}.comment strong{font-size:14px}.comment p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.progress{height:7px;background:#0d141d;border-radius:9px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.hint{font-size:12px;color:var(--muted)}.status{min-height:22px;color:var(--muted);font-size:13px}.status.error{color:var(--danger)}
 .hidden{display:none!important}
-.empty{border:1px dashed #3a4b62;padding:25px;border-radius:10px;color:var(--muted);text-align:center}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.actions button{font-size:12px}
-.comment{padding:10px 0;border-bottom:1px solid var(--line)}
-dialog{width:min(650px,94vw);max-height:90vh;overflow:auto;background:var(--panel);color:white;border:1px solid var(--line);border-radius:12px;padding:20px}
-dialog::backdrop{background:#000b}
-footer{text-align:center;padding:25px;color:var(--muted);border-top:1px solid var(--line)}
-.notice{font-size:12px;color:var(--muted)}
-@media(max-width:650px){.hero h1{font-size:34px}.form-grid{grid-template-columns:1fr}nav{order:3;flex-basis:100%}}
+@media(max-width:620px){.top{gap:12px}.brand{font-size:20px}#account{margin-left:0;width:100%}.hero{padding:30px 20px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
-
 <header>
-<div class="nav">
-<div class="brand">WOLF <span>STUDIOS</span></div>
-<nav>
-<a href="#inicio">Início</a>
-<a href="#filmes">Filmes</a>
-<a href="#hqs">HQs</a>
-<a href="#animacoes">Animações</a>
-</nav>
-<div id="userArea">
-<button class="secondary" onclick="openLogin()">Entrar / Criar perfil</button>
-</div>
-</div>
+  <div class="top">
+    <a class="brand" href="#"><span>WOLF</span> STUDIOS <span>PRODUÇÕES</span></a>
+    <nav aria-label="Categorias">
+      <a href="#filmes">Filmes</a>
+      <a href="#hqs">HQs</a>
+      <a href="#animacoes">Animações</a>
+    </nav>
+    <div id="account"><span class="hint">Conectando...</span></div>
+  </div>
 </header>
 
-<main id="inicio">
+<main>
+  <section class="hero">
+    <div class="eyebrow">Produções independentes</div>
+    <h1>Histórias que ganham vida.</h1>
+    <p>Bem-vindo à Wolf Studios Produções. Explore nossos filmes, histórias em quadrinhos e animações.</p>
+  </section>
 
-<section class="hero">
-<div class="eyebrow">CINEMA INDEPENDENTE</div>
-<h1>O seu universo.<br>Na sua tela.</h1>
-<p>Bem-vindo à Wolf Studios Produções Independentes. Assista a filmes, animações e acompanhe nossas HQs em um só lugar.</p>
-<button onclick="document.querySelector('#catalogo').scrollIntoView({behavior:'smooth'})">Explorar catálogo</button>
-</section>
+  <div id="catalog">
+    <section class="section" id="filmes">
+      <div class="section-head"><h2>Filmes</h2><small id="count-filme">0 títulos</small></div>
+      <div class="cards" id="list-filme"><div class="empty">Carregando filmes...</div></div>
+    </section>
 
-<section id="studioPanel" class="panel hidden">
-<h2>🎬 Painel oficial do estúdio</h2>
-<p class="notice">Somente o administrador pode publicar conteúdos.</p>
+    <section class="section" id="hqs">
+      <div class="section-head"><h2>HQs</h2><small id="count-hq">0 títulos</small></div>
+      <div class="cards" id="list-hq"><div class="empty">Carregando HQs...</div></div>
+    </section>
 
-<form id="publishForm">
-<div class="form-grid">
-<div>
-<label>Título</label>
-<input id="title" required placeholder="Nome do conteúdo">
-</div>
-<div>
-<label>Categoria</label>
-<select id="category">
-<option value="Filmes">Filmes</option>
-<option value="HQs">HQs</option>
-<option value="Animações">Animações</option>
-</select>
-</div>
-</div>
-
-<label>Descrição</label>
-<textarea id="description" placeholder="Sinopse do conteúdo"></textarea>
-
-<label>Enviar arquivo (vídeo, imagem ou PDF)</label>
-<input id="media" type="file" accept="video/*,image/*,.pdf" required>
-
-<p class="notice">Esta versão demonstra o upload local no navegador. Para disponibilizar arquivos para todos os usuários, será necessário conectar um serviço de armazenamento online.</p>
-
-<button type="submit">Publicar conteúdo</button>
-</form>
-</section>
-
-<section id="catalogo">
-<h2 id="filmes">🎬 Filmes</h2>
-<div class="grid" id="grid-Filmes"></div>
-
-<h2 id="hqs">📚 HQs</h2>
-<div class="grid" id="grid-HQs"></div>
-
-<h2 id="animacoes">✨ Animações</h2>
-<div class="grid" id="grid-Animações"></div>
-</section>
-
+    <section class="section" id="animacoes">
+      <div class="section-head"><h2>Animações</h2><small id="count-animacao">0 títulos</small></div>
+      <div class="cards" id="list-animacao"><div class="empty">Carregando animações...</div></div>
+    </section>
+  </div>
 </main>
 
-<footer>
-© <span id="year"></span> Wolf Studios Produções Independentes
-</footer>
+<footer>© <span id="year"></span> Wolf Studios Produções. Todos os direitos reservados aos seus autores.</footer>
+
+<dialog id="detailDialog">
+  <div class="modal-head">
+    <strong id="detailTitle">Detalhes</strong>
+    <button class="btn" data-close="detailDialog">Fechar</button>
+  </div>
+  <div class="modal-body" id="detailBody"></div>
+</dialog>
+
+<dialog id="uploadDialog">
+  <div class="modal-head">
+    <strong>Publicar conteúdo</strong>
+    <button class="btn" data-close="uploadDialog">Fechar</button>
+  </div>
+  <form class="modal-body" id="uploadForm">
+    <div class="form-grid">
+      <div class="field">
+        <label for="kind">Categoria</label>
+        <select id="kind" required>
+          <option value="filme">Filme</option>
+          <option value="hq">HQ</option>
+          <option value="animacao">Animação</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="title">Título</label>
+        <input id="title" maxlength="100" required placeholder="Nome da produção">
+      </div>
+
+      <div class="field">
+        <label for="yearInput">Ano (opcional)</label>
+        <input id="yearInput" type="number" min="1900" max="2100" placeholder="2026">
+      </div>
+
+      <div class="field">
+        <label for="genre">Gênero (opcional)</label>
+        <input id="genre" maxlength="60" placeholder="Aventura, ficção...">
+      </div>
+
+      <div class="field full">
+        <label for="description">Sinopse / descrição</label>
+        <textarea id="description" maxlength="3000" placeholder="Conte um pouco sobre esta produção..."></textarea>
+      </div>
+
+      <div class="field full">
+        <label for="cover">Imagem de capa (opcional)</label>
+        <input id="cover" type="file" accept="image/png,image/jpeg,image/webp">
+      </div>
+
+      <div class="field full" id="mainFileField">
+        <label for="mainFile">Arquivo principal</label>
+        <input id="mainFile" type="file" accept="video/mp4,video/webm" required>
+        <span class="hint">Filmes e animações: selecione um vídeo MP4 ou WebM.</span>
+      </div>
+
+      <div class="field full hidden" id="hqFileField">
+        <label for="hqFiles">Arquivos da HQ</label>
+        <input id="hqFiles" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" multiple>
+        <span class="hint">Envie um PDF ou selecione várias páginas em imagem. Se selecionar imagens, escolha-as na ordem de leitura.</span>
+      </div>
+    </div>
+
+    <div class="progress"><span id="uploadProgress"></span></div>
+    <div class="status" id="uploadStatus" role="status"></div>
+    <button class="btn primary" id="publishBtn" type="submit">Enviar publicação</button>
+  </form>
+</dialog>
 
 <dialog id="loginDialog">
-<h2>Seu perfil</h2>
-<form id="loginForm">
-<label>Nome de exibição</label>
-<input id="profileName" required placeholder="Seu nome">
-<label>E-mail</label>
-<input id="profileEmail" type="email" required placeholder="seu@email.com">
-<br><br>
-<button type="submit">Entrar</button>
-<button type="button" class="secondary" onclick="closeDialog('loginDialog')">Fechar</button>
-</form>
+  <div class="modal-head">
+    <strong>Acesso administrativo</strong>
+    <button class="btn" data-close="loginDialog">Fechar</button>
+  </div>
+  <form class="modal-body" id="loginForm">
+    <p class="hint">Entre com a conta administrativa autorizada.</p>
+    <div class="field">
+      <label for="adminEmail">E-mail</label>
+      <input id="adminEmail" type="email" autocomplete="username" required value="jeffersonaugusto706@gmail.com">
+    </div>
+    <div class="field">
+      <label for="adminPassword">Senha</label>
+      <input id="adminPassword" type="password" autocomplete="current-password" required>
+    </div>
+    <div class="status" id="loginStatus"></div>
+    <button class="btn primary" type="submit">Entrar</button>
+  </form>
 </dialog>
 
-<dialog id="watchDialog">
-<h2 id="watchTitle"></h2>
-<div id="watchMedia"></div>
-<p id="watchDescription"></p>
-<div class="actions">
-<button id="likeButton" onclick="toggleLike()">♡ Curtir</button>
-<span id="likeCount"></span>
-</div>
-<h3>Comentários</h3>
-<div id="comments"></div>
-<form id="commentForm">
-<label>Escreva seu comentário</label>
-<textarea id="commentText" required maxlength="500"></textarea>
-<button type="submit">Comentar</button>
-<button type="button" class="secondary" onclick="closeDialog('watchDialog')">Fechar</button>
-</form>
-</dialog>
+<div id="toast" class="status" style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1b2734;border:1px solid #405166;border-radius:8px;padding:10px 15px;z-index:10;display:none"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
 
 <script>
-const ADMIN_EMAIL="jeffersonaugusto706@gmail.com";
-const STORAGE_KEY="wolf_studios_demo_v1";
+/*
+  CONFIGURAÇÃO FIREBASE:
 
-let state=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{"posts":[],"likes":{},"comments":{}}');
-let currentUser=null;
-let activePostId=null;
+  1. Crie um projeto no Firebase.
+  2. Copie a configuração do app Web para FIREBASE_CONFIG.
+  3. Ative Authentication: Anonymous e Email/Password.
+  4. Ative Firestore Database e Storage.
+  5. Publique as regras de segurança fornecidas separadamente.
+*/
 
-const $=id=>document.getElementById(id);
-const save=()=>localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
-
-function safe(value){
-return String(value??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
-}
-
-function isAdmin(){
-return currentUser && currentUser.email.toLowerCase()===ADMIN_EMAIL;
-}
-
-function openLogin(){
-$("loginDialog").showModal();
-}
-
-function closeDialog(id){
-$(id).close();
-}
-
-function updateUser(){
-const area=$("userArea");
-
-if(!currentUser){
-area.innerHTML='<button class="secondary" onclick="openLogin()">Entrar / Criar perfil</button>';
-$("studioPanel").classList.add("hidden");
-return;
-}
-
-area.innerHTML=`
-<strong>${safe(currentUser.name)}</strong>
-<button class="secondary" onclick="logout()">Sair</button>
-`;
-
-$("studioPanel").classList.toggle("hidden",!isAdmin());
-}
-
-function logout(){
-currentUser=null;
-updateUser();
-}
-
-$("loginForm").addEventListener("submit",e=>{
-e.preventDefault();
-
-const email=$("profileEmail").value.trim().toLowerCase();
-const name=$("profileName").value.trim();
-
-if(!email||!name)return;
-
-currentUser={email,name};
-closeDialog("loginDialog");
-updateUser();
-render();
-});
-
-function render(){
-
-["Filmes","HQs","Animações"].forEach(category=>{
-
-const grid=$("grid-"+category);
-const posts=state.posts.filter(p=>p.category===category);
-
-grid.innerHTML="";
-
-if(posts.length===0){
-grid.innerHTML='<div class="empty">Nenhum conteúdo publicado nesta categoria ainda. Aguarde os lançamentos oficiais da Wolf Studios.</div>';
-return;
-}
-
-posts.forEach(post=>{
-
-const card=document.createElement("article");
-card.className="card";
-
-let preview="";
-
-if(post.type.startsWith("video/")){
-preview=`<video src="${post.url}" muted playsinline></video>`;
-}else if(post.type==="application/pdf"){
-preview='<div class="poster">📖 PDF</div>';
-}else{
-preview=`<img src="${post.url}" alt="">`;
-}
-
-card.innerHTML=`
-<div class="poster">${preview}</div>
-<div class="card-body">
-<span class="pill">${safe(post.category)}</span>
-<h3>${safe(post.title)}</h3>
-<p>${safe(post.description)}</p>
-<div class="actions">
-<button onclick="watchPost('${post.id}')">▶ Assistir / Ler</button>
-${isAdmin()?`<button onclick="deletePost('${post.id}')">Excluir</button>`:""}
-</div>
-</div>`;
-
-grid.appendChild(card);
-});
-
-});
-}
-
-$("publishForm").addEventListener("submit",e=>{
-e.preventDefault();
-
-if(!isAdmin()){
-alert("Somente o administrador pode publicar.");
-return;
-}
-
-const file=$("media").files[0];
-if(!file)return;
-
-const reader=new FileReader();
-
-reader.onload=()=>{
-state.posts.unshift({
-id:crypto.randomUUID(),
-title:$("title").value.trim(),
-category:$("category").value,
-description:$("description").value.trim(),
-url:reader.result,
-type:file.type||"application/octet-stream"
-});
-
-save();
-e.target.reset();
-render();
-alert("Conteúdo adicionado ao catálogo deste navegador.");
+const FIREBASE_CONFIG = {
+  apiKey: "COLE_SUA_API_KEY",
+  authDomain: "SEU-PROJETO.firebaseapp.com",
+  projectId: "SEU-PROJETO",
+  storageBucket: "SEU-BUCKET-DE-STORAGE",
+  messagingSenderId: "COLE_SEU_SENDER_ID",
+  appId: "COLE_SEU_APP_ID"
 };
 
-reader.readAsDataURL(file);
+const ADMIN_EMAIL = "jeffersonaugusto706@gmail.com";
+
+let auth, db, storage;
+let currentUser = null;
+let isAdmin = false;
+let posts = [];
+let activePostId = null;
+let unsubscribePosts = null;
+
+const $ = id => document.getElementById(id);
+
+const fmtDate = ts =>
+  ts?.toDate ? ts.toDate().toLocaleDateString("pt-BR") : "";
+
+function notify(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.style.display = "block";
+
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => {
+    el.style.display = "none";
+  }, 3500);
+}
+
+function showStatus(id, message, error = false) {
+  const el = $(id);
+  el.textContent = message;
+  el.classList.toggle("error", error);
+}
+
+function openDialog(id) {
+  $(id).showModal();
+}
+
+function closeDialog(id) {
+  $(id).close();
+}
+
+document.querySelectorAll("[data-close]").forEach(btn => {
+  btn.addEventListener("click", () => closeDialog(btn.dataset.close));
 });
 
-function deletePost(id){
-if(!isAdmin()||!confirm("Excluir este conteúdo?"))return;
+$("year").textContent = new Date().getFullYear();
 
-state.posts=state.posts.filter(p=>p.id!==id);
-save();
-render();
+function setupFirebase() {
+  const configured =
+    FIREBASE_CONFIG.apiKey &&
+    !FIREBASE_CONFIG.apiKey.startsWith("COLE_") &&
+    FIREBASE_CONFIG.projectId &&
+    !FIREBASE_CONFIG.projectId.startsWith("SEU-");
+
+  if (!configured) {
+    $("account").innerHTML =
+      '<span class="hint">Firebase ainda não configurado</span>';
+
+    document.querySelectorAll(".cards").forEach(el => {
+      el.innerHTML =
+        '<div class="empty">Adicione as configurações do seu projeto Firebase no código para ativar o catálogo.</div>';
+    });
+
+    return;
+  }
+
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+
+    auth = firebase.auth();
+    db = firebase.firestore();
+    storage = firebase.storage();
+
+    auth.onAuthStateChanged(async user => {
+      if (!user) {
+        try {
+          await auth.signInAnonymously();
+        } catch (e) {
+          console.error(e);
+          notify("Não foi possível iniciar a sessão pública.");
+        }
+        return;
+      }
+
+      currentUser = user;
+
+      isAdmin =
+        !!user.email &&
+        user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+      renderAccount();
+      listenPosts();
+    });
+
+  } catch (e) {
+    console.error(e);
+    $("account").innerHTML =
+      '<span class="hint">Erro ao iniciar Firebase. Confira a configuração.</span>';
+  }
 }
 
-function watchPost(id){
+function renderAccount() {
+  const el = $("account");
+  el.replaceChildren();
 
-const post=state.posts.find(p=>p.id===id);
-if(!post)return;
+  if (isAdmin) {
+    const label = document.createElement("span");
+    label.className = "hint";
+    label.textContent = "Administrador";
+    el.append(label);
 
-activePostId=id;
+    const upload = document.createElement("button");
+    upload.className = "btn primary";
+    upload.textContent = "+ Publicar";
+    upload.onclick = () => openDialog("uploadDialog");
+    el.append(upload);
 
-$("watchTitle").textContent=post.title;
-$("watchDescription").textContent=post.description;
+    const out = document.createElement("button");
+    out.className = "btn";
+    out.textContent = "Sair";
+    out.onclick = async () => {
+      await auth.signOut();
+    };
+    el.append(out);
 
-if(post.type.startsWith("video/")){
-$("watchMedia").innerHTML=`
-<video src="${post.url}" controls playsinline style="width:100%;max-height:55vh;background:#000"></video>`;
-}else if(post.type==="application/pdf"){
-$("watchMedia").innerHTML=`
-<a href="${post.url}" target="_blank" style="color:#8dbaff">Abrir HQ em PDF</a>`;
-}else{
-$("watchMedia").innerHTML=`
-<img src="${post.url}" style="width:100%;max-height:55vh;object-fit:contain">`;
+  } else {
+    const login = document.createElement("button");
+    login.className = "btn";
+    login.textContent = "Acesso do estúdio";
+    login.onclick = () => openDialog("loginDialog");
+    el.append(login);
+
+    const label = document.createElement("span");
+    label.className = "hint";
+    label.textContent = "Visitante";
+    el.append(label);
+  }
 }
 
-refreshEngagement();
-$("watchDialog").showModal();
+function listenPosts() {
+  if (unsubscribePosts) unsubscribePosts();
+
+  unsubscribePosts = db
+    .collection("publications")
+    .orderBy("createdAt", "desc")
+    .onSnapshot(snapshot => {
+      posts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      renderCatalog();
+
+      if (activePostId) refreshDetail();
+
+    }, err => {
+      console.error(err);
+      notify("Erro ao carregar publicações. Verifique as regras do Firestore.");
+    });
 }
 
-function refreshEngagement(){
+function renderCatalog() {
+  const kinds = ["filme", "hq", "animacao"];
 
-const likes=state.likes[activePostId]||[];
+  const names = {
+    filme: "Filmes",
+    hq: "HQs",
+    animacao: "Animações"
+  };
 
-$("likeButton").textContent=
-likes.includes(currentUser?.email)?"♥ Curtido":"♡ Curtir";
+  kinds.forEach(kind => {
+    const list = $("list-" + kind);
+    const items = posts.filter(p => p.kind === kind);
 
-$("likeCount").textContent=likes.length+" curtida(s)";
+    $("count-" + kind).textContent =
+      items.length + (items.length === 1 ? " título" : " títulos");
 
-const comments=state.comments[activePostId]||[];
+    list.replaceChildren();
 
-$("comments").innerHTML=comments.length
-?comments.map(c=>`
-<div class="comment">
-<strong>${safe(c.name)}</strong>
-<p>${safe(c.text)}</p>
-<small>${safe(c.date)}</small>
-</div>`).join("")
-:"<p class='notice'>Ainda não há comentários.</p>";
+    if (!items.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent =
+        "Ainda não há " + names[kind].toLowerCase() + " publicados.";
+
+      list.append(empty);
+      return;
+    }
+
+    items.forEach(post => list.append(makeCard(post)));
+  });
 }
 
-function toggleLike(){
+function makeCard(post) {
+  const article = document.createElement("article");
+  article.className = "card";
 
-if(!currentUser){
-closeDialog("watchDialog");
-openLogin();
-return;
+  const cover = document.createElement("div");
+  cover.className = "cover";
+
+  if (post.coverUrl) {
+    const img = document.createElement("img");
+    img.src = post.coverUrl;
+    img.alt = "Capa de " + post.title;
+    cover.append(img);
+  } else {
+    const ph = document.createElement("div");
+    ph.className = "placeholder";
+    ph.textContent = "WOLF STUDIOS";
+    cover.append(ph);
+  }
+
+  const info = document.createElement("div");
+  info.className = "card-info";
+
+  const title = document.createElement("div");
+  title.className = "card-title";
+  title.textContent = post.title || "Sem título";
+
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  meta.textContent =
+    [post.year, post.genre].filter(Boolean).join(" • ") ||
+    "Wolf Studios Produções";
+
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+
+  const view = document.createElement("button");
+  view.className = "btn primary";
+  view.textContent =
+    post.kind === "hq" ? "Ler / detalhes" : "Assistir / detalhes";
+  view.onclick = () => openDetail(post.id);
+
+  actions.append(view);
+
+  const like = document.createElement("button");
+  like.className = "btn";
+  like.textContent = "♡ Curtir";
+  like.onclick = () => toggleLike(post.id);
+
+  actions.append(like);
+
+  info.append(title, meta, actions);
+  article.append(cover, info);
+
+  return article;
 }
 
-const list=state.likes[activePostId]||(state.likes[activePostId]=[]);
-const index=list.indexOf(currentUser.email);
+async function toggleLike(postId) {
+  if (!currentUser) {
+    return notify("Conectando como visitante. Tente novamente.");
+  }
 
-if(index>=0)list.splice(index,1);
-else list.push(currentUser.email);
+  const ref = db
+    .collection("publications")
+    .doc(postId)
+    .collection("likes")
+    .doc(currentUser.uid);
 
-save();
-refreshEngagement();
+  try {
+    const snap = await ref.get();
+
+    if (snap.exists) {
+      await ref.delete();
+    } else {
+      await ref.set({
+        uid: currentUser.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+
+    if (activePostId === postId) refreshDetail();
+
+  } catch (e) {
+    console.error(e);
+    notify("Não foi possível registrar a curtida.");
+  }
 }
 
-$("commentForm").addEventListener("submit",e=>{
-e.preventDefault();
-
-if(!currentUser){
-closeDialog("watchDialog");
-openLogin();
-return;
+function openDetail(id) {
+  activePostId = id;
+  refreshDetail();
+  openDialog("detailDialog");
 }
 
-const text=$("commentText").value.trim();
-if(!text)return;
+async function refreshDetail() {
+  const post = posts.find(p => p.id === activePostId);
+  if (!post) return;
 
-const list=state.comments[activePostId]||(state.comments[activePostId]=[]);
+  $("detailTitle").textContent = post.title;
 
-list.push({
-name:currentUser.name,
-text,
-date:new Date().toLocaleString("pt-BR")
+  const body = $("detailBody");
+  body.replaceChildren();
+
+  const media = document.createElement("div");
+  media.className = "detail-media";
+
+  if (post.kind === "hq") {
+
+    if (post.pdfUrl) {
+      const link = document.createElement("a");
+      link.href = post.pdfUrl;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.className = "btn primary";
+      link.textContent = "Abrir HQ em PDF";
+      media.append(link);
+
+    } else if (post.pageUrls?.length) {
+      const pages = document.createElement("div");
+      pages.className = "pages";
+
+      post.pageUrls.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "Página da HQ";
+        pages.append(img);
+      });
+
+      media.append(pages);
+
+    } else {
+      media.textContent = "Arquivo da HQ indisponível.";
+    }
+
+  } else if (post.videoUrl) {
+    const video = document.createElement("video");
+    video.src = post.videoUrl;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    media.append(video);
+
+  } else {
+    media.textContent = "Vídeo indisponível.";
+  }
+
+  body.append(media);
+
+  if (post.description) {
+    const desc = document.createElement("p");
+    desc.textContent = post.description;
+    desc.style.whiteSpace = "pre-wrap";
+    body.append(desc);
+  }
+
+  const meta = document.createElement("p");
+  meta.className = "hint";
+  meta.textContent =
+    [post.year, post.genre, fmtDate(post.createdAt)]
+      .filter(Boolean)
+      .join(" • ");
+
+  body.append(meta);
+
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+
+  const likeBtn = document.createElement("button");
+  likeBtn.className = "btn";
+  likeBtn.textContent = "♡ Curtir";
+  likeBtn.onclick = () => toggleLike(post.id);
+
+  const likeCount = document.createElement("span");
+  likeCount.className = "hint";
+  likeCount.textContent = "Carregando curtidas...";
+
+  actions.append(likeBtn, likeCount);
+
+  if (isAdmin) {
+    const del = document.createElement("button");
+    del.className = "btn danger";
+    del.textContent = "Excluir publicação";
+    del.onclick = () => deletePost(post);
+    actions.append(del);
+  }
+
+  body.append(actions);
+
+  try {
+    const likes = await db
+      .collection("publications")
+      .doc(post.id)
+      .collection("likes")
+      .get();
+
+    likeCount.textContent = "♥ " + likes.size + " curtida(s)";
+
+    const mine = currentUser && await db
+      .collection("publications")
+      .doc(post.id)
+      .collection("likes")
+      .doc(currentUser.uid)
+      .get();
+
+    if (mine?.exists) likeBtn.textContent = "♥ Curtido";
+
+  } catch (e) {
+    likeCount.textContent = "Curtidas indisponíveis";
+  }
+
+  const commentsTitle = document.createElement("h3");
+  commentsTitle.textContent = "Comentários";
+  commentsTitle.style.margin = "24px 0 8px";
+  body.append(commentsTitle);
+
+  const form = document.createElement("form");
+  form.className = "field";
+
+  const textarea = document.createElement("textarea");
+  textarea.maxLength = 500;
+  textarea.placeholder = "Escreva seu comentário...";
+  textarea.required = true;
+
+  const send = document.createElement("button");
+  send.className = "btn primary";
+  send.textContent = "Comentar";
+
+  form.append(textarea, send);
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+    await addComment(post.id, textarea.value.trim());
+    textarea.value = "";
+  };
+
+  body.append(form);
+
+  const comments = document.createElement("div");
+  comments.id = "commentsList";
+  comments.className = "comments";
+  body.append(comments);
+
+  try {
+    const snap = await db
+      .collection("publications")
+      .doc(post.id)
+      .collection("comments")
+      .orderBy("createdAt", "asc")
+      .limit(100)
+      .get();
+
+    snap.forEach(doc => {
+      const data = doc.data();
+
+      const item = document.createElement("div");
+      item.className = "comment";
+
+      const who = document.createElement("strong");
+      who.textContent = data.displayName || "Visitante";
+
+      const text = document.createElement("p");
+      text.textContent = data.text || "";
+
+      item.append(who, text);
+
+      if (currentUser && (data.uid === currentUser.uid || isAdmin)) {
+        const remove = document.createElement("button");
+        remove.className = "btn danger";
+        remove.textContent = "Apagar";
+        remove.style.marginTop = "7px";
+
+        remove.onclick = async () => {
+          try {
+            await db
+              .collection("publications")
+              .doc(post.id)
+              .collection("comments")
+              .doc(doc.id)
+              .delete();
+
+            refreshDetail();
+
+          } catch (e) {
+            notify("Não foi possível apagar.");
+          }
+        };
+
+        item.append(remove);
+      }
+
+      comments.append(item);
+    });
+
+    if (!comments.children.length) {
+      comments.textContent = "Seja a primeira pessoa a comentar.";
+    }
+
+  } catch (e) {
+    comments.textContent = "Não foi possível carregar os comentários.";
+  }
+}
+
+async function addComment(postId, text) {
+  if (!text) return;
+
+  if (!currentUser) {
+    return notify("Conectando como visitante. Tente novamente.");
+  }
+
+  try {
+    await db
+      .collection("publications")
+      .doc(postId)
+      .collection("comments")
+      .add({
+        uid: currentUser.uid,
+        displayName: "Visitante",
+        text: text.slice(0, 500),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+    refreshDetail();
+
+  } catch (e) {
+    console.error(e);
+    notify("Não foi possível publicar o comentário.");
+  }
+}
+
+async function deletePost(post) {
+  if (!confirm("Tem certeza de que deseja excluir esta publicação?")) {
+    return;
+  }
+
+  try {
+    const ref = db.collection("publications").doc(post.id);
+
+    const files = [
+      post.coverPath,
+      post.videoPath,
+      post.pdfPath,
+      ...(post.pagePaths || [])
+    ].filter(Boolean);
+
+    for (const path of files) {
+      try {
+        await storage.ref(path).delete();
+      } catch (e) {
+        console.warn("Falha ao excluir arquivo", path, e);
+      }
+    }
+
+    const comments = await ref.collection("comments").get();
+    const likes = await ref.collection("likes").get();
+
+    const batch = db.batch();
+
+    comments.docs.forEach(d => batch.delete(d.ref));
+    likes.docs.forEach(d => batch.delete(d.ref));
+    batch.delete(ref);
+
+    await batch.commit();
+
+    closeDialog("detailDialog");
+    activePostId = null;
+    notify("Publicação excluída.");
+
+  } catch (e) {
+    console.error(e);
+    notify("Erro ao excluir publicação. Confira as regras.");
+  }
+}
+
+function uploadFile(file, path, onProgress) {
+  return new Promise((resolve, reject) => {
+    const task = storage.ref(path).put(file);
+
+    task.on(
+      "state_changed",
+      snap => onProgress?.(snap.bytesTransferred / snap.totalBytes),
+      reject,
+      async () => {
+        try {
+          resolve({
+            path,
+            url: await task.snapshot.ref.getDownloadURL()
+          });
+        } catch (e) {
+          reject(e);
+        }
+      }
+    );
+  });
+}
+
+$("kind").addEventListener("change", () => {
+  const hq = $("kind").value === "hq";
+
+  $("hqFileField").classList.toggle("hidden", !hq);
+  $("mainFileField").classList.toggle("hidden", hq);
+
+  $("mainFile").required = !hq;
+  $("hqFiles").required = hq;
 });
 
-$("commentText").value="";
-save();
-refreshEngagement();
+$("uploadForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if (!isAdmin) {
+    return notify("Apenas o administrador pode publicar.");
+  }
+
+  const kind = $("kind").value;
+  const title = $("title").value.trim();
+  const cover = $("cover").files[0];
+
+  const main = $("mainFile").files[0];
+  const hqFiles = Array.from($("hqFiles").files);
+
+  if (!title) {
+    return showStatus("uploadStatus", "Informe o título.", true);
+  }
+
+  if (kind === "hq" && !hqFiles.length) {
+    return showStatus("uploadStatus", "Selecione o PDF ou as páginas da HQ.", true);
+  }
+
+  if (kind !== "hq" && !main) {
+    return showStatus("uploadStatus", "Selecione o vídeo.", true);
+  }
+
+  const btn = $("publishBtn");
+  btn.disabled = true;
+  $("uploadProgress").style.width = "0%";
+
+  showStatus("uploadStatus", "Preparando envio...");
+
+  let total =
+    (cover?.size || 0) +
+    (main?.size || 0) +
+    hqFiles.reduce((n, f) => n + f.size, 0);
+
+  let done = 0;
+
+  const progress = (fraction, size) => {
+    $("uploadProgress").style.width =
+      Math.min(100, ((done + fraction * size) / Math.max(total, 1)) * 100) + "%";
+  };
+
+  try {
+    const ref = db.collection("publications").doc();
+    const id = ref.id;
+
+    const data = {
+      kind,
+      title,
+      year: $("yearInput").value ? Number($("yearInput").value) : null,
+      genre: $("genre").value.trim(),
+      description: $("description").value.trim(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdBy: currentUser.uid
+    };
+
+    if (cover) {
+      const result = await uploadFile(
+        cover,
+        `publications/${id}/cover-${Date.now()}-${cover.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
+        f => progress(f, cover.size)
+      );
+
+      done += cover.size;
+      data.coverPath = result.path;
+      data.coverUrl = result.url;
+    }
+
+    if (kind === "hq") {
+
+      if (hqFiles.length === 1 && hqFiles[0].type === "application/pdf") {
+        const file = hqFiles[0];
+
+        const result = await uploadFile(
+          file,
+          `publications/${id}/hq-${Date.now()}.pdf`,
+          f => progress(f, file.size)
+        );
+
+        data.pdfPath = result.path;
+        data.pdfUrl = result.url;
+
+      } else {
+        data.pagePaths = [];
+        data.pageUrls = [];
+
+        for (let i = 0; i < hqFiles.length; i++) {
+          const file = hqFiles[i];
+          const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+          const result = await uploadFile(
+            file,
+            `publications/${id}/page-${String(i + 1).padStart(3, "0")}-${safe}`,
+            f => progress(f, file.size)
+          );
+
+          done += file.size;
+          data.pagePaths.push(result.path);
+          data.pageUrls.push(result.url);
+        }
+      }
+
+    } else {
+      const result = await uploadFile(
+        main,
+        `publications/${id}/video-${Date.now()}-${main.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
+        f => progress(f, main.size)
+      );
+
+      data.videoPath = result.path;
+      data.videoUrl = result.url;
+    }
+
+    await ref.set(data);
+
+    $("uploadForm").reset();
+    $("kind").dispatchEvent(new Event("change"));
+    $("uploadProgress").style.width = "100%";
+
+    showStatus("uploadStatus", "Publicado com sucesso!");
+    notify("Conteúdo publicado na Wolf Studios.");
+
+    setTimeout(() => {
+      closeDialog("uploadDialog");
+      showStatus("uploadStatus", "");
+    }, 900);
+
+  } catch (err) {
+    console.error(err);
+
+    showStatus(
+      "uploadStatus",
+      "Falha no envio: " + (err.message || "verifique Firebase Storage e as regras."),
+      true
+    );
+
+  } finally {
+    btn.disabled = false;
+  }
 });
 
-$("year").textContent=new Date().getFullYear();
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
 
-updateUser();
-render();
+  showStatus("loginStatus", "Entrando...");
+
+  const email = $("adminEmail").value.trim().toLowerCase();
+  const password = $("adminPassword").value;
+
+  if (email !== ADMIN_EMAIL) {
+    return showStatus("loginStatus", "Este e-mail não é o administrador autorizado.", true);
+  }
+
+  try {
+    const credential = await auth.signInWithEmailAndPassword(email, password);
+
+    if ((credential.user.email || "").toLowerCase() !== ADMIN_EMAIL) {
+      throw new Error("Conta não autorizada.");
+    }
+
+    closeDialog("loginDialog");
+    $("loginForm").reset();
+    notify("Acesso administrativo liberado.");
+
+  } catch (err) {
+    console.error(err);
+
+    showStatus(
+      "loginStatus",
+      "Não foi possível entrar. Confira a senha e se a conta foi criada no Firebase Authentication.",
+      true
+    );
+  }
+});
+
+setupFirebase();
 </script>
-
 </body>
 </html>
