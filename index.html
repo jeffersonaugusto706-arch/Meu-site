@@ -1,8 +1,27 @@
+!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Wolf Studios Produções Independentes</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+ 
+<!-- ============================================================
+     CONFIGURAÇÃO: troque os dois valores abaixo pelos do seu projeto
+     Supabase (Project Settings > API). A chave "anon public" pode
+     ficar no código; quem protege os dados são as regras do SQL.
+     ============================================================ -->
+<script>
+window.WOLF_CONFIG = {
+  SUPABASE_URL: 'COLE_AQUI_A_URL_DO_PROJETO',
+  SUPABASE_ANON_KEY: 'COLE_AQUI_A_CHAVE_ANON_PUBLICA',
+  ADMIN_EMAIL: 'jeffersonaugusto706@gmail.com'
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+ 
 <style>
-/* Layout: barra fixa → capa em destaque → três cartões de catálogo (Filmes, HQs, Animações) em fileiras de rolagem horizontal → janelas de detalhe, leitor de HQ e formulário do estúdio */
+/* Layout: barra fixa, capa em destaque, três cartões de catálogo (Filmes, HQs, Animações) em fileiras de rolagem horizontal, janelas de detalhe, leitor de HQ, login e formulário do estúdio */
 :root{
   --bg:#0b1317; --surface:#111b21; --surface-2:#19262e; --line:#26363f;
   --fg:#e9eff1; --muted:#8ea3ad;
@@ -30,11 +49,12 @@
   --bar:rgba(238,242,243,.9); --fade:rgba(238,242,243,.62); --glow:rgba(154,84,0,.14);
   color-scheme:light;
 }
-
+ 
 *{box-sizing:border-box}
 html.lock{overflow:hidden}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--font-body)}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+img{max-width:100%}
+[hidden]{display:none!important}
 h1,h2,h3,p{margin:0}
 a{color:inherit}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -42,14 +62,12 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--eye);outline-offset:2px}
 .muted{color:var(--muted)}
 .wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-
-/* marca */
+ 
 .mark{width:34px;height:34px;color:var(--fg);flex:none;display:block}
 .w-eye{fill:var(--eye)}
 .w-nose{fill:var(--bg)}
-
-/* barra */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);background:var(--bar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+ 
+.top{position:sticky;top:0;z-index:20;background:var(--bg);background:var(--bar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 24px;padding-block:10px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .wm{font-family:var(--font-display);font-weight:800;font-size:26px;line-height:1;letter-spacing:.07em;text-transform:uppercase}
@@ -60,11 +78,10 @@ button{cursor:pointer}
 .nav a[aria-current="page"]{color:var(--fg);box-shadow:inset 0 -2px 0 var(--eye);border-radius:6px 6px 0 0}
 .who{margin-left:auto;display:flex;align-items:center;gap:10px;min-width:0}
 .who .nm{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:14px}
-.av{width:30px;height:30px;border-radius:50%;object-fit:cover;background:var(--surface-2);flex:none;display:block}
+.av{width:30px;height:30px;border-radius:50%;background:var(--eye);color:var(--on-eye);flex:none;display:grid;place-items:center;font:700 13px/1 var(--font-body);text-transform:uppercase}
 .tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--eye);color:var(--eye);border-radius:3px;white-space:nowrap}
 @media (max-width:760px){ .nav{order:3;width:100%} }
-
-/* botões */
+ 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);font-weight:600;line-height:1.2;text-decoration:none}
 .btn:hover{border-color:var(--muted)}
 .btn.primary{background:var(--eye);border-color:var(--eye);color:var(--on-eye)}
@@ -76,8 +93,7 @@ button{cursor:pointer}
 .ico{display:inline-flex}
 .ibtn{width:32px;height:32px;display:grid;place-items:center;border-radius:6px;border:0;background:transparent;color:var(--muted)}
 .ibtn:hover{color:var(--danger);background:var(--surface-2)}
-
-/* capa */
+ 
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(60% 90% at 88% 10%,var(--glow),transparent 70%),var(--surface)}
 .hero .bg{position:absolute;inset:0}
 .hero .bg>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -90,8 +106,7 @@ button{cursor:pointer}
 .cm{font:400 11.5px/1.35 var(--font-mono);color:var(--muted);letter-spacing:.02em}
 .cm.big{margin-top:12px;font-size:12.5px}
 .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-
-/* cartões do catálogo */
+ 
 .shelf{padding-block:30px 6px}
 .shelf-h{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px;margin-bottom:14px}
 .shelf-h h2,.cat-h h1{font:800 clamp(26px,3.2vw,36px)/1 var(--font-display);letter-spacing:.05em;text-transform:uppercase}
@@ -125,10 +140,10 @@ button{cursor:pointer}
 .grid .card,.grid .card.wide{width:auto}
 .note{margin-top:18px;padding:12px 16px;border:1px solid var(--line);border-left:3px solid var(--eye);border-radius:6px;background:var(--surface);color:var(--fg)}
 .foot{padding-block:36px 48px;color:var(--muted);font:400 12px/1.5 var(--font-mono);letter-spacing:.04em}
-
-/* janelas */
+ 
 .overlay{position:fixed;inset:0;z-index:50;background:var(--scrim);overflow-y:auto;display:flex;justify-content:center;align-items:flex-start;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .panel{position:relative;width:100%;max-width:880px;margin:clamp(0px,3vh,28px) 0;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.panel.narrow{max-width:440px}
 .x{position:absolute;top:10px;right:10px;z-index:3;width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:50%;background:var(--scrim);color:var(--on-scrim)}
 .media{position:relative;aspect-ratio:16/9;background:#05090b;display:grid;place-items:center;overflow:hidden}
 .media>img.cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -143,25 +158,23 @@ button{cursor:pointer}
 .cmts{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:16px}
 .cmts h3{font:800 24px/1 var(--font-display);letter-spacing:.05em;text-transform:uppercase}
 .compose{display:grid;gap:10px}
-textarea,input[type=text],input[type=number],input[type=url],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;color:var(--fg)}
+textarea,input[type=text],input[type=email],input[type=password],input[type=number],input[type=url],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;color:var(--fg)}
 textarea{min-height:76px;resize:vertical}
 .compose .btn{justify-self:end}
 .cmt{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:start}
 .cmt .av{width:34px;height:34px}
 .ch{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
 .ctext{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere}
-
-/* leitor de HQ */
+ 
 .reader{position:fixed;inset:0;z-index:60;overflow-y:auto;background:var(--bg)}
 .reader-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;background:var(--bar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:max(10px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
 .reader-bar strong{font:800 20px/1 var(--font-display);letter-spacing:.05em;text-transform:uppercase;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .reader-bar .btn{margin-left:auto;flex:none}
-.pages{max-width:880px;margin:0 auto;padding:12px max(0px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(0px,env(safe-area-inset-left,0px));display:grid;gap:6px}
+.pages{max-width:880px;margin:0 auto;padding:12px 0 max(24px,env(safe-area-inset-bottom,0px));display:grid;gap:6px}
 .pg{min-height:260px;background:var(--surface)}
 .pg img{display:block;width:100%;height:auto}
 .pdfbox{max-width:520px;margin:60px auto;padding:0 16px;display:grid;gap:14px;justify-items:start}
-
-/* formulário do estúdio */
+ 
 .fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .fgrid .full{grid-column:1/-1}
 @media (max-width:560px){ .fgrid{grid-template-columns:minmax(0,1fr)} }
@@ -173,9 +186,14 @@ input[type=file]{width:100%;min-width:0;padding:8px;border:1px dashed var(--line
 .prog>i{display:block;height:100%;width:0;background:var(--eye);transition:width .2s}
 .fmsg{min-height:1.4em;font-size:14px}
 .fmsg.err{color:var(--danger)}
+.tabs{display:flex;gap:4px;margin-top:10px}
+.tabs button{flex:1;padding:9px 12px;border:0;border-bottom:2px solid var(--line);background:none;color:var(--muted);font-weight:600}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--eye)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:80;max-width:min(92vw,540px);padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);box-shadow:0 10px 34px rgba(0,0,0,.4)}
 </style>
-
+</head>
+<body>
+ 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="wolf" viewBox="0 0 64 64">
     <path d="M6 6 L22 17 Q32 14 42 17 L58 6 L55 32 L47 50 L32 60 L17 50 L9 32 Z" fill="currentColor"/>
@@ -184,7 +202,7 @@ input[type=file]{width:100%;min-width:0;padding:8px;border:1px dashed var(--line
     <polygon class="w-nose" points="27,47 37,47 32,54"/>
   </symbol>
 </svg>
-
+ 
 <header class="top">
   <div class="wrap bar">
     <a class="brand" href="#inicio" aria-label="Wolf Studios, início">
@@ -200,20 +218,24 @@ input[type=file]{width:100%;min-width:0;padding:8px;border:1px dashed var(--line
     <div class="who" id="who"></div>
   </div>
 </header>
-
+ 
 <main id="main"></main>
 <footer class="wrap foot" id="foot"></footer>
-
+ 
 <div id="modal" class="overlay" hidden></div>
 <div id="pub" class="overlay" hidden></div>
+<div id="auth" class="overlay" hidden></div>
 <div id="reader" class="reader" hidden></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-
+ 
 <script>
 (function(){
 'use strict';
-
-var MAX = 20 * 1024 * 1024;
+ 
+var CFG = window.WOLF_CONFIG || {};
+var ADMIN = String(CFG.ADMIN_EMAIL || '').trim().toLowerCase();
+var BUCKET = 'wolf-media';
+var MAX = 50 * 1024 * 1024;
 var IMG_TYPES = ['image/png','image/jpeg','image/webp','image/gif'];
 var VID_TYPES = ['video/mp4','video/webm'];
 var EXT_TYPES = {mp4:'video/mp4',webm:'video/webm',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',gif:'image/gif',pdf:'application/pdf'};
@@ -224,20 +246,24 @@ var KINDS = {
   animacao:{label:'Animações',single:'Animação',route:'animacoes',ratio:'wide',emptyTitle:'Nenhuma animação publicada ainda'}
 };
 var ROUTES = {inicio:null,filmes:'filme',hqs:'hq',animacoes:'animacao'};
-
-var C = window.claude;
+ 
+var configured = !!(window.supabase && CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY && String(CFG.SUPABASE_URL).indexOf('COLE_AQUI') < 0 && String(CFG.SUPABASE_ANON_KEY).indexOf('COLE_AQUI') < 0);
+var sb = null;
+if(configured){
+  try{ sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY); }catch(e){ sb = null; }
+}
+ 
 var state = {
-  db:null, assets:null, user:null,
-  me:{id:null,name:'',avatarUrl:'',isOwner:false},
-  posts:[], likes:{}, comments:{}, site:{},
-  loaded:{posts:false,likes:false,comments:false,site:false},
-  unavailable:false, slow:false, route:'inicio',
-  openId:null, lastFocus:null, publishing:false, ownerWritten:false
+  me:{id:null,name:'',email:'',isOwner:false},
+  posts:[], likeCount:{}, mine:{}, featuredId:null,
+  cmts:[], cmtsFor:null,
+  loaded:false, error:'', route:'inicio',
+  openId:null, lastFocus:null, publishing:false
 };
-
+ 
 function $(s,r){ return (r||document).querySelector(s); }
 function sleep(ms){ return new Promise(function(res){ setTimeout(res,ms); }); }
-
+ 
 function h(tag, props){
   var el = document.createElement(tag);
   if(props){
@@ -259,14 +285,15 @@ function append(el, kid){
   if(Array.isArray(kid)){ kid.forEach(function(k){ append(el,k); }); return; }
   el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
 }
-
+ 
 var ICONS = {
   play:'<polygon points="7 4 20 12 7 20" fill="currentColor" stroke="none"/>',
   book:'<path d="M3 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-7a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h7z"/>',
-  heart:'<path d="M12 20s-7.5-4.6-9-9.4C1.900 7.400 3.700 4.500 7 4.500c2 0 3.400 1 5 3 1.600-2 3-3 5-3 3.300 0 5.100 2.900 4 6.100-1.500 4.800-9 9.400-9 9.400z"/>',
+  heart:'<path d="M12 20s-7.5-4.600-9-9.400C1.900 7.400 3.700 4.500 7 4.500c2 0 3.400 1 5 3 1.600-2 3-3 5-3 3.300 0 5.100 2.900 4 6.100-1.500 4.800-9 9.400-9 9.400z"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   x:'<path d="M6 6l12 12M18 6L6 18"/>',
   trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
   star:'<path d="M12 3l2.600 5.600 6 .7-4.500 4.100 1.300 6L12 16.400 6.600 19.400l1.300-6L3.400 9.300l6-.7z"/>'
 };
 function icon(name, filled){
@@ -275,7 +302,8 @@ function icon(name, filled){
 function markEl(cls){
   return h('span',{html:'<svg class="mark'+(cls?' '+cls:'')+'" viewBox="0 0 64 64" aria-hidden="true"><use href="#wolf"/></svg>'}).firstChild;
 }
-
+function initial(name){ return String(name || '?').trim().charAt(0) || '?'; }
+ 
 var toastT;
 function toast(msg){
   var t = $('#toast');
@@ -283,50 +311,41 @@ function toast(msg){
   clearTimeout(toastT);
   toastT = setTimeout(function(){ t.hidden = true; }, 6000);
 }
-
-/* ---------- dados ---------- */
-var queues = {};
-function queue(key, fn){
-  var prev = queues[key] || Promise.resolve();
-  var next = prev.catch(function(){}).then(fn);
-  queues[key] = next;
-  return next;
+function syncLock(){
+  var any = ['modal','pub','auth','reader'].some(function(id){ return !$('#'+id).hidden; });
+  document.documentElement.classList.toggle('lock', any);
 }
-function writeError(e){
-  var c = e && e.code;
-  if(c === 'invalid_argument') return 'Seu acesso é só de visualização. Peça ao estúdio permissão de colaborador para curtir e comentar.';
-  if(c === 'quota_exceeded') return 'O limite de dados desta página foi atingido.';
-  if(c === 'resource_exhausted') return 'Muitas ações em pouco tempo. Aguarde um instante e tente de novo.';
-  return 'Não foi possível salvar agora. Tente de novo em instantes.';
+ 
+/* ---------- dados ---------- */
+function fileUrl(path){
+  if(!sb || !path) return '';
+  return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+}
+function mapPost(r){
+  return {
+    id:r.id, kind:r.kind, title:r.title, synopsis:r.synopsis, genre:r.genre, year:r.year, duration:r.duration,
+    coverPath:r.cover_path, bannerPath:r.banner_path, videoPath:r.video_path, pdfPath:r.pdf_path,
+    pagePaths:r.page_paths || [], externalUrl:r.external_url, createdAt:r.created_at
+  };
 }
 function postById(id){ for(var i=0;i<state.posts.length;i++){ if(state.posts[i].id===id) return state.posts[i]; } return null; }
-function featuredPost(){
-  return postById(state.site.featuredId) || state.posts[0] || null;
-}
+function featuredPost(){ return postById(state.featuredId) || state.posts[0] || null; }
 function isFeatured(id){ var f = featuredPost(); return !!f && f.id === id; }
-function likeCount(pid){ var n=0; for(var u in state.likes){ if(state.likes[u] && state.likes[u][pid]) n++; } return n; }
-function iLike(pid){ var m=state.me.id; return !!(m && state.likes[m] && state.likes[m][pid]); }
-function commentsFor(pid){
-  var out = [];
-  for(var uid in state.comments){
-    var arr = state.comments[uid] || [];
-    for(var i=0;i<arr.length;i++){ var it = arr[i]; if(it && it.postId === pid) out.push({uid:uid,id:it.id,text:String(it.text||''),ts:it.ts||0}); }
-  }
-  out.sort(function(a,b){ return a.ts-b.ts; });
-  return out;
-}
+function likeCount(pid){ return state.likeCount[pid] || 0; }
+function iLike(pid){ return !!state.mine[pid]; }
 function hasMedia(p){
-  if(p.kind === 'hq') return (p.pageIds && p.pageIds.length > 0) || !!p.pdfId;
-  return !!p.videoId || !!p.externalUrl;
+  if(p.kind === 'hq') return p.pagePaths.length > 0 || !!p.pdfPath;
+  return !!p.videoPath || !!p.externalUrl;
 }
 function primaryLabel(p){ return p.kind === 'hq' ? 'Ler HQ' : 'Assistir'; }
 function metaLine(p){
   var k = KINDS[p.kind] || KINDS.filme;
-  var extra = p.kind === 'hq' ? ((p.pageIds && p.pageIds.length) ? p.pageIds.length + ' págs.' : '') : p.duration;
+  var extra = p.kind === 'hq' ? (p.pagePaths.length ? p.pagePaths.length + ' págs.' : '') : p.duration;
   return [k.single, p.year, p.genre, extra].filter(Boolean).join(' · ');
 }
 function clip(s, n){ s = String(s||''); return s.length > n ? s.slice(0, n-1).trim() + '…' : s; }
-function ago(ts){
+function ago(iso){
+  var ts = new Date(iso).getTime();
   var s = Math.round((ts - Date.now())/1000), a = Math.abs(s);
   var rtf = new Intl.RelativeTimeFormat('pt-BR',{numeric:'auto'});
   if(a < 60) return 'agora';
@@ -335,8 +354,70 @@ function ago(ts){
   if(a < 2592000) return rtf.format(Math.round(s/86400),'day');
   return new Date(ts).toLocaleDateString('pt-BR');
 }
-
-/* ---------- interface: barra ---------- */
+function dbError(e){
+  var m = String((e && e.message) || '');
+  if(/row-level security|permission denied|not authorized|JWT/i.test(m)) return 'Você não tem permissão para esta ação. Entre na sua conta e tente de novo.';
+  if(/Failed to fetch|NetworkError|network/i.test(m)) return 'Sem conexão com o servidor. Verifique a internet e tente de novo.';
+  return 'Não foi possível concluir agora. Tente de novo em instantes.';
+}
+ 
+async function loadPosts(){
+  var r = await sb.from('posts').select('*').order('created_at',{ascending:false}).limit(500);
+  if(r.error) throw r.error;
+  state.posts = (r.data || []).map(mapPost);
+}
+async function loadLikes(){
+  var r = await sb.from('likes').select('post_id,user_id').limit(20000);
+  if(r.error) throw r.error;
+  var counts = {}, mine = {};
+  (r.data || []).forEach(function(l){
+    counts[l.post_id] = (counts[l.post_id] || 0) + 1;
+    if(state.me.id && l.user_id === state.me.id) mine[l.post_id] = true;
+  });
+  state.likeCount = counts; state.mine = mine;
+}
+async function loadSite(){
+  var r = await sb.from('site_config').select('featured_id').eq('id',1).maybeSingle();
+  if(r.error) throw r.error;
+  state.featuredId = r.data ? r.data.featured_id : null;
+}
+async function loadAll(){
+  try{
+    await Promise.all([loadPosts(), loadLikes(), loadSite()]);
+    state.error = '';
+  }catch(e){
+    state.error = 'Não foi possível carregar o catálogo. Verifique se o script SQL foi executado e se a URL e a chave do Supabase estão corretas.';
+  }
+  state.loaded = true;
+  renderMain();
+  if(state.openId && !postById(state.openId)) closeModal();
+}
+async function loadComments(pid){
+  var r = await sb.from('comments').select('id,user_id,body,created_at,profiles(name,is_studio)').eq('post_id',pid).order('created_at',{ascending:true}).limit(500);
+  if(r.error){ toast(dbError(r.error)); return; }
+  state.cmts = r.data || []; state.cmtsFor = pid;
+  if(state.openId === pid) renderComments();
+}
+ 
+/* ---------- sessão ---------- */
+function meFromSession(session){
+  var u = session && session.user;
+  if(!u) return {id:null,name:'',email:'',isOwner:false};
+  var email = String(u.email || '').toLowerCase();
+  var name = (u.user_metadata && u.user_metadata.name) || email.split('@')[0] || 'Visitante';
+  return {id:u.id, name:name, email:email, isOwner: !!ADMIN && email === ADMIN};
+}
+async function applySession(session){
+  var prev = state.me.id;
+  state.me = meFromSession(session);
+  if(state.me.id === prev) return;
+  renderWho();
+  try{ await loadLikes(); }catch(e){}
+  renderMain();
+  if(state.openId){ var id = state.openId; openPost(id); }
+}
+ 
+/* ---------- barra ---------- */
 function currentRoute(){
   var hs = (location.hash || '').replace(/^#/,'');
   return (hs && Object.prototype.hasOwnProperty.call(ROUTES,hs)) ? hs : 'inicio';
@@ -349,15 +430,25 @@ function renderNav(){
 function renderWho(){
   var w = $('#who'), m = state.me;
   w.replaceChildren();
+  if(!sb) return;
   if(m.isOwner){
     w.append(h('button',{class:'btn primary',type:'button',onclick:function(){ openPublish(); }}, icon('plus'), 'Publicar'));
   }
-  if(m.avatarUrl) w.append(h('img',{class:'av',src:m.avatarUrl,alt:''}));
-  w.append(h('span',{class:'nm',text:m.name || 'Visitante'}));
-  if(m.isOwner) w.append(h('span',{class:'tag',text:'Estúdio'}));
+  if(m.id){
+    w.append(h('span',{class:'av','aria-hidden':'true',text:initial(m.name)}), h('span',{class:'nm',text:m.name}));
+    if(m.isOwner) w.append(h('span',{class:'tag',text:'Estúdio'}));
+    w.append(h('button',{class:'btn',type:'button',onclick:signOut,text:'Sair'}));
+  } else {
+    w.append(h('button',{class:'btn',type:'button',onclick:function(){ openAuth('login'); },text:'Entrar'}));
+  }
 }
-
-/* ---------- interface: catálogo ---------- */
+async function signOut(){
+  try{ await sb.auth.signOut(); }catch(e){}
+  await applySession(null);
+  toast('Você saiu da conta.');
+}
+ 
+/* ---------- catálogo ---------- */
 function placeholder(title){
   return h('div',{class:'ph'}, markEl(), title ? h('span',{text:title}) : null);
 }
@@ -365,9 +456,9 @@ function posterCard(p){
   var k = KINDS[p.kind] || KINDS.filme;
   var art = h('div',{class:'art '+k.ratio});
   art.append(placeholder(p.title));
-  var src = k.ratio === 'wide' ? (p.bannerId || p.coverId) : p.coverId;
+  var src = k.ratio === 'wide' ? (p.bannerPath || p.coverPath) : p.coverPath;
   if(src){
-    var img = h('img',{src:'/_blob/'+src,alt:'',loading:'lazy',decoding:'async'});
+    var img = h('img',{src:fileUrl(src),alt:'',loading:'lazy',decoding:'async'});
     img.addEventListener('error', function(){ img.remove(); });
     art.append(img);
   }
@@ -394,13 +485,13 @@ function shelf(kind){
   var k = KINDS[kind];
   var items = state.posts.filter(function(p){ return p.kind === kind; });
   var row = h('div',{class:'row','data-kind':kind});
-  if(!state.loaded.posts) row.append(skeletons(kind));
+  if(!state.loaded) row.append(skeletons(kind));
   else if(!items.length) row.append(emptyCard(kind));
   else items.forEach(function(p){ row.append(posterCard(p)); });
   return h('section',{class:'shelf','aria-label':k.label},
     h('div',{class:'shelf-h'},
       h('h2',{text:k.label}),
-      state.loaded.posts ? h('span',{class:'count',text:items.length + (items.length===1?' título':' títulos')}) : null,
+      state.loaded ? h('span',{class:'count',text:items.length + (items.length===1?' título':' títulos')}) : null,
       h('a',{href:'#'+k.route,text:'Ver tudo'})),
     row);
 }
@@ -408,27 +499,23 @@ function categoryView(kind){
   var k = KINDS[kind];
   var items = state.posts.filter(function(p){ return p.kind === kind; });
   var body;
-  if(!state.loaded.posts) body = h('div',{class:'row'}, skeletons(kind));
+  if(!state.loaded) body = h('div',{class:'row'}, skeletons(kind));
   else if(!items.length) body = h('div',{class:'row'}, emptyCard(kind));
   else body = h('div',{class:'grid '+k.ratio}, items.map(posterCard));
   return h('section',{'aria-label':k.label},
     h('div',{class:'cat-h'}, h('h1',{text:k.label}),
-      state.loaded.posts ? h('span',{class:'count',text:items.length + (items.length===1?' título':' títulos')}) : null),
+      state.loaded ? h('span',{class:'count',text:items.length + (items.length===1?' título':' títulos')}) : null),
     body);
 }
 function heroEl(){
   var p = featuredPost();
   var sec = h('section',{class:'hero'});
   var bg = h('div',{class:'bg','aria-hidden':'true'});
-  if(p){
-    var src = p.bannerId || p.coverId;
-    if(src){
-      var img = h('img',{src:'/_blob/'+src,alt:'',decoding:'async'});
-      img.addEventListener('error', function(){ img.remove(); });
-      bg.append(img);
-    } else {
-      bg.append(markEl('ghost'));
-    }
+  var src = p ? (p.bannerPath || p.coverPath) : null;
+  if(src){
+    var img = h('img',{src:fileUrl(src),alt:'',decoding:'async'});
+    img.addEventListener('error', function(){ img.remove(); });
+    bg.append(img);
   } else {
     bg.append(markEl('ghost'));
   }
@@ -456,16 +543,18 @@ function heroEl(){
   return sec;
 }
 function noteBox(text){ return h('div',{class:'wrap'}, h('p',{class:'note',text:text})); }
-
+ 
 function renderMain(){
   var main = $('#main');
   var saved = {};
   main.querySelectorAll('.row[data-kind]').forEach(function(r){ saved[r.getAttribute('data-kind')] = r.scrollLeft; });
   main.replaceChildren();
-  if(state.unavailable){
-    main.append(noteBox('Não foi possível abrir o catálogo nesta visualização. Entre na sua conta e recarregue a página.'));
-  } else if(state.slow && !state.loaded.posts){
-    main.append(noteBox('Ainda conectando ao catálogo. Se demorar, verifique a conexão e recarregue a página.'));
+  if(!sb){
+    main.append(noteBox(window.supabase
+      ? 'Falta configurar o Supabase. Abra o index.html, troque SUPABASE_URL e SUPABASE_ANON_KEY no início do arquivo e publique de novo.'
+      : 'Não foi possível carregar a biblioteca do Supabase. Verifique a conexão e recarregue a página.'));
+  } else if(state.error){
+    main.append(noteBox(state.error));
   }
   if(state.route === 'inicio'){
     main.append(heroEl());
@@ -489,43 +578,43 @@ function refreshCounts(){
   });
   updateModalLive();
 }
-
+ 
 /* ---------- curtidas e comentários ---------- */
 async function toggleLike(pid){
-  var me = state.me.id;
-  if(!state.db || !me){ toast('Entre na sua conta para curtir.'); return; }
-  var mine = {};
-  var cur = state.likes[me] || {};
-  Object.keys(cur).forEach(function(k){ if(cur[k]) mine[k] = true; });
-  if(mine[pid]) delete mine[pid]; else mine[pid] = true;
-  try{
-    await queue('likes/'+me, function(){ return state.db.doc('likes/'+me).set({posts:mine}); });
-  }catch(e){ toast(writeError(e)); }
+  if(!sb) return;
+  if(!state.me.id){ toast('Entre na sua conta para curtir.'); openAuth('login'); return; }
+  var had = !!state.mine[pid];
+  if(had){ delete state.mine[pid]; state.likeCount[pid] = Math.max(0,(state.likeCount[pid]||1)-1); }
+  else { state.mine[pid] = true; state.likeCount[pid] = (state.likeCount[pid]||0)+1; }
+  refreshCounts();
+  var r = had
+    ? await sb.from('likes').delete().eq('post_id',pid).eq('user_id',state.me.id)
+    : await sb.from('likes').insert({post_id:pid,user_id:state.me.id});
+  if(r.error){ toast(dbError(r.error)); }
+  try{ await loadLikes(); }catch(e){}
+  refreshCounts();
 }
 async function addComment(pid, text){
-  var me = state.me.id;
-  if(!state.db || !me){ toast('Entre na sua conta para comentar.'); return false; }
-  var items = (state.comments[me] || []).slice();
-  items.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,8), postId:pid, text:text, ts:Date.now()});
-  try{
-    await queue('comments/'+me, function(){ return state.db.doc('comments/'+me).set({items:items}); });
-    return true;
-  }catch(e){ toast(writeError(e)); return false; }
+  if(!sb) return false;
+  if(!state.me.id){ toast('Entre na sua conta para comentar.'); openAuth('login'); return false; }
+  var r = await sb.from('comments').insert({post_id:pid,user_id:state.me.id,body:text});
+  if(r.error){ toast(dbError(r.error)); return false; }
+  await loadComments(pid);
+  return true;
 }
-async function deleteComment(uid, cid){
-  var items = (state.comments[uid] || []).filter(function(it){ return it.id !== cid; });
-  try{
-    await queue('comments/'+uid, function(){ return state.db.doc('comments/'+uid).set({items:items}); });
-  }catch(e){ toast(writeError(e)); }
+async function deleteComment(cid){
+  var r = await sb.from('comments').delete().eq('id',cid);
+  if(r.error){ toast(dbError(r.error)); return; }
+  if(state.openId) await loadComments(state.openId);
 }
-
+ 
 /* ---------- janela do título ---------- */
 function idleMedia(media, p){
   media.replaceChildren();
   media.append(placeholder(p.title));
-  var src = p.bannerId || p.coverId;
+  var src = p.bannerPath || p.coverPath;
   if(src){
-    var img = h('img',{class:'cover',src:'/_blob/'+src,alt:'',decoding:'async'});
+    var img = h('img',{class:'cover',src:fileUrl(src),alt:'',decoding:'async'});
     img.addEventListener('error', function(){ img.remove(); });
     media.append(img);
   }
@@ -539,8 +628,8 @@ function startMedia(p){
   var media = $('#media');
   if(!media) return;
   media.replaceChildren();
-  if(p.videoId){
-    var v = h('video',{controls:true,playsinline:true,preload:'auto',src:'/_blob/'+p.videoId});
+  if(p.videoPath){
+    var v = h('video',{controls:true,playsinline:true,preload:'auto',src:fileUrl(p.videoPath)});
     media.append(v);
     var pr = v.play();
     if(pr && pr.catch) pr.catch(function(){});
@@ -554,14 +643,15 @@ function openPost(id, opts){
   var p = postById(id);
   if(!p) return;
   opts = opts || {};
+  if(!state.openId) state.lastFocus = document.activeElement;
   state.openId = id;
-  state.lastFocus = document.activeElement;
+  if(state.cmtsFor !== id){ state.cmts = []; }
   var root = $('#modal');
   root.replaceChildren();
-
+ 
   var media = h('div',{class:'media',id:'media'});
   idleMedia(media, p);
-
+ 
   var acts = h('div',{class:'acts'});
   if(hasMedia(p)){
     acts.append(h('button',{class:'btn primary',type:'button',onclick:function(){ startMedia(p); }},
@@ -584,7 +674,7 @@ function openPost(id, opts){
     });
     acts.append(del);
   }
-
+ 
   var compose;
   if(state.me.id){
     var ta = h('textarea',{id:'cmtText',maxlength:'500',placeholder:'Escreva um comentário',rows:'3','aria-label':'Escreva um comentário'});
@@ -599,9 +689,11 @@ function openPost(id, opts){
     });
     compose = h('div',{class:'compose'}, ta, send);
   } else {
-    compose = h('p',{class:'muted',text:'Entre na sua conta para curtir e comentar.'});
+    compose = h('div',{class:'compose'},
+      h('p',{class:'muted',text:'Entre na sua conta para curtir e comentar.'}),
+      h('button',{class:'btn',type:'button',onclick:function(){ openAuth('login'); }}, 'Entrar ou criar conta'));
   }
-
+ 
   var body = h('div',{class:'pbody'},
     h('p',{class:'kick',text:(KINDS[p.kind]||KINDS.filme).single}),
     h('h2',{text:p.title}),
@@ -609,15 +701,16 @@ function openPost(id, opts){
     acts,
     p.synopsis ? h('p',{class:'syn',text:p.synopsis}) : null,
     h('section',{class:'cmts'}, h('h3',{id:'cmtTitle',text:'Comentários'}), compose, h('div',{id:'cmtList'})));
-
+ 
   var closeBtn = h('button',{class:'x',type:'button','aria-label':'Fechar',onclick:closeModal}, icon('x'));
   root.append(h('div',{class:'panel',role:'dialog','aria-modal':'true','aria-label':p.title}, closeBtn, media, body));
   root.onclick = function(ev){ if(ev.target === root) closeModal(); };
   root.hidden = false;
   root.scrollTop = 0;
-  document.documentElement.classList.add('lock');
+  syncLock();
   closeBtn.focus();
   updateModalLive();
+  loadComments(id);
   if(opts.play && hasMedia(p)) startMedia(p);
 }
 function closeModal(){
@@ -625,7 +718,7 @@ function closeModal(){
   root.replaceChildren();
   root.hidden = true;
   state.openId = null;
-  if($('#reader').hidden && $('#pub').hidden) document.documentElement.classList.remove('lock');
+  syncLock();
   if(state.lastFocus && state.lastFocus.focus){ try{ state.lastFocus.focus(); }catch(e){} }
 }
 function updateModalLive(){
@@ -646,40 +739,33 @@ function updateModalLive(){
     pb.disabled = f;
     pb.replaceChildren(icon('star', f), f ? 'Em destaque na capa' : 'Destacar na capa');
   }
-  renderComments();
 }
-var cmtToken = 0;
-async function renderComments(){
+function renderComments(){
   var pid = state.openId, list = $('#cmtList');
-  if(!pid || !list) return;
-  var token = ++cmtToken;
-  var items = commentsFor(pid);
+  if(!pid || !list || state.cmtsFor !== pid) return;
+  var items = state.cmts;
   $('#cmtTitle').textContent = 'Comentários (' + items.length + ')';
-  var ids = Array.from(new Set(items.map(function(c){ return c.uid; })));
-  var ps = {};
-  if(state.user && ids.length){ try{ ps = await state.user.profiles(ids); }catch(e){} }
-  if(token !== cmtToken || state.openId !== pid) return;
   list.replaceChildren();
   if(!items.length){
     list.append(h('p',{class:'muted',text:'Ainda não há comentários. Seja a primeira pessoa a comentar.'}));
     return;
   }
   items.forEach(function(c){
-    var pr = ps[c.uid] || {};
-    var studio = (state.site.ownerId && c.uid === state.site.ownerId) || (state.me.isOwner && c.uid === state.me.id);
-    var canDel = c.uid === state.me.id || state.me.isOwner;
+    var pr = c.profiles || {};
+    var nm = pr.name || 'Visitante';
+    var canDel = c.user_id === state.me.id || state.me.isOwner;
     list.append(h('article',{class:'cmt'},
-      pr.avatarUrl ? h('img',{class:'av',src:pr.avatarUrl,alt:''}) : h('span',{class:'av'}),
+      h('span',{class:'av','aria-hidden':'true',text:initial(nm)}),
       h('div',{},
         h('div',{class:'ch'},
-          h('strong',{text:pr.name || 'Visitante'}),
-          studio ? h('span',{class:'tag',text:'Estúdio'}) : null,
-          h('span',{class:'cm',text:ago(c.ts)})),
-        h('p',{class:'ctext',text:c.text})),
-      canDel ? h('button',{class:'ibtn',type:'button','aria-label':'Excluir comentário',onclick:function(){ deleteComment(c.uid, c.id); }}, icon('trash')) : h('span')));
+          h('strong',{text:nm}),
+          pr.is_studio ? h('span',{class:'tag',text:'Estúdio'}) : null,
+          h('span',{class:'cm',text:ago(c.created_at)})),
+        h('p',{class:'ctext',text:c.body})),
+      canDel ? h('button',{class:'ibtn',type:'button','aria-label':'Excluir comentário',onclick:function(){ deleteComment(c.id); }}, icon('trash')) : h('span')));
   });
 }
-
+ 
 /* ---------- leitor de HQ ---------- */
 function openReader(p){
   var r = $('#reader');
@@ -687,82 +773,145 @@ function openReader(p){
   var bar = h('div',{class:'reader-bar'},
     h('strong',{text:p.title}),
     h('button',{class:'btn',type:'button',onclick:closeReader}, icon('x'), 'Fechar'));
-  var ids = p.pageIds || [];
-  if(ids.length){
+  if(p.pagePaths.length){
     var pages = h('div',{class:'pages'});
-    ids.forEach(function(id, i){
-      var img = h('img',{src:'/_blob/'+id,alt:'Página '+(i+1)+' de '+p.title,loading:'lazy',decoding:'async'});
+    p.pagePaths.forEach(function(path, i){
+      var img = h('img',{src:fileUrl(path),alt:'Página '+(i+1)+' de '+p.title,loading:'lazy',decoding:'async'});
       var wrap = h('div',{class:'pg'}, img);
       img.addEventListener('load', function(){ wrap.style.minHeight = '0'; });
       pages.append(wrap);
     });
     r.append(bar, pages);
-    if(p.pdfId){
-      pages.append(h('div',{class:'pdfbox'}, h('a',{class:'btn',href:'/_blob/'+p.pdfId,target:'_blank',rel:'noopener',text:'Abrir a versão em PDF'})));
+    if(p.pdfPath){
+      pages.append(h('div',{class:'pdfbox'}, h('a',{class:'btn',href:fileUrl(p.pdfPath),target:'_blank',rel:'noopener',text:'Abrir a versão em PDF'})));
     }
-  } else if(p.pdfId){
+  } else if(p.pdfPath){
     r.append(bar, h('div',{class:'pdfbox'},
       h('h2',{class:'kick',text:'HQ em PDF'}),
       h('p',{text:'Esta HQ foi publicada em PDF. Ela abre em uma nova aba.'}),
-      h('a',{class:'btn primary',href:'/_blob/'+p.pdfId,target:'_blank',rel:'noopener',text:'Abrir o PDF'})));
+      h('a',{class:'btn primary',href:fileUrl(p.pdfPath),target:'_blank',rel:'noopener',text:'Abrir o PDF'})));
   }
   r.hidden = false;
   r.scrollTop = 0;
-  document.documentElement.classList.add('lock');
+  syncLock();
 }
 function closeReader(){
   var r = $('#reader');
   r.replaceChildren();
   r.hidden = true;
-  if($('#modal').hidden && $('#pub').hidden) document.documentElement.classList.remove('lock');
+  syncLock();
 }
-
+ 
 /* ---------- ações do estúdio ---------- */
 async function pinPost(id){
-  if(!state.me.isOwner || !state.db) return;
-  var data = Object.assign({}, state.site, {ownerId:state.me.id, featuredId:id});
-  try{
-    await queue('site/config', function(){ return state.db.doc('site/config').set(data); });
-    toast('Título em destaque na capa.');
-  }catch(e){ toast(writeError(e)); }
+  if(!state.me.isOwner || !sb) return;
+  var r = await sb.from('site_config').upsert({id:1, featured_id:id});
+  if(r.error){ toast(dbError(r.error)); return; }
+  state.featuredId = id;
+  renderMain();
+  toast('Título em destaque na capa.');
 }
 async function removePost(id){
   var p = postById(id);
-  if(!p || !state.me.isOwner || !state.db) return;
-  var assetIds = [p.coverId, p.bannerId, p.videoId, p.pdfId].concat(p.pageIds || []).filter(Boolean);
-  try{
-    await state.db.doc('posts/'+id).delete();
-    if(state.site.featuredId === id){
-      var s = Object.assign({}, state.site); delete s.featuredId;
-      await queue('site/config', function(){ return state.db.doc('site/config').set(s); });
-    }
-  }catch(e){ toast(writeError(e)); return; }
+  if(!p || !state.me.isOwner || !sb) return;
+  var paths = [p.coverPath, p.bannerPath, p.videoPath, p.pdfPath].concat(p.pagePaths).filter(Boolean);
+  var r = await sb.from('posts').delete().eq('id',id);
+  if(r.error){ toast(dbError(r.error)); return; }
+  if(paths.length){ try{ await sb.storage.from(BUCKET).remove(paths); }catch(e){} }
   closeModal();
-  if(state.assets){
-    for(var i=0;i<assetIds.length;i++){ try{ await state.assets.delete(assetIds[i]); }catch(e){} }
-  }
+  await loadAll();
   toast('Lançamento excluído.');
 }
-async function ensureOwnerId(){
-  if(!state.db || !state.me.isOwner || !state.me.id || !state.loaded.site || state.ownerWritten) return;
-  if(state.site.ownerId === state.me.id) return;
-  state.ownerWritten = true;
-  var data = Object.assign({}, state.site, {ownerId:state.me.id});
-  try{ await queue('site/config', function(){ return state.db.doc('site/config').set(data); }); }catch(e){}
+ 
+/* ---------- login ---------- */
+function authErr(e){
+  var m = String((e && e.message) || '');
+  if(/Invalid login credentials/i.test(m)) return 'E-mail ou senha incorretos.';
+  if(/Email not confirmed/i.test(m)) return 'Confirme seu e-mail pelo link que enviamos antes de entrar.';
+  if(/already registered|already been registered/i.test(m)) return 'Este e-mail já tem conta. Use a aba Entrar.';
+  if(/rate limit|too many/i.test(m)) return 'Muitas tentativas. Aguarde alguns minutos e tente de novo.';
+  if(/password/i.test(m)) return 'A senha precisa ter pelo menos 6 caracteres.';
+  if(/valid email|invalid email/i.test(m)) return 'Informe um e-mail válido.';
+  return 'Não foi possível concluir. Tente de novo em instantes.';
 }
-
+function openAuth(mode){
+  if(!sb) return;
+  var root = $('#auth');
+  root.replaceChildren();
+  if(!state.openId) state.lastFocus = document.activeElement;
+  var isSign = mode === 'signup';
+ 
+  var msg = h('p',{class:'fmsg',id:'authMsg',role:'status'});
+  var setMsg = function(t, err){ msg.textContent = t || ''; msg.className = 'fmsg' + (err ? ' err' : ''); };
+  var nameIn = h('input',{type:'text',id:'a-name',maxlength:'40',autocomplete:'name'});
+  var emailIn = h('input',{type:'email',id:'a-email',autocomplete:'email'});
+  var passIn = h('input',{type:'password',id:'a-pass',minlength:'6',autocomplete:isSign?'new-password':'current-password'});
+  var go = h('button',{class:'btn primary',type:'submit'}, isSign ? 'Criar conta' : 'Entrar');
+ 
+  var form = h('form',{novalidate:true},
+    isSign ? h('div',{class:'field'}, h('label',{for:'a-name',text:'Seu nome'}), nameIn) : null,
+    h('div',{class:'field'}, h('label',{for:'a-email',text:'E-mail'}), emailIn),
+    h('div',{class:'field'}, h('label',{for:'a-pass',text:'Senha'}), passIn, isSign ? h('small',{text:'Mínimo de 6 caracteres.'}) : null),
+    msg, go);
+  form.style.display = 'grid'; form.style.gap = '14px'; form.style.marginTop = '18px';
+ 
+  form.addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    var em = emailIn.value.trim(), pw = passIn.value, nm = nameIn.value.trim();
+    if(!em || !pw){ setMsg('Preencha e-mail e senha.', true); return; }
+    if(isSign && !nm){ setMsg('Informe seu nome.', true); return; }
+    if(isSign && pw.length < 6){ setMsg('A senha precisa ter pelo menos 6 caracteres.', true); return; }
+    go.disabled = true; setMsg('Aguarde…', false);
+    try{
+      if(isSign){
+        var r = await sb.auth.signUp({email:em,password:pw,options:{data:{name:nm},emailRedirectTo:location.origin+location.pathname}});
+        if(r.error) throw r.error;
+        if(r.data && r.data.session){ closeAuth(); toast('Conta criada. Bem-vindo ao Wolf Studios.'); }
+        else setMsg('Enviamos um e-mail de confirmação. Abra o link dele e depois volte para entrar.', false);
+      } else {
+        var s = await sb.auth.signInWithPassword({email:em,password:pw});
+        if(s.error) throw s.error;
+        closeAuth();
+      }
+    }catch(e){ setMsg(authErr(e), true); }
+    go.disabled = false;
+  });
+ 
+  var tabs = h('div',{class:'tabs',role:'tablist'},
+    h('button',{type:'button',role:'tab','aria-selected':String(!isSign),onclick:function(){ openAuth('login'); },text:'Entrar'}),
+    h('button',{type:'button',role:'tab','aria-selected':String(isSign),onclick:function(){ openAuth('signup'); },text:'Criar conta'}));
+  var closeBtn = h('button',{class:'x',type:'button','aria-label':'Fechar',onclick:closeAuth}, icon('x'));
+  root.append(h('div',{class:'panel narrow',role:'dialog','aria-modal':'true','aria-label':'Entrar'}, closeBtn,
+    h('div',{class:'pbody'}, h('p',{class:'kick',text:'Sua conta'}), h('h2',{text:isSign?'Criar conta':'Entrar'}), tabs, form)));
+  root.onclick = function(ev){ if(ev.target === root) closeAuth(); };
+  root.hidden = false;
+  root.scrollTop = 0;
+  syncLock();
+  (isSign ? nameIn : emailIn).focus();
+}
+function closeAuth(){
+  var root = $('#auth');
+  root.replaceChildren();
+  root.hidden = true;
+  syncLock();
+}
+ 
 /* ---------- formulário de publicação ---------- */
 function typeOf(f){
   var t = f.type, ext = (f.name.split('.').pop() || '').toLowerCase();
   for(var k in EXT_TYPES){ if(EXT_TYPES[k] === t) return t; }
   return EXT_TYPES[ext] || null;
 }
+function extOf(f){
+  var e = (f.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g,'');
+  return e || 'bin';
+}
 function checkFile(f, allowed, label){
   if(!f) return null;
   var t = typeOf(f);
   if(!t || allowed.indexOf(t) < 0) return label + ': formato não aceito.';
   if(f.size > MAX){
-    return label + ': o arquivo passa de 20 MB.' + (label === 'Vídeo' ? ' Reduza o tamanho (por exemplo, exportando em resolução menor) ou use o campo de link externo.' : '');
+    return label + ': o arquivo passa de 50 MB.' + (label === 'Vídeo' ? ' Reduza o tamanho ou use o campo de link externo.' : '');
   }
   return null;
 }
@@ -777,32 +926,30 @@ function setProgress(done, total){
   if(b) b.style.width = (total ? Math.round(done/total*100) : 0) + '%';
 }
 function upErr(e, name){
-  var c = e && e.code;
-  if(c === 'too_large') return '“'+name+'” passa do limite de 20 MB.';
-  if(c === 'unsupported_type') return '“'+name+'” tem um formato que o catálogo não aceita.';
-  if(c === 'quota_or_state') return 'O espaço de armazenamento da página acabou. Exclua lançamentos antigos para liberar espaço.';
-  if(c === 'rate_limited') return 'Muitos envios seguidos. Aguarde um instante e tente de novo.';
+  var m = String((e && e.message) || '');
+  if(/exceeded|too large|maximum allowed size|413/i.test(m)) return '“'+name+'” passa do limite de tamanho do armazenamento (50 MB no plano gratuito).';
+  if(/row-level security|not authorized|permission/i.test(m)) return 'Sem permissão para enviar. Entre com a conta do administrador.';
   return 'Não foi possível enviar “'+name+'”. Tente de novo.';
 }
 function field(label, id, control, hint, full){
   return h('div',{class:'field'+(full?' full':'')}, h('label',{for:id,text:label}), control, hint ? h('small',{text:hint}) : null);
 }
 function openPublish(preKind){
-  if(!state.me.isOwner) return;
+  if(!state.me.isOwner || !sb) return;
   var root = $('#pub');
   root.replaceChildren();
   state.lastFocus = document.activeElement;
-
+ 
   var kind = h('select',{id:'f-kind'}, KIND_ORDER.map(function(k){ return h('option',{value:k,text:KINDS[k].single}); }));
   kind.value = preKind || (state.route !== 'inicio' ? ROUTES[state.route] : 'filme');
-
+ 
   var videoBox = h('div',{class:'fgrid full','data-only':'video'},
-    field('Arquivo de vídeo (MP4 ou WebM)','f-video',h('input',{type:'file',id:'f-video',accept:'video/mp4,video/webm,.mp4,.webm'}),'Até 20 MB por arquivo.',true),
-    field('Link externo (opcional)','f-ext',h('input',{type:'url',id:'f-ext',placeholder:'https://'}),'Para vídeos acima de 20 MB. O botão de assistir abre esse link em outra aba.',true));
+    field('Arquivo de vídeo (MP4 ou WebM)','f-video',h('input',{type:'file',id:'f-video',accept:'video/mp4,video/webm,.mp4,.webm'}),'Até 50 MB por arquivo no plano gratuito.',true),
+    field('Link externo (opcional)','f-ext',h('input',{type:'url',id:'f-ext',placeholder:'https://'}),'Para vídeos maiores. O botão de assistir abre esse link em outra aba.',true));
   var hqBox = h('div',{class:'fgrid full','data-only':'hq'},
-    field('Páginas da HQ (imagens, na ordem do nome do arquivo)','f-pages',h('input',{type:'file',id:'f-pages',accept:'image/png,image/jpeg,image/webp,image/gif',multiple:true}),'Cada imagem com até 20 MB.',true),
-    field('PDF da HQ (opcional)','f-pdf',h('input',{type:'file',id:'f-pdf',accept:'application/pdf,.pdf'}),'Até 20 MB.',true));
-
+    field('Páginas da HQ (imagens, na ordem do nome do arquivo)','f-pages',h('input',{type:'file',id:'f-pages',accept:'image/png,image/jpeg,image/webp,image/gif',multiple:true}),'Cada imagem com até 50 MB.',true),
+    field('PDF da HQ (opcional)','f-pdf',h('input',{type:'file',id:'f-pdf',accept:'application/pdf,.pdf'}),'Até 50 MB.',true));
+ 
   var form = h('form',{id:'pubForm',novalidate:true},
     h('div',{class:'pbody'},
       h('p',{class:'kick',text:'Novo lançamento oficial'}),
@@ -824,15 +971,14 @@ function openPublish(preKind){
         h('button',{class:'btn',type:'button',id:'pubCancel',onclick:closePublish}, 'Cancelar'))));
   form.addEventListener('submit', submitPublish);
   kind.addEventListener('change', syncKind);
-
+ 
   var closeBtn = h('button',{class:'x',type:'button','aria-label':'Fechar',onclick:closePublish}, icon('x'));
   root.append(h('div',{class:'panel',role:'dialog','aria-modal':'true','aria-label':'Publicar lançamento'}, closeBtn, form));
   root.onclick = function(ev){ if(ev.target === root) closePublish(); };
   root.hidden = false;
   root.scrollTop = 0;
-  document.documentElement.classList.add('lock');
+  syncLock();
   syncKind();
-  if(!state.assets) setFormMsg('O envio de arquivos não está disponível nesta sessão. Recarregue a página.', true);
   $('#f-title').focus();
 }
 function syncKind(){
@@ -847,7 +993,7 @@ function closePublish(){
   var root = $('#pub');
   root.replaceChildren();
   root.hidden = true;
-  if($('#modal').hidden && $('#reader').hidden) document.documentElement.classList.remove('lock');
+  syncLock();
   if(state.lastFocus && state.lastFocus.focus){ try{ state.lastFocus.focus(); }catch(e){} }
 }
 function validatePublish(kind, title, f, ext){
@@ -870,10 +1016,13 @@ function validatePublish(kind, title, f, ext){
   e = checkFile(f.banner, IMG_TYPES, 'Banner'); if(e) return e;
   return null;
 }
+function newId(){
+  if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,10);
+}
 async function submitPublish(ev){
   ev.preventDefault();
-  if(state.publishing || !state.me.isOwner) return;
-  if(!state.assets || !state.db){ setFormMsg('O envio de arquivos não está disponível nesta sessão. Recarregue a página.', true); return; }
+  if(state.publishing || !state.me.isOwner || !sb) return;
   var val = function(id){ return $('#'+id).value.trim(); };
   var kind = $('#f-kind').value;
   var f = {
@@ -887,81 +1036,71 @@ async function submitPublish(ev){
   var problem = validatePublish(kind, title, f, ext);
   if(problem){ setFormMsg(problem, true); return; }
   f.pages.sort(function(a,b){ return a.name.localeCompare(b.name, undefined, {numeric:true}); });
-
-  var queueFiles = [];
-  if(f.cover) queueFiles.push({key:'cover',file:f.cover,label:'capa'});
-  if(f.banner) queueFiles.push({key:'banner',file:f.banner,label:'banner'});
-  if(f.video) queueFiles.push({key:'video',file:f.video,label:'vídeo'});
-  if(f.pdf) queueFiles.push({key:'pdf',file:f.pdf,label:'PDF'});
-  f.pages.forEach(function(pg,i){ queueFiles.push({key:'page',file:pg,label:'página '+(i+1)+' de '+f.pages.length}); });
-
+ 
+  var list = [];
+  if(f.cover) list.push({key:'cover',file:f.cover,label:'capa'});
+  if(f.banner) list.push({key:'banner',file:f.banner,label:'banner'});
+  if(f.video) list.push({key:'video',file:f.video,label:'vídeo'});
+  if(f.pdf) list.push({key:'pdf',file:f.pdf,label:'PDF'});
+  f.pages.forEach(function(pg,i){ list.push({key:'page',file:pg,label:'página '+(i+1)+' de '+f.pages.length}); });
+ 
   state.publishing = true;
   $('#pubGo').disabled = true; $('#pubCancel').disabled = true;
-  setFormMsg('Enviando arquivos…', false); setProgress(0, queueFiles.length + 1);
-
+  setFormMsg('Enviando arquivos…', false); setProgress(0, list.length + 1);
+ 
   var made = [];
-  var up = {pageIds:[]};
+  var up = {pages:[]};
+  var folder = kind + '/' + newId();
   try{
-    for(var i=0;i<queueFiles.length;i++){
-      var q = queueFiles[i];
-      setFormMsg('Enviando ' + q.label + ' (' + (i+1) + ' de ' + queueFiles.length + ')…', false);
+    for(var i=0;i<list.length;i++){
+      var q = list[i];
+      setFormMsg('Enviando ' + q.label + ' (' + (i+1) + ' de ' + list.length + ')…', false);
+      var path = folder + '/' + (q.key === 'page' ? 'p' + String(i).padStart(3,'0') : q.key) + '-' + newId().slice(0,8) + '.' + extOf(q.file);
       var res = null, tries = 0;
       while(!res){
-        try{
-          res = await state.assets.upload(q.file, {type:typeOf(q.file)});
-        }catch(e){
+        var r = await sb.storage.from(BUCKET).upload(path, q.file, {contentType:typeOf(q.file), cacheControl:'31536000', upsert:false});
+        if(r.error){
           tries++;
-          var c = e && e.code;
-          if(tries < 2 && (c === 'store_unavailable' || c === 'rate_limited')){ await sleep(c === 'rate_limited' ? 3000 : 1200); continue; }
-          e.fileName = q.file.name;
-          throw e;
+          if(tries < 2 && /fetch|network|timeout/i.test(String(r.error.message))){ await sleep(1200); continue; }
+          var err = r.error; err.fileName = q.file.name; throw err;
         }
+        res = r.data;
       }
-      made.push(res.id);
-      if(q.key === 'page') up.pageIds.push(res.id);
-      else if(q.key === 'cover') up.coverId = res.id;
-      else if(q.key === 'banner') up.bannerId = res.id;
-      else if(q.key === 'video') up.videoId = res.id;
-      else if(q.key === 'pdf') up.pdfId = res.id;
-      setProgress(i+1, queueFiles.length + 1);
+      made.push(path);
+      if(q.key === 'page') up.pages.push(path);
+      else up[q.key] = path;
+      setProgress(i+1, list.length + 1);
     }
     setFormMsg('Publicando no catálogo…', false);
-    var data = {kind:kind, title:title, createdAt:Date.now()};
+    var row = {kind:kind, title:title};
     var syn = val('f-syn'), genre = val('f-genre'), dur = val('f-dur'), year = parseInt($('#f-year').value, 10);
-    if(syn) data.synopsis = syn;
-    if(genre) data.genre = genre;
-    if(kind !== 'hq' && dur) data.duration = dur;
-    if(year > 0) data.year = year;
-    if(up.coverId) data.coverId = up.coverId;
-    if(up.bannerId) data.bannerId = up.bannerId;
-    if(up.videoId) data.videoId = up.videoId;
-    if(up.pdfId) data.pdfId = up.pdfId;
-    if(up.pageIds.length) data.pageIds = up.pageIds;
-    if(ext) data.externalUrl = ext;
-    await state.db.collection('posts').doc().set(data);
+    if(syn) row.synopsis = syn;
+    if(genre) row.genre = genre;
+    if(kind !== 'hq' && dur) row.duration = dur;
+    if(year > 0) row.year = year;
+    if(up.cover) row.cover_path = up.cover;
+    if(up.banner) row.banner_path = up.banner;
+    if(up.video) row.video_path = up.video;
+    if(up.pdf) row.pdf_path = up.pdf;
+    if(up.pages.length) row.page_paths = up.pages;
+    if(ext) row.external_url = ext;
+    var ins = await sb.from('posts').insert(row);
+    if(ins.error) throw ins.error;
     setProgress(1, 1);
     state.publishing = false;
     closePublish();
+    await loadAll();
     toast('Publicado em ' + KINDS[kind].label + '.');
   }catch(e){
     state.publishing = false;
-    for(var j=0;j<made.length;j++){ try{ await state.assets.delete(made[j]); }catch(err){} }
+    if(made.length){ try{ await sb.storage.from(BUCKET).remove(made); }catch(err){} }
     $('#pubGo').disabled = false; $('#pubCancel').disabled = false;
     setProgress(0, 1);
-    setFormMsg(e && e.fileName ? upErr(e, e.fileName) : writeError(e), true);
+    setFormMsg(e && e.fileName ? upErr(e, e.fileName) : dbError(e), true);
   }
 }
-
+ 
 /* ---------- início ---------- */
-function onPosts(snap){
-  if(snap.metadata && snap.metadata.fromCache && snap.size === 0 && !state.slow) return;
-  state.posts = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
-  state.loaded.posts = true;
-  if(state.openId && !postById(state.openId)) closeModal();
-  renderMain();
-}
-function onFail(){ state.slow = true; renderMain(); }
-
 async function boot(){
   state.route = currentRoute();
   renderNav(); renderWho(); renderMain(); renderFoot();
@@ -971,46 +1110,25 @@ async function boot(){
   document.addEventListener('keydown', function(ev){
     if(ev.key !== 'Escape') return;
     if(!$('#reader').hidden) closeReader();
+    else if(!$('#auth').hidden) closeAuth();
     else if(!$('#pub').hidden) closePublish();
     else if(!$('#modal').hidden) closeModal();
   });
-
-  if(!C || !C.use){ state.unavailable = true; renderMain(); return; }
-  var db = null, user = null, assets = null;
-  try{ db = await C.use('db'); }catch(e){}
-  try{ user = await C.use('user'); }catch(e){}
-  try{ assets = await C.use('assets'); }catch(e){}
-  state.db = db; state.user = user; state.assets = assets;
-
-  if(user){
-    try{
-      var m = await user.me();
-      state.me = {id:m.id, name:m.name, avatarUrl:m.avatarUrl, isOwner:!!m.isOwner};
-    }catch(e){}
-  }
+  if(!sb) return;
+ 
+  try{
+    var s = await sb.auth.getSession();
+    state.me = meFromSession(s.data && s.data.session);
+  }catch(e){}
   renderWho();
-  if(!db){ state.unavailable = true; state.loaded.posts = true; renderMain(); return; }
-
-  setTimeout(function(){ if(!state.loaded.posts){ state.slow = true; renderMain(); } }, 10000);
-
-  db.collection('posts').orderBy('createdAt','desc').limit(500).onSnapshot(onPosts, onFail);
-  db.collection('likes').onSnapshot(function(snap){
-    var next = {};
-    snap.docs.forEach(function(d){ next[d.id] = (d.data().posts) || {}; });
-    state.likes = next; state.loaded.likes = true; refreshCounts();
-  }, function(){});
-  db.collection('comments').onSnapshot(function(snap){
-    var next = {};
-    snap.docs.forEach(function(d){ next[d.id] = d.data().items || []; });
-    state.comments = next; state.loaded.comments = true; renderComments();
-  }, function(){});
-  db.doc('site/config').onSnapshot(function(snap){
-    state.site = snap.exists ? Object.assign({}, snap.data()) : {};
-    state.loaded.site = true;
-    ensureOwnerId();
-    if(state.loaded.posts) renderMain();
-  }, function(){});
+  sb.auth.onAuthStateChange(function(event, session){
+    setTimeout(function(){ applySession(session); }, 0);
+  });
+  await loadAll();
 }
 boot();
 })();
 </script>
+</body>
+</html>
+ 
