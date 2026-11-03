@@ -258,7 +258,7 @@
 
         .card-thumb {
             width: 100%;
-            height: 130px;
+            height: 180px;
             object-fit: cover;
             background-color: #1a1a22;
         }
@@ -331,7 +331,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border-metallic);
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             max-height: 90vh;
             border-radius: 10px;
             overflow-y: auto;
@@ -364,15 +364,18 @@
 
         .modal-media {
             width: 100%;
-            height: 380px;
+            height: 420px;
             background: #000;
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-media img, .modal-media video, .modal-media iframe {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border: none;
         }
 
@@ -667,7 +670,7 @@
                 <i class="fa-solid fa-clapperboard"></i> Filmes
             </div>
             <div id="row-filmes" class="cards-row">
-                <div class="empty-row-msg">Nenhum filme publicado nesta categoria ainda. <br><a onclick="openAdminModal()" style="color:var(--silver-primary); cursor:pointer; text-decoration:underline;">Clique aqui para postar o primeiro.</a></div>
+                <div class="empty-row-msg">Nenhum filme publicado nesta categoria ainda. <br><a onclick="openAdminModal()" style="color:var(--silver-primary); cursor:pointer; text-decoration:underline;">Clique aqui para postar.</a></div>
             </div>
         </section>
 
@@ -677,7 +680,7 @@
                 <i class="fa-solid fa-video"></i> Fanfilms
             </div>
             <div id="row-fanfilms" class="cards-row">
-                <div class="empty-row-msg">Nenhum fanfilm publicado nesta categoria ainda.</div>
+                <div class="empty-row-msg">Nenhum fanfilm publicado nesta categoria ainda. <br><a onclick="openAdminModal()" style="color:var(--silver-primary); cursor:pointer; text-decoration:underline;">Clique aqui para postar.</a></div>
             </div>
         </section>
 
@@ -687,7 +690,7 @@
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Animações
             </div>
             <div id="row-animacoes" class="cards-row">
-                <div class="empty-row-msg">Nenhuma animação publicada nesta categoria ainda.</div>
+                <div class="empty-row-msg">Nenhuma animação publicada nesta categoria ainda. <br><a onclick="openAdminModal()" style="color:var(--silver-primary); cursor:pointer; text-decoration:underline;">Clique aqui para postar.</a></div>
             </div>
         </section>
 
@@ -697,7 +700,21 @@
                 <i class="fa-solid fa-book-open"></i> HQs
             </div>
             <div id="row-hqs" class="cards-row">
-                <div class="empty-row-msg">Nenhuma HQ publicada nesta categoria ainda.</div>
+                <!-- HQ Doctor Who injetada por padrão -->
+                <div class="card" onclick="openDefaultHQModal()">
+                    <div style="width:100%; height:180px; background: linear-gradient(135deg, #1e1e28 0%, #0c0c10 100%); display:flex; flex-direction:column; justify-content:center; align-items:center; color:var(--silver-primary); border-bottom:1px solid var(--border-metallic);">
+                        <i class="fa-solid fa-book-open-reader" style="font-size: 38px; color: var(--silver-secondary); margin-bottom: 10px;"></i>
+                        <span style="font-weight: 700; font-size: 13px; letter-spacing: 1px;">WOLF STUDIOS COMICS</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Doctor Who: A Extinção do Tempo</div>
+                        <div class="card-desc">Skorm, a ira do senhor do tempo, a TARDIS e a jornada épica para um novo Doutor.</div>
+                        <div class="card-footer">
+                            <div class="card-likes"><i class="fa-solid fa-heart"></i> <span id="defaultHQLikes">14</span></div>
+                            <div><i class="fa-solid fa-book-open" style="font-size:10px;"></i> Ler HQ</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -766,7 +783,7 @@
                     </div>
                     <div class="form-group">
                         <label>Título do Conteúdo</label>
-                        <input type="text" id="itemTitle" required placeholder="Ex: O Retorno de Fênix">
+                        <input type="text" id="itemTitle" required placeholder="Ex: Novo Episódio">
                     </div>
                     <div class="form-group">
                         <label>Sinopse / Descrição</label>
@@ -783,12 +800,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Mídia Principal (Vídeo / PDF / Imagem do Projeto)</label>
+                        <label>Mídia Principal (Vídeo / PDF / Imagem)</label>
                         <div class="file-upload-box" onclick="document.getElementById('itemMediaFile').click()">
                             <input type="file" id="itemMediaFile" accept="video/*,image/*,application/pdf" required onchange="previewMediaName(this)">
                             <div class="file-upload-label">
                                 <i class="fa-solid fa-file-arrow-up"></i>
-                                <span id="mediaFileName">Clique para selecionar o arquivo de mídia do projeto</span>
+                                <span id="mediaFileName">Clique para selecionar o arquivo de mídia</span>
                             </div>
                         </div>
                     </div>
@@ -821,6 +838,17 @@
         let itemsData = JSON.parse(localStorage.getItem("wolf_studios_items")) || [];
         let currentActiveId = null;
 
+        // Dados da HQ padrão fixa do Doutor Who
+        const defaultHQ = {
+            id: 'default_hq_extincao_tempo',
+            title: 'Doctor Who: A Extinção do Tempo',
+            desc: 'Skorm, a ira do senhor do tempo, a TARDIS e a jornada épica para um novo Doutor.',
+            likes: parseInt(localStorage.getItem("default_hq_likes")) || 14,
+            comments: JSON.parse(localStorage.getItem("default_hq_comments")) || [
+                { author: 'Dhannyllo', text: 'Ficou sensacional esse começo com a regeneração!' }
+            ]
+        };
+
         // Efeito Navbar Scroll
         window.addEventListener("scroll", () => {
             const nav = document.getElementById("navbar");
@@ -837,7 +865,7 @@
 
         // Renderizar Catálogo
         function renderCatalog() {
-            const categories = ["filmes", "fanfilms", "animacoes", "hqs"];
+            const categories = ["filmes", "fanfilms", "animacoes"];
             
             categories.forEach(cat => {
                 const rowContainer = document.getElementById(`row-${cat}`);
@@ -854,13 +882,78 @@
                                 <div class="card-desc">${item.desc}</div>
                                 <div class="card-footer">
                                     <div class="card-likes"><i class="fa-solid fa-heart"></i> ${item.likes || 0}</div>
-                                    <div><i class="fa-solid fa-play" style="font-size:10px;"></i> Assistir</div>
+                                    <div><i class="fa-solid fa-play" style="font-size:10px;"></i> Ver</div>
                                 </div>
                             </div>
                         </div>
                     `).join('');
                 }
             });
+
+            // Renderizar HQs adicionadas pelo admin junto com a HQ padrão
+            const hqsContainer = document.getElementById("row-hqs");
+            const customHQs = itemsData.filter(item => item.category === 'hqs');
+            
+            let customHQsHtml = customHQs.map(item => `
+                <div class="card" onclick="openDetailsModal('${item.id}')">
+                    <img src="${item.thumb}" class="card-thumb" alt="${item.title}">
+                    <div class="card-body">
+                        <div class="card-title">${item.title}</div>
+                        <div class="card-desc">${item.desc}</div>
+                        <div class="card-footer">
+                            <div class="card-likes"><i class="fa-solid fa-heart"></i> ${item.likes || 0}</div>
+                            <div><i class="fa-solid fa-book-open" style="font-size:10px;"></i> Ler</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Card padrão da HQ do Doctor Who sempre presente
+            const defaultHqHtml = `
+                <div class="card" onclick="openDefaultHQModal()">
+                    <div style="width:100%; height:180px; background: linear-gradient(135deg, #1e1e28 0%, #0c0c10 100%); display:flex; flex-direction:column; justify-content:center; align-items:center; color:var(--silver-primary); border-bottom:1px solid var(--border-metallic);">
+                        <i class="fa-solid fa-book-open-reader" style="font-size: 38px; color: var(--silver-secondary); margin-bottom: 10px;"></i>
+                        <span style="font-weight: 700; font-size: 13px; letter-spacing: 1px;">WOLF STUDIOS COMICS</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${defaultHQ.title}</div>
+                        <div class="card-desc">${defaultHQ.desc}</div>
+                        <div class="card-footer">
+                            <div class="card-likes"><i class="fa-solid fa-heart"></i> <span id="defaultHQLikes">${defaultHQ.likes}</span></div>
+                            <div><i class="fa-solid fa-book-open" style="font-size:10px;"></i> Ler HQ</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            hqsContainer.innerHTML = defaultHqHtml + customHQsHtml;
+        }
+
+        // Abrir Modal da HQ Padrão com Visualizador do Google Drive embutido
+        function openDefaultHQModal() {
+            currentActiveId = 'default_hq';
+            document.getElementById("modalTitle").innerText = defaultHQ.title;
+            document.getElementById("modalSynopsis").innerText = defaultHQ.desc + "\n\nLeitura oficial da HQ digital do universo Wolf Studios.";
+            document.getElementById("modalLikesCount").innerText = defaultHQ.likes;
+
+            const mediaContainer = document.getElementById("modalMediaContainer");
+            // Incorporação direta da HQ do Google Drive informada
+            mediaContainer.innerHTML = `<iframe src="https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/preview" style="width:100%; height:100%; border:none;"></iframe>`;
+
+            renderDefaultHQComments();
+            document.getElementById("detailsModal").style.display = "flex";
+        }
+
+        function renderDefaultHQComments() {
+            const list = document.getElementById("commentsList");
+            const comments = defaultHQ.comments;
+
+            list.innerHTML = comments.map(c => `
+                <div class="comment-item">
+                    <div class="comment-user"><i class="fa-solid fa-user-circle"></i> ${escapeHtml(c.author)}</div>
+                    <div class="comment-text">${escapeHtml(c.text)}</div>
+                </div>
+            `).join('');
         }
 
         // Painel Admin Controles
@@ -893,159 +986,3 @@
 
         function resetAdminAuth() {
             document.getElementById("adminAuthView").style.display = "block";
-            document.getElementById("adminDeniedView").style.display = "none";
-            document.getElementById("adminEmailInput").value = "";
-        }
-
-        function previewThumbName(input) {
-            if (input.files && input.files[0]) {
-                document.getElementById("thumbFileName").innerText = input.files[0].name;
-            }
-        }
-
-        function previewMediaName(input) {
-            if (input.files && input.files[0]) {
-                document.getElementById("mediaFileName").innerText = input.files[0].name;
-            }
-        }
-
-        // Upload de Arquivos Local (Convertidos para Base64 para persistência no LocalStorage)
-        function handleUpload(e) {
-            e.preventDefault();
-            const category = document.getElementById("itemCategory").value;
-            const title = document.getElementById("itemTitle").value;
-            const desc = document.getElementById("itemDesc").value;
-            const thumbFile = document.getElementById("itemThumbFile").files[0];
-            const mediaFile = document.getElementById("itemMediaFile").files[0];
-
-            const readerThumb = new FileReader();
-            readerThumb.onload = function(uploadThumbEvent) {
-                const thumbResult = uploadThumbEvent.target.result;
-
-                const readerMedia = new FileReader();
-                readerMedia.onload = function(uploadMediaEvent) {
-                    const mediaResult = uploadMediaEvent.target.result;
-                    const mediaType = mediaFile.type.startsWith("video") ? "video" : (mediaFile.type.includes("pdf") ? "pdf" : "image");
-
-                    const newItem = {
-                        id: 'item_' + Date.now(),
-                        category,
-                        title,
-                        desc,
-                        thumb: thumbResult,
-                        media: mediaResult,
-                        mediaType,
-                        likes: 0,
-                        comments: []
-                    };
-
-                    itemsData.push(newItem);
-                    localStorage.setItem("wolf_studios_items", JSON.stringify(itemsData));
-                    renderCatalog();
-                    closeAdminModal();
-                    alert("Conteúdo publicado com sucesso!");
-                    document.getElementById("uploadForm").reset();
-                    document.getElementById("thumbFileName").innerText = "Clique para selecionar a imagem de capa";
-                    document.getElementById("mediaFileName").innerText = "Clique para selecionar o arquivo de mídia do projeto";
-                };
-                readerMedia.readAsDataURL(mediaFile);
-            };
-            readerThumb.readAsDataURL(thumbFile);
-        }
-
-        // Modal de Detalhes
-        function openDetailsModal(id) {
-            currentActiveId = id;
-            const item = itemsData.find(i => i.id === id);
-            if (!item) return;
-
-            document.getElementById("modalTitle").innerText = item.title;
-            document.getElementById("modalSynopsis").innerText = item.desc;
-            document.getElementById("modalLikesCount").innerText = item.likes || 0;
-
-            // Renderizar Mídia
-            const mediaContainer = document.getElementById("modalMediaContainer");
-            if (item.mediaType === "video") {
-                mediaContainer.innerHTML = `<video src="${item.media}" controls autoplay style="width:100%; height:100%;"></video>`;
-            } else if (item.mediaType === "pdf") {
-                mediaContainer.innerHTML = `<iframe src="${item.media}" style="width:100%; height:100%;"></iframe>`;
-            } else {
-                mediaContainer.innerHTML = `<img src="${item.media}" style="width:100%; height:100%; object-fit:contain;">`;
-            }
-
-            renderComments(item);
-            document.getElementById("detailsModal").style.display = "flex";
-        }
-
-        function closeModalExplicit() {
-            document.getElementById("detailsModal").style.display = "none";
-            const mediaContainer = document.getElementById("modalMediaContainer");
-            mediaContainer.innerHTML = ""; // Para parar vídeo rodando
-            currentActiveId = null;
-        }
-
-        function closeDetailsModal(e) {
-            if (e.target.id === "detailsModal") closeModalExplicit();
-        }
-
-        // Curtidas
-        function toggleLikeCurrentItem() {
-            if (!currentActiveId) return;
-            const item = itemsData.find(i => i.id === currentActiveId);
-            if (item) {
-                item.likes = (item.likes || 0) + 1;
-                localStorage.setItem("wolf_studios_items", JSON.stringify(itemsData));
-                document.getElementById("modalLikesCount").innerText = item.likes;
-                renderCatalog();
-            }
-        }
-
-        // Comentários
-        function renderComments(item) {
-            const list = document.getElementById("commentsList");
-            const comments = item.comments || [];
-
-            if (comments.length === 0) {
-                list.innerHTML = `<div style="color:var(--silver-secondary); font-size:13px; text-align:center; padding: 15px;">Nenhum comentário ainda. Seja o primeiro a comentar!</div>`;
-                return;
-            }
-
-            list.innerHTML = comments.map(c => `
-                <div class="comment-item">
-                    <div class="comment-user"><i class="fa-solid fa-user-circle"></i> ${escapeHtml(c.author)}</div>
-                    <div class="comment-text">${escapeHtml(c.text)}</div>
-                </div>
-            `).join('');
-        }
-
-        function postComment() {
-            if (!currentActiveId) return;
-            const authorInput = document.getElementById("commentAuthorInput");
-            const textInput = document.getElementById("commentTextInput");
-
-            const author = authorInput.value.trim() || "Visitante";
-            const text = textInput.value.trim();
-
-            if (!text) return;
-
-            const item = itemsData.find(i => i.id === currentActiveId);
-            if (item) {
-                if (!item.comments) item.comments = [];
-                item.comments.push({ author, text });
-                localStorage.setItem("wolf_studios_items", JSON.stringify(itemsData));
-                textInput.value = "";
-                renderComments(item);
-            }
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        // Inicializar Catálogo ao Carregar
-        window.onload = function() {
-            renderCatalog();
-        };
-    </script>
-</body>
-</html>
