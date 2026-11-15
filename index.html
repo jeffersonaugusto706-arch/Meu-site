@@ -43,7 +43,6 @@
             flex-direction: column;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -58,7 +57,6 @@
             background: var(--accent-red);
         }
 
-        /* Header */
         header {
             position: sticky;
             top: 0;
@@ -158,7 +156,6 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
         }
 
-        /* Hero Section */
         .hero {
             position: relative;
             padding: 4.5rem 5% 3.5rem;
@@ -245,7 +242,6 @@
             color: var(--accent-gold);
         }
 
-        /* Main Container */
         main {
             flex: 1;
             padding: 2.5rem 5% 4rem;
@@ -271,12 +267,6 @@
             letter-spacing: 1px;
         }
 
-        .filter-pills {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
         .search-input {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -292,7 +282,6 @@
             border-color: var(--accent-gold);
         }
 
-        /* Grid & Cards */
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -445,7 +434,6 @@
             text-decoration: underline;
         }
 
-        /* Modals */
         .modal-backdrop {
             position: fixed;
             inset: 0;
@@ -512,7 +500,6 @@
             padding: 1.5rem;
         }
 
-        /* Player Container */
         .player-wrapper {
             position: relative;
             width: 100%;
@@ -530,7 +517,6 @@
             border: none;
         }
 
-        /* HQ Reader */
         .hq-viewer {
             display: flex;
             flex-direction: column;
@@ -562,7 +548,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* Admin Panel Styles */
         .admin-auth-box {
             max-width: 440px;
             margin: 1rem auto;
@@ -614,23 +599,15 @@
             border: 2px dashed var(--border-gold);
             background: rgba(212, 175, 55, 0.04);
             border-radius: 8px;
-            padding: 1.8rem 1rem;
+            padding: 1.5rem 1rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s ease;
         }
 
-        .dropzone:hover, .dropzone.dragover {
+        .dropzone:hover {
             background: rgba(212, 175, 55, 0.12);
             border-color: var(--accent-gold);
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 0.6rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.8rem;
         }
 
         .admin-list-item {
@@ -747,7 +724,6 @@
         <p>&copy; 2026 <strong>WOLF STUDIOS PRODUÇÕES</strong> &mdash; Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Modal Reprodutor / Leitor HQ -->
     <div class="modal-backdrop" id="mediaModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -758,7 +734,6 @@
         </div>
     </div>
 
-    <!-- Modal Administração Privada -->
     <div class="modal-backdrop" id="adminModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -771,10 +746,9 @@
 
     <script>
         const AUTHORIZED_EMAIL = "jeffersonaugusto706@gmail.com";
-        const STORAGE_KEY = "wolf_studios_catalog_v1";
+        const STORAGE_KEY = "wolf_studios_catalog_v2";
         const AUTH_KEY = "wolf_studios_admin_logged";
 
-        // Catálogo inicial com exemplos (edite aqui para fixar conteúdos permanentes no GitHub)
         const defaultCatalog = [
             {
                 id: "item-1",
@@ -798,16 +772,6 @@
                 thumbnail: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=900&q=80",
                 description: "Arthur Henry abandonou o passado, mas as sombras da cidade exigem um último acerto de contas.",
                 date: "2026"
-            },
-            {
-                id: "item-3",
-                title: "Taitron: Despertar Cósmico",
-                category: "Animações",
-                sourceType: "youtube",
-                url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
-                thumbnail: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=80",
-                description: "Animação original explorando a transformação de Norman Spencer diante de uma ameaça interdimensional.",
-                date: "2026"
             }
         ];
 
@@ -820,7 +784,7 @@
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
             } catch (e) {
-                alert("Aviso: Arquivo local muito grande para salvar no cache permanente do navegador, mas já está ativo nesta sessão.");
+                alert("Aviso: Armazenamento local cheio. Tente imagens menores.");
             }
         }
 
@@ -859,7 +823,7 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 3rem 0;">Nenhuma produção encontrada nesta categoria.</p>`;
+                grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 3rem 0;">Nenhuma produção encontrada.</p>`;
                 return;
             }
 
@@ -965,7 +929,6 @@
             document.getElementById("mediaModalBody").innerHTML = "";
         }
 
-        /* ================= SISTEMA DE GERENCIAMENTO PRIVADO ================= */
         function isAdminLogged() {
             return sessionStorage.getItem(AUTH_KEY) === AUTHORIZED_EMAIL;
         }
@@ -988,16 +951,16 @@
             document.getElementById("adminModalBody").innerHTML = `
                 <div class="admin-auth-box">
                     <p style="color: var(--text-secondary); margin-bottom: 1.2rem;">
-                        Acesso restrito ao administrador oficial da <strong>Wolf Studios Produções</strong>.
+                        Acesso restrito ao administrador da <strong>Wolf Studios Produções</strong>.
                     </p>
                     <div class="alert-msg alert-error" id="authError"></div>
                     <form onsubmit="handleAdminLogin(event)">
                         <div class="form-group">
                             <label>E-mail do Administrador</label>
-                            <input type="email" id="adminEmailInput" class="form-control" placeholder="Digite o e-mail autorizado..." required>
+                            <input type="email" id="adminEmailInput" class="form-control" placeholder="Digite o e-mail..." required>
                         </div>
                         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
-                            Acessar Painel do Estúdio
+                            Acessar Painel
                         </button>
                     </form>
                 </div>
@@ -1014,7 +977,7 @@
                 renderAdminDashboard();
             } else {
                 errBox.style.display = "block";
-                errBox.textContent = "Acesso negado. Este e-mail não possui permissão de gerenciamento.";
+                errBox.textContent = "Acesso negado para este e-mail.";
             }
         }
 
@@ -1026,15 +989,17 @@
         let uploadedFileUrl = "";
         let uploadedHqPages = [];
         let uploadedFileType = "";
+        let customThumbUrl = "";
 
         function renderAdminDashboard() {
             uploadedFileUrl = "";
             uploadedHqPages = [];
             uploadedFileType = "";
+            customThumbUrl = "";
 
             document.getElementById("adminModalBody").innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;">
-                    <span style="font-size: 0.85rem; color: var(--accent-gold);">Conectado como: <strong>${AUTHORIZED_EMAIL}</strong></span>
+                    <span style="font-size: 0.85rem; color: var(--accent-gold);">Conectado: <strong>${AUTHORIZED_EMAIL}</strong></span>
                     <button class="btn-secondary" style="padding: 0.35rem 0.8rem; font-size: 0.8rem;" onclick="logoutAdmin()">Sair</button>
                 </div>
 
@@ -1046,11 +1011,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Título da Produção</label>
-                            <input type="text" id="pubTitle" class="form-control" placeholder="Ex: Fênix - Episódio 01" required>
+                            <input type="text" id="pubTitle" class="form-control" placeholder="Ex: Taitron - Episódio 01" required>
                         </div>
                         <div class="form-group">
                             <label>Categoria (Aba)</label>
-                            <select id="pubCategory" class="form-control" onchange="toggleSourceFields()">
+                            <select id="pubCategory" class="form-control">
                                 <option value="Filmes">Filmes</option>
                                 <option value="HQs">HQs</option>
                                 <option value="Animações">Animações</option>
@@ -1060,41 +1025,55 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Método de Hospedagem</label>
+                            <label>Método de Mídia</label>
                             <select id="pubSourceMode" class="form-control" onchange="toggleSourceFields()">
-                                <option value="youtube">Servidor YouTube (Link)</option>
-                                <option value="upload">Upload Direto de Arquivo (MP4, WebM, PDF, Imagens)</option>
+                                <option value="youtube">Vídeo do YouTube (Link)</option>
+                                <option value="upload">Upload de Arquivo (Vídeo, PDF ou Páginas de HQ)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>URL da Capa / Thumbnail (Opcional)</label>
-                            <input type="text" id="pubThumb" class="form-control" placeholder="https://... ou deixe vazio para gerar">
+                            <label>Opção de Capa (Thumbnail)</label>
+                            <select id="thumbMode" class="form-control" onchange="toggleThumbFields()">
+                                <option value="auto">Automática (YouTube ou 1ª Página)</option>
+                                <option value="url">Link de Imagem (URL)</option>
+                                <option value="file">Carregar Imagem de Capa do Computador</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-group" id="youtubeInputGroup">
-                        <label>Link do Vídeo no YouTube</label>
+                        <label>Link do YouTube</label>
                         <input type="url" id="pubYoutubeUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
                     </div>
 
                     <div class="form-group" id="uploadInputGroup" style="display: none;">
-                        <label>Upload Direto do Arquivo</label>
-                        <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-                            <p style="font-weight: 600; color: var(--accent-gold);">Clique ou arraste seu arquivo aqui</p>
-                            <span style="font-size: 0.8rem; color: var(--text-secondary);" id="fileStatus">Suporta Vídeos (MP4/WebM), PDFs ou múltiplas páginas de HQ (JPG/PNG)</span>
+                        <label>Arquivo Principal da Obra</label>
+                        <div class="dropzone" onclick="document.getElementById('fileInput').click()">
+                            <p style="font-weight: 600; color: var(--accent-gold);">Clique para selecionar o arquivo</p>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);" id="fileStatus">Vídeos (MP4), PDFs ou imagens de HQ</span>
                             <input type="file" id="fileInput" style="display: none;" multiple accept="video/*,application/pdf,image/*" onchange="handleFileSelect(this.files)">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Sinopse / Descrição</label>
-                        <textarea id="pubDesc" class="form-control" rows="3" placeholder="Descreva a história ou detalhes técnicos..." required></textarea>
+                    <div class="form-group" id="thumbUrlGroup" style="display: none;">
+                        <label>URL da Imagem de Capa</label>
+                        <input type="url" id="pubThumbUrlInput" class="form-control" placeholder="https://exemplo.com/capa.jpg">
                     </div>
 
-                    <button type="submit" class="btn-primary">Publicar no Catálogo</button>
+                    <div class="form-group" id="thumbFileGroup" style="display: none;">
+                        <label>Selecionar Imagem de Capa do Computador</label>
+                        <input type="file" id="thumbFileInput" class="form-control" accept="image/*" onchange="handleThumbFileSelect(this.files)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sinopse / Descrição</label>
+                        <textarea id="pubDesc" class="form-control" rows="3" placeholder="Detalhes da história..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Publicar Obra</button>
                 </form>
 
-                <h4 style="font-family: var(--font-display); margin-bottom: 1rem;">Gerenciar Obras Publicadas (${catalog.length})</h4>
+                <h4 style="font-family: var(--font-display); margin-bottom: 1rem;">Obras Publicadas (${catalog.length})</h4>
                 <div id="adminCatalogList">
                     ${catalog.map(item => `
                         <div class="admin-list-item">
@@ -1107,8 +1086,6 @@
                     `).join("")}
                 </div>
             `;
-
-            setupDropzone();
         }
 
         function toggleSourceFields() {
@@ -1117,19 +1094,10 @@
             document.getElementById("uploadInputGroup").style.display = mode === "upload" ? "block" : "none";
         }
 
-        function setupDropzone() {
-            const dz = document.getElementById("dropzone");
-            if (!dz) return;
-            dz.addEventListener("dragover", e => {
-                e.preventDefault();
-                dz.classList.add("dragover");
-            });
-            dz.addEventListener("dragleave", () => dz.classList.remove("dragover"));
-            dz.addEventListener("drop", e => {
-                e.preventDefault();
-                dz.classList.remove("dragover");
-                handleFileSelect(e.dataTransfer.files);
-            });
+        function toggleThumbFields() {
+            const mode = document.getElementById("thumbMode").value;
+            document.getElementById("thumbUrlGroup").style.display = mode === "url" ? "block" : "none";
+            document.getElementById("thumbFileGroup").style.display = mode === "file" ? "block" : "none";
         }
 
         function handleFileSelect(files) {
@@ -1144,11 +1112,17 @@
                 uploadedHqPages = Array.from(files).map(f => URL.createObjectURL(f));
                 uploadedFileUrl = uploadedHqPages[0];
                 uploadedFileType = "hq-pages";
-                status.textContent = `${files.length} página(s) de imagem carregada(s).`;
+                status.textContent = `${files.length} páginas carregadas.`;
             } else {
                 uploadedFileUrl = URL.createObjectURL(files[0]);
                 uploadedFileType = "direct-video";
                 status.textContent = `Vídeo carregado: ${files[0].name}`;
+            }
+        }
+
+        function handleThumbFileSelect(files) {
+            if (files && files[0]) {
+                customThumbUrl = URL.createObjectURL(files[0]);
             }
         }
 
@@ -1157,7 +1131,7 @@
             const title = document.getElementById("pubTitle").value.trim();
             const category = document.getElementById("pubCategory").value;
             const mode = document.getElementById("pubSourceMode").value;
-            const customThumb = document.getElementById("pubThumb").value.trim();
+            const thumbMode = document.getElementById("thumbMode").value;
             const desc = document.getElementById("pubDesc").value.trim();
 
             let newItem = {
@@ -1168,19 +1142,21 @@
                 date: new Date().getFullYear().toString()
             };
 
+            let finalThumb = "";
+
             if (mode === "youtube") {
                 const ytUrl = document.getElementById("pubYoutubeUrl").value.trim();
                 const ytId = extractYouTubeId(ytUrl);
                 if (!ytId) {
-                    alert("Por favor, insira um link válido do YouTube.");
+                    alert("Link do YouTube inválido.");
                     return;
                 }
                 newItem.sourceType = "youtube";
                 newItem.url = ytUrl;
-                newItem.thumbnail = customThumb || `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+                finalThumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
             } else {
                 if (!uploadedFileUrl) {
-                    alert("Por favor, selecione ou arraste um arquivo para upload.");
+                    alert("Selecione um arquivo de mídia.");
                     return;
                 }
                 newItem.sourceType = uploadedFileType;
@@ -1188,8 +1164,18 @@
                 if (uploadedFileType === "hq-pages") {
                     newItem.pages = uploadedHqPages;
                 }
-                newItem.thumbnail = customThumb || (uploadedFileType === "hq-pages" ? uploadedHqPages[0] : "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=900&q=80");
+                finalThumb = uploadedFileType === "hq-pages" ? uploadedHqPages[0] : "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=900&q=80";
             }
+
+            // Definir capa com base na escolha do usuário
+            if (thumbMode === "url") {
+                const urlInput = document.getElementById("pubThumbUrlInput").value.trim();
+                if (urlInput) finalThumb = urlInput;
+            } else if (thumbMode === "file") {
+                if (customThumbUrl) finalThumb = customThumbUrl;
+            }
+
+            newItem.thumbnail = finalThumb;
 
             catalog.unshift(newItem);
             saveCatalog();
@@ -1198,7 +1184,7 @@
 
             const successBox = document.getElementById("adminSuccess");
             successBox.style.display = "block";
-            successBox.textContent = `"${title}" foi publicado com sucesso no portal!`;
+            successBox.textContent = `"${title}" publicado com sucesso!`;
         }
 
         function deleteCatalogItem(id) {
@@ -1208,7 +1194,6 @@
             renderAdminDashboard();
         }
 
-        // Inicializar
         renderCatalog();
     </script>
 </body>
