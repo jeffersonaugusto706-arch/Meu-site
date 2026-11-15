@@ -746,7 +746,7 @@
 
     <script>
         const AUTHORIZED_EMAIL = "jeffersonaugusto706@gmail.com";
-        const STORAGE_KEY = "wolf_studios_catalog_v2";
+        const STORAGE_KEY = "wolf_studios_catalog_v3";
         const AUTH_KEY = "wolf_studios_admin_logged";
 
         const defaultCatalog = [
@@ -784,7 +784,7 @@
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
             } catch (e) {
-                alert("Aviso: Armazenamento local cheio. Tente imagens menores.");
+                alert("Aviso: O armazenamento local ficou cheio. Tente imagens de capa com tamanhos menores.");
             }
         }
 
@@ -989,13 +989,20 @@
         let uploadedFileUrl = "";
         let uploadedHqPages = [];
         let uploadedFileType = "";
-        let customThumbUrl = "";
+        let customThumbBase64 = "";
+
+        // Função auxiliar para converter arquivo de imagem em Base64 persistente
+        function fileToBase64(file, callback) {
+            const reader = new FileReader();
+            reader.onload = () => callback(reader.result);
+            reader.readAsDataURL(file);
+        }
 
         function renderAdminDashboard() {
             uploadedFileUrl = "";
             uploadedHqPages = [];
             uploadedFileType = "";
-            customThumbUrl = "";
+            customThumbBase64 = "";
 
             document.getElementById("adminModalBody").innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;">
@@ -1109,10 +1116,20 @@
                 uploadedFileType = "pdf";
                 status.textContent = `PDF carregado: ${files[0].name}`;
             } else if (files[0].type.startsWith("image/")) {
-                uploadedHqPages = Array.from(files).map(f => URL.createObjectURL(f));
-                uploadedFileUrl = uploadedHqPages[0];
-                uploadedFileType = "hq-pages";
-                status.textContent = `${files.length} páginas carregadas.`;
+                // Converter todas as páginas de HQ para Base64 para persistirem após atualizar a página
+                uploadedHqPages = [];
+                let loadedCount = 0;
+                Array.from(files).forEach((file, index) => {
+                    fileToBase64(file, (base64Str) => {
+                        uploadedHqPages[index] = base64Str;
+                        loadedCount++;
+                        if (loadedCount === files.length) {
+                            uploadedFileUrl = uploadedHqPages[0];
+                            uploadedFileType = "hq-pages";
+                            status.textContent = `${files.length} páginas convertidas e salvas.`;
+                        }
+                    });
+                });
             } else {
                 uploadedFileUrl = URL.createObjectURL(files[0]);
                 uploadedFileType = "direct-video";
@@ -1122,7 +1139,9 @@
 
         function handleThumbFileSelect(files) {
             if (files && files[0]) {
-                customThumbUrl = URL.createObjectURL(files[0]);
+                fileToBase64(files[0], (base64Result) => {
+                    customThumbBase64 = base64Result;
+                });
             }
         }
 
@@ -1167,12 +1186,11 @@
                 finalThumb = uploadedFileType === "hq-pages" ? uploadedHqPages[0] : "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=900&q=80";
             }
 
-            // Definir capa com base na escolha do usuário
             if (thumbMode === "url") {
                 const urlInput = document.getElementById("pubThumbUrlInput").value.trim();
                 if (urlInput) finalThumb = urlInput;
             } else if (thumbMode === "file") {
-                if (customThumbUrl) finalThumb = customThumbUrl;
+                if (customThumbBase64) finalThumb = customThumbBase64;
             }
 
             newItem.thumbnail = finalThumb;
@@ -1184,7 +1202,7 @@
 
             const successBox = document.getElementById("adminSuccess");
             successBox.style.display = "block";
-            successBox.textContent = `"${title}" publicado com sucesso!`;
+            successBox.textContent = `"${title}" publicado com sucesso e salvo permanentemente!`;
         }
 
         function deleteCatalogItem(id) {
