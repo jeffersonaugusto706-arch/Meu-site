@@ -217,6 +217,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none;
         }
 
         .btn-primary:hover {
@@ -235,6 +236,9 @@
             font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-secondary:hover {
@@ -746,7 +750,7 @@
 
     <script>
         const AUTHORIZED_EMAIL = "jeffersonaugusto706@gmail.com";
-        const STORAGE_KEY = "wolf_studios_catalog_v3";
+        const STORAGE_KEY = "wolf_studios_catalog_v4";
         const AUTH_KEY = "wolf_studios_admin_logged";
 
         const defaultCatalog = [
@@ -784,7 +788,7 @@
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
             } catch (e) {
-                alert("Aviso: O armazenamento local ficou cheio. Tente imagens de capa com tamanhos menores.");
+                alert("Aviso: O armazenamento local ficou cheio. Tente imagens menores.");
             }
         }
 
@@ -829,7 +833,11 @@
 
             grid.innerHTML = filtered.map(item => {
                 const isHQ = item.category === "HQs";
-                const sourceLabel = item.sourceType === "youtube" ? "YouTube" : (isHQ ? "Leitor HQ" : "Direto");
+                let sourceLabel = "YouTube";
+                if (item.sourceType === "globalcomics") sourceLabel = "Global Comics";
+                else if (item.sourceType === "hq-pages" || item.sourceType === "pdf") sourceLabel = "Leitor HQ";
+                else if (item.sourceType === "direct-video") sourceLabel = "Direto";
+
                 const actionText = isHQ ? "Ler Edição &rarr;" : "Assistir Agora &rarr;";
 
                 return `
@@ -869,7 +877,17 @@
 
             title.textContent = item.title;
 
-            if (item.category === "HQs") {
+            if (item.category === "HQs" && item.sourceType === "globalcomics") {
+                body.innerHTML = `
+                    <div style="text-align: center; padding: 2rem 1rem;">
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Esta HQ está hospedada oficialmente na plataforma <strong>Global Comics</strong>.</p>
+                        <a href="${item.url}" target="_blank" class="btn-primary" style="display: inline-flex; justify-content: center; margin-bottom: 1.5rem;">
+                            &#128218; Ler no Global Comics &rarr;
+                        </a>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${item.description}</p>
+                    </div>
+                `;
+            } else if (item.category === "HQs") {
                 if (item.sourceType === "pdf") {
                     body.innerHTML = `
                         <iframe class="hq-pdf-frame" src="${item.url}"></iframe>
@@ -991,7 +1009,6 @@
         let uploadedFileType = "";
         let customThumbBase64 = "";
 
-        // Função auxiliar para converter arquivo de imagem em Base64 persistente
         function fileToBase64(file, callback) {
             const reader = new FileReader();
             reader.onload = () => callback(reader.result);
@@ -1018,7 +1035,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Título da Produção</label>
-                            <input type="text" id="pubTitle" class="form-control" placeholder="Ex: Taitron - Episódio 01" required>
+                            <input type="text" id="pubTitle" class="form-control" placeholder="Ex: Fênix Edição Especial" required>
                         </div>
                         <div class="form-group">
                             <label>Categoria (Aba)</label>
@@ -1032,18 +1049,19 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Método de Mídia</label>
+                            <label>Método de Mídia / Hospedagem</label>
                             <select id="pubSourceMode" class="form-control" onchange="toggleSourceFields()">
                                 <option value="youtube">Vídeo do YouTube (Link)</option>
-                                <option value="upload">Upload de Arquivo (Vídeo, PDF ou Páginas de HQ)</option>
+                                <option value="globalcomics">Global Comics (Link da HQ)</option>
+                                <option value="upload">Upload de Arquivo (PDF ou Páginas de HQ)</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Opção de Capa (Thumbnail)</label>
                             <select id="thumbMode" class="form-control" onchange="toggleThumbFields()">
-                                <option value="auto">Automática (YouTube ou 1ª Página)</option>
+                                <option value="auto">Automática</option>
                                 <option value="url">Link de Imagem (URL)</option>
-                                <option value="file">Carregar Imagem de Capa do Computador</option>
+                                <option value="file">Carregar Capa do Computador</option>
                             </select>
                         </div>
                     </div>
@@ -1053,12 +1071,17 @@
                         <input type="url" id="pubYoutubeUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
                     </div>
 
+                    <div class="form-group" id="globalComicsInputGroup" style="display: none;">
+                        <label>Link da HQ no Global Comics</label>
+                        <input type="url" id="pubGlobalComicsUrl" class="form-control" placeholder="https://globalcomics.com/c/sua-hq">
+                    </div>
+
                     <div class="form-group" id="uploadInputGroup" style="display: none;">
                         <label>Arquivo Principal da Obra</label>
                         <div class="dropzone" onclick="document.getElementById('fileInput').click()">
                             <p style="font-weight: 600; color: var(--accent-gold);">Clique para selecionar o arquivo</p>
-                            <span style="font-size: 0.8rem; color: var(--text-secondary);" id="fileStatus">Vídeos (MP4), PDFs ou imagens de HQ</span>
-                            <input type="file" id="fileInput" style="display: none;" multiple accept="video/*,application/pdf,image/*" onchange="handleFileSelect(this.files)">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);" id="fileStatus">PDFs ou múltiplas imagens de HQ</span>
+                            <input type="file" id="fileInput" style="display: none;" multiple accept="application/pdf,image/*" onchange="handleFileSelect(this.files)">
                         </div>
                     </div>
 
@@ -1098,6 +1121,7 @@
         function toggleSourceFields() {
             const mode = document.getElementById("pubSourceMode").value;
             document.getElementById("youtubeInputGroup").style.display = mode === "youtube" ? "block" : "none";
+            document.getElementById("globalComicsInputGroup").style.display = mode === "globalcomics" ? "block" : "none";
             document.getElementById("uploadInputGroup").style.display = mode === "upload" ? "block" : "none";
         }
 
@@ -1116,7 +1140,6 @@
                 uploadedFileType = "pdf";
                 status.textContent = `PDF carregado: ${files[0].name}`;
             } else if (files[0].type.startsWith("image/")) {
-                // Converter todas as páginas de HQ para Base64 para persistirem após atualizar a página
                 uploadedHqPages = [];
                 let loadedCount = 0;
                 Array.from(files).forEach((file, index) => {
@@ -1130,10 +1153,6 @@
                         }
                     });
                 });
-            } else {
-                uploadedFileUrl = URL.createObjectURL(files[0]);
-                uploadedFileType = "direct-video";
-                status.textContent = `Vídeo carregado: ${files[0].name}`;
             }
         }
 
@@ -1161,7 +1180,7 @@
                 date: new Date().getFullYear().toString()
             };
 
-            let finalThumb = "";
+            let finalThumb = "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=900&q=80";
 
             if (mode === "youtube") {
                 const ytUrl = document.getElementById("pubYoutubeUrl").value.trim();
@@ -1173,17 +1192,25 @@
                 newItem.sourceType = "youtube";
                 newItem.url = ytUrl;
                 finalThumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+            } else if (mode === "globalcomics") {
+                const gcUrl = document.getElementById("pubGlobalComicsUrl").value.trim();
+                if (!gcUrl) {
+                    alert("Insira o link do Global Comics.");
+                    return;
+                }
+                newItem.sourceType = "globalcomics";
+                newItem.url = gcUrl;
             } else {
                 if (!uploadedFileUrl) {
-                    alert("Selecione um arquivo de mídia.");
+                    alert("Selecione um arquivo de HQ.");
                     return;
                 }
                 newItem.sourceType = uploadedFileType;
                 newItem.url = uploadedFileUrl;
                 if (uploadedFileType === "hq-pages") {
                     newItem.pages = uploadedHqPages;
+                    finalThumb = uploadedHqPages[0];
                 }
-                finalThumb = uploadedFileType === "hq-pages" ? uploadedHqPages[0] : "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=900&q=80";
             }
 
             if (thumbMode === "url") {
@@ -1202,7 +1229,7 @@
 
             const successBox = document.getElementById("adminSuccess");
             successBox.style.display = "block";
-            successBox.textContent = `"${title}" publicado com sucesso e salvo permanentemente!`;
+            successBox.textContent = `"${title}" publicado com sucesso!`;
         }
 
         function deleteCatalogItem(id) {
