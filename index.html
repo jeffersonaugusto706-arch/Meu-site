@@ -1,248 +1,443 @@
-<img class="hq-page-display" src="${currentHqPages[currentHqIndex]}" alt="Página da HQ">
-                    <div class="hq-controls">
-                        <button class="btn-secondary" onclick="prevHqPage()" ${currentHqIndex === 0 ? 'disabled style="opacity:0.5"' : ''}>&larr; Anterior</button>
-                        <span style="font-size: 0.9rem; font-weight: 600;">Página ${currentHqIndex + 1} de ${currentHqPages.length}</span>
-                        <button class="btn-secondary" onclick="nextHqPage()" ${currentHqIndex === currentHqPages.length - 1 ? 'disabled style="opacity:0.5"' : ''}>Próxima &rarr;</button>
+<script>
+    const STORAGE_KEY = "wolf_studios_catalog_v6";
+    const AUTH_KEY = "wolf_studios_admin_logged";
+
+    const defaultCatalog = [
+        {
+            id: "item-1",
+            title: "Fênix: Guerra Civil — Trailer Oficial",
+            category: "Filmes",
+            sourceType: "youtube",
+            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            thumbnail: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=900&q=80",
+            description: "O confronto ideológico que divide o Wolf Comics Universe. Quando antigos aliados entram em rota de colisão, ninguém sairá ileso.",
+            date: "2026"
+        },
+        {
+            id: "item-2",
+            title: "A Máscara da Vingança — Edição #01",
+            category: "HQs",
+            sourceType: "hq-pages",
+            pages: [
+                "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=900&q=85",
+                "https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&w=900&q=85"
+            ],
+            thumbnail: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=900&q=80",
+            description: "Arthur Henry abandonou o passado, mas as sombras da cidade exigem um último acerto de contas.",
+            date: "2026"
+        }
+    ];
+
+    let catalog = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultCatalog;
+    let currentTab = "todos";
+    let currentHqPages = [];
+    let currentHqIndex = 0;
+
+    function saveCatalog() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+        } catch (e) {
+            alert("Aviso: O armazenamento local ficou cheio. Tente imagens menores.");
+        }
+    }
+
+    function extractYouTubeId(url) {
+        if (!url) return null;
+        const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        const match = url.match(regExp);
+        return match ? match[1] : null;
+    }
+
+    function convertDriveUrl(url) {
+        if (!url) return "";
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+            return `https://drive.google.com/file/d/${match[1]}/preview`;
+        }
+        return url;
+    }
+
+    function switchTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.tab === tab);
+        });
+
+        const titles = {
+            "todos": "Catálogo Completo",
+            "Filmes": "Filmes & Produções Live-Action",
+            "HQs": "Histórias em Quadrinhos (WCU)",
+            "Animações": "Animações Originais"
+        };
+        document.getElementById("sectionTitle").textContent = titles[tab] || tab;
+        document.getElementById("heroSection").style.display = tab === "todos" ? "block" : "none";
+        renderCatalog();
+    }
+
+    function renderCatalog() {
+        const grid = document.getElementById("catalogGrid");
+        const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+        const filtered = catalog.filter(item => {
+            const matchTab = currentTab === "todos" || item.category === currentTab;
+            const matchQuery = item.title.toLowerCase().includes(query) || item.description.toLowerCase().includes(query);
+            return matchTab && matchQuery;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 3rem 0;">Nenhuma produção encontrada.</p>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(item => {
+            const isHQ = item.category === "HQs";
+            let sourceLabel = "YouTube";
+            if (item.sourceType === "globalcomics") sourceLabel = "Global Comics";
+            else if (item.sourceType === "gdrive") sourceLabel = "Google Drive";
+            else if (item.sourceType === "hq-pages" || item.sourceType === "pdf") sourceLabel = "Leitor HQ";
+            else if (item.sourceType === "direct-video") sourceLabel = "Direto";
+
+            const actionText = isHQ ? "Ler Edição &rarr;" : "Assistir Agora &rarr;";
+
+            return `
+                <article class="media-card">
+                    <div class="card-thumb ${isHQ ? 'hq-ratio' : ''}" onclick="openMedia('${item.id}')">
+                        <div class="card-tags">
+                            <span class="tag tag-cat">${item.category}</span>
+                            <span class="tag tag-src">${sourceLabel}</span>
+                        </div>
+                        <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80'">
+                        <div class="play-overlay">
+                            <div class="play-circle">${isHQ ? '&#128214;' : '&#9654;'}</div>
+                        </div>
                     </div>
-                    <p style="color: var(--text-secondary); text-align: center; margin-top: 0.5rem;">${description}</p>
+                    <div class="card-body">
+                        <div>
+                            <h4 class="card-title">${item.title}</h4>
+                            <p class="card-desc">${item.description}</p>
+                        </div>
+                        <div class="card-footer">
+                            <span>Wolf Studios &bull; ${item.date || '2026'}</span>
+                            <button class="watch-link" onclick="openMedia('${item.id}')">${actionText}</button>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }).join("");
+    }
+
+    function openMedia(id) {
+        const item = catalog.find(i => i.id === id);
+        if (!item) return;
+
+        const modal = document.getElementById("mediaModal");
+        const title = document.getElementById("mediaModalTitle");
+        const body = document.getElementById("mediaModalBody");
+
+        title.textContent = item.title;
+
+        if (item.category === "HQs" && item.sourceType === "gdrive") {
+            const embedUrl = convertDriveUrl(item.url);
+            body.innerHTML = `
+                <iframe class="hq-pdf-frame" src="${embedUrl}" allow="autoplay"></iframe>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">${item.description}</p>
+            `;
+        } else if (item.category === "HQs" && item.sourceType === "globalcomics") {
+            body.innerHTML = `
+                <div style="text-align: center; padding: 2rem 1rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Esta HQ está hospedada oficialmente na plataforma <strong>Global Comics</strong>.</p>
+                    <a href="${item.url}" target="_blank" class="btn-primary" style="display: inline-flex; justify-content: center; margin-bottom: 1.5rem;">
+                        &#128218; Ler no Global Comics &rarr;
+                    </a>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">${item.description}</p>
                 </div>
             `;
-        }
-
-        function prevHqPage() {
-            if (currentHqIndex > 0) {
-                currentHqIndex--;
-                renderHqReader(catalog.find(i => i.category === "HQs" && (i.pages && i.pages[currentHqIndex] === currentHqPages[currentHqIndex] || true))?.description || "");
-            }
-        }
-
-        function nextHqPage() {
-            if (currentHqIndex < currentHqPages.length - 1) {
-                currentHqIndex++;
-                renderHqReader(catalog.find(i => i.category === "HQs")?.description || "");
-            }
-        }
-
-        function closeMediaModal() {
-            document.getElementById("mediaModal").classList.remove("open");
-            document.getElementById("mediaModalBody").innerHTML = "";
-        }
-
-        // --- SISTEMA DE SENHA E PAINEL PRIVADO (ESTÚDIO ADMIN) ---
-        function openAdminModal() {
-            const modal = document.getElementById("adminModal");
-            const body = document.getElementById("adminModalBody");
-
-            const isLogged = sessionStorage.getItem(AUTH_KEY) === "true";
-
-            if (!isLogged) {
+        } else if (item.category === "HQs") {
+            if (item.sourceType === "pdf") {
                 body.innerHTML = `
-                    <div class="admin-auth-box">
-                        <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--accent-gold);">Acesso Restrito ao Estúdio</h4>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Digite a senha de administrador para gerenciar o catálogo da Wolf Studios.</p>
-                        <div id="adminAlert" class="alert-msg alert-error"></div>
-                        <div class="form-group">
-                            <label for="adminPasswordInput">Senha de Acesso</label>
-                            <input type="password" id="adminPasswordInput" class="form-control" placeholder="Digite a senha..." onkeydown="if(event.key === 'Enter') verifyAdminPassword()">
-                        </div>
-                        <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="verifyAdminPassword()">Entrar no Painel</button>
-                    </div>
+                    <iframe class="hq-pdf-frame" src="${item.url}"></iframe>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">${item.description}</p>
                 `;
             } else {
-                renderAdminDashboard(body);
+                currentHqPages = item.pages && item.pages.length ? item.pages : [item.thumbnail];
+                currentHqIndex = 0;
+                renderHqReader(item.description);
             }
-
-            modal.classList.add("open");
-        }
-
-        function verifyAdminPassword() {
-            const pass = document.getElementById("adminPasswordInput").value.trim();
-            const alertBox = document.getElementById("adminAlert");
-
-            if (pass === "9165") {
-                sessionStorage.setItem(AUTH_KEY, "true");
-                renderAdminDashboard(document.getElementById("adminModalBody"));
-            } else {
-                alertBox.textContent = "Senha incorreta. Acesso negado.";
-                alertBox.style.display = "block";
-            }
-        }
-
-        function closeAdminModal() {
-            document.getElementById("adminModal").classList.remove("open");
-        }
-
-        function renderAdminDashboard(container) {
-            container.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                    <span style="color: var(--accent-gold); font-weight: 600; font-size: 0.9rem;">&#128275; Modo Administrador Ativo</span>
-                    <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;" onclick="logoutAdmin()">Sancar / Bloquear</button>
+        } else if (item.sourceType === "youtube") {
+            const ytId = extractYouTubeId(item.url);
+            const embedUrl = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0` : item.url;
+            body.innerHTML = `
+                <div class="player-wrapper">
+                    <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
-
-                <div id="formAlert" class="alert-msg"></div>
-
-                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
-                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.2rem; color: var(--text-primary);">Adicionar Nova Produção</h4>
-                    <form onsubmit="handleAddItem(event)">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Título da Obra</label>
-                                <input type="text" id="newItemTitle" class="form-control" required placeholder="Ex: Fênix Capítulo 2">
-                            </div>
-                            <div class="form-group">
-                                <label>Categoria</label>
-                                <select id="newItemCategory" class="form-control" onchange="toggleFormFields()">
-                                    <option value="Filmes">Filmes</option>
-                                    <option value="HQs">HQs</option>
-                                    <option value="Animações">Animações</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Tipo de Fonte / Hospedagem</label>
-                                <select id="newItemSourceType" class="form-control" onchange="toggleFormFields()">
-                                    <option value="youtube">YouTube (Vídeo / Trailer)</option>
-                                    <option value="gdrive">Google Drive (PDF / Leitura)</option>
-                                    <option value="globalcomics">Global Comics (Link Externo)</option>
-                                    <option value="hq-pages">Páginas de Imagem (Leitor Web)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Ano / Data</label>
-                                <input type="text" id="newItemDate" class="form-control" value="2026">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label id="urlOrPagesLabel">Link do YouTube ou Google Drive</label>
-                            <input type="text" id="newItemUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
-                            <small id="urlHelpText" style="color: var(--text-secondary); display: block; margin-top: 0.3rem; font-size: 0.78rem;">Insira o link completo do YouTube ou o link de compartilhamento público do Google Drive.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Link da Imagem de Capa (Thumbnail)</label>
-                            <input type="text" id="newItemThumb" class="form-control" required placeholder="https://images.unsplash.com/...">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Sinopse / Descrição</label>
-                            <textarea id="newItemDesc" class="form-control" rows="3" required placeholder="Escreva uma breve sinopse..."></textarea>
-                        </div>
-
-                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Publicar no Catálogo Público</button>
-                    </form>
+                <p style="color: var(--text-secondary);">${item.description}</p>
+            `;
+        } else if (item.sourceType === "gdrive") {
+            const embedUrl = convertDriveUrl(item.url);
+            body.innerHTML = `
+                <div class="player-wrapper">
+                    <iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>
                 </div>
-
-                <div>
-                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1rem;">Gerenciar Produções Existentes (${catalog.length})</h4>
-                    <div id="adminItemsList" style="max-height: 320px; overflow-y: auto; padding-right: 4px;">
-                        ${catalog.map(item => `
-                            <div class="admin-list-item">
-                                <div style="display: flex; align-items: center; gap: 0.8rem; overflow: hidden;">
-                                    <img src="${item.thumbnail}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 4px; flex-shrink: 0;" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=200&q=80'">
-                                    <div style="overflow: hidden;">
-                                        <h5 style="font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary);">${item.title}</h5>
-                                        <span style="font-size: 0.75rem; color: var(--accent-gold);">${item.category} &bull; ${item.sourceType}</span>
-                                    </div>
-                                </div>
-                                <button class="btn-danger" onclick="deleteCatalogItem('${item.id}')">Excluir</button>
-                            </div>
-                        `).join("")}
-                    </div>
+                <p style="color: var(--text-secondary);">${item.description}</p>
+            `;
+        } else {
+            body.innerHTML = `
+                <div class="player-wrapper">
+                    <video src="${item.url}" controls autoplay playsinline></video>
                 </div>
+                <p style="color: var(--text-secondary);">${item.description}</p>
             `;
         }
 
-        function toggleFormFields() {
-            const category = document.getElementById("newItemCategory").value;
-            const sourceType = document.getElementById("newItemSourceType").value;
-            const label = document.getElementById("urlOrPagesLabel");
-            const input = document.getElementById("newItemUrl");
-            const help = document.getElementById("urlHelpText");
+        modal.classList.add("open");
+    }
 
-            if (category === "HQs" && sourceType === "hq-pages") {
-                label.textContent = "Links das Páginas da HQ (separados por vírgula ou quebra de linha)";
-                input.placeholder = "https://img1.com/p1.jpg, https://img2.com/p2.jpg";
-                help.textContent = "Cole os links diretos das imagens das páginas da HQ separados por vírgula.";
-            } else if (sourceType === "gdrive") {
-                label.textContent = "Link de Compartilhamento do Google Drive";
-                input.placeholder = "https://drive.google.com/file/d/.../view?usp=sharing";
-                help.textContent = "Certifique-se de que o arquivo no Google Drive esteja configurado como 'Qualquer pessoa com o link' (Leitor).";
-            } else if (sourceType === "globalcomics") {
-                label.textContent = "Link da HQ no Global Comics";
-                input.placeholder = "https://globalcomics.com/...";
-                help.textContent = "Insira o link oficial da publicação no Global Comics.";
-            } else {
-                label.textContent = "Link do Vídeo no YouTube";
-                input.placeholder = "https://www.youtube.com/watch?v=...";
-                help.textContent = "Insira o link completo do vídeo ou trailer no YouTube.";
-            }
+    function renderHqReader(description) {
+        const body = document.getElementById("mediaModalBody");
+        body.innerHTML = `
+            <div class="hq-viewer">
+                <img class="hq-page-display" src="${currentHqPages[currentHqIndex]}" alt="Página da HQ">
+                <div class="hq-controls">
+                    <button class="btn-secondary" onclick="prevHqPage()" ${currentHqIndex === 0 ? 'disabled style="opacity:0.5"' : ''}>&larr; Anterior</button>
+                    <span style="font-size: 0.9rem; font-weight: 600;">Página ${currentHqIndex + 1} de ${currentHqPages.length}</span>
+                    <button class="btn-secondary" onclick="nextHqPage()" ${currentHqIndex === currentHqPages.length - 1 ? 'disabled style="opacity:0.5"' : ''}>Próxima &rarr;</button>
+                </div>
+                <p style="color: var(--text-secondary); text-align: center; margin-top: 0.5rem;">${description}</p>
+            </div>
+        `;
+    }
+
+    function prevHqPage() {
+        if (currentHqIndex > 0) {
+            currentHqIndex--;
+            renderHqReader("Página da HQ");
+        }
+    }
+
+    function nextHqPage() {
+        if (currentHqIndex < currentHqPages.length - 1) {
+            currentHqIndex++;
+            renderHqReader("Página da HQ");
+        }
+    }
+
+    function closeMediaModal() {
+        document.getElementById("mediaModal").classList.remove("open");
+        document.getElementById("mediaModalBody").innerHTML = "";
+    }
+
+    // --- SISTEMA DE SENHA E PAINEL PRIVADO (9165) ---
+    function openAdminModal() {
+        const modal = document.getElementById("adminModal");
+        const body = document.getElementById("adminModalBody");
+        const isLogged = sessionStorage.getItem(AUTH_KEY) === "true";
+
+        if (!isLogged) {
+            body.innerHTML = `
+                <div class="admin-auth-box">
+                    <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--accent-gold);">Acesso Restrito ao Estúdio</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Digite a senha de administrador para gerenciar o catálogo da Wolf Studios.</p>
+                    <div id="adminAlert" class="alert-msg alert-error"></div>
+                    <div class="form-group">
+                        <label for="adminPasswordInput">Senha de Acesso</label>
+                        <input type="password" id="adminPasswordInput" class="form-control" placeholder="Digite a senha..." onkeydown="if(event.key === 'Enter') verifyAdminPassword()">
+                    </div>
+                    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="verifyAdminPassword()">Entrar no Painel</button>
+                </div>
+            `;
+        } else {
+            renderAdminDashboard(body);
         }
 
-        function handleAddItem(event) {
-            event.preventDefault();
-            const title = document.getElementById("newItemTitle").value.trim();
-            const category = document.getElementById("newItemCategory").value;
-            const sourceType = document.getElementById("newItemSourceType").value;
-            const date = document.getElementById("newItemDate").value.trim();
-            const rawUrl = document.getElementById("newItemUrl").value.trim();
-            const thumbnail = document.getElementById("newItemThumb").value.trim();
-            const description = document.getElementById("newItemDesc").value.trim();
-            const alertBox = document.getElementById("formAlert");
+        modal.classList.add("open");
+    }
 
-            let url = rawUrl;
-            let pages = [];
+    function verifyAdminPassword() {
+        const pass = document.getElementById("adminPasswordInput").value.trim();
+        const alertBox = document.getElementById("adminAlert");
 
-            if (category === "HQs" && sourceType === "hq-pages") {
-                pages = rawUrl.split(",").map(s => s.trim()).filter(Boolean);
-                url = pages[0] || "";
-            }
+        if (pass === "9165") {
+            sessionStorage.setItem(AUTH_KEY, "true");
+            renderAdminDashboard(document.getElementById("adminModalBody"));
+        } else {
+            alertBox.textContent = "Senha incorreta. Acesso negado.";
+            alertBox.style.display = "block";
+        }
+    }
 
-            const newItem = {
-                id: "item-" + Date.now(),
-                title,
-  1461:             category,
-                sourceType,
-                url,
-                pages,
-                thumbnail,
-                description,
-                date: date || "2026"
-            };
+    function closeAdminModal() {
+        document.getElementById("adminModal").classList.remove("open");
+    }
 
-            catalog.unshift(newItem);
+    function renderAdminDashboard(container) {
+        container.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <span style="color: var(--accent-gold); font-weight: 600; font-size: 0.9rem;">&#128275; Modo Administrador Ativo</span>
+                <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;" onclick="logoutAdmin()">Bloquear Painel</button>
+            </div>
+
+            <div id="formAlert" class="alert-msg"></div>
+
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.2rem; color: var(--text-primary);">Adicionar Nova Produção</h4>
+                <form onsubmit="handleAddItem(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Título da Obra</label>
+                            <input type="text" id="newItemTitle" class="form-control" required placeholder="Ex: Fênix Capítulo 2">
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select id="newItemCategory" class="form-control" onchange="toggleFormFields()">
+                                <option value="Filmes">Filmes</option>
+                                <option value="HQs">HQs</option>
+                                <option value="Animações">Animações</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tipo de Fonte / Hospedagem</label>
+                            <select id="newItemSourceType" class="form-control" onchange="toggleFormFields()">
+                                <option value="youtube">YouTube (Vídeo / Trailer)</option>
+                                <option value="gdrive">Google Drive (PDF / Leitura)</option>
+                                <option value="globalcomics">Global Comics (Link Externo)</option>
+                                <option value="hq-pages">Páginas de Imagem (Leitor Web)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ano / Data</label>
+                            <input type="text" id="newItemDate" class="form-control" value="2026">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="urlOrPagesLabel">Link do YouTube ou Google Drive</label>
+                        <input type="text" id="newItemUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                        <small id="urlHelpText" style="color: var(--text-secondary); display: block; margin-top: 0.3rem; font-size: 0.78rem;">Insira o link completo do YouTube ou o link de compartilhamento público do Google Drive.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Link da Imagem de Capa (Thumbnail)</label>
+                        <input type="text" id="newItemThumb" class="form-control" required placeholder="https://images.unsplash.com/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sinopse / Descrição</label>
+                        <textarea id="newItemDesc" class="form-control" rows="3" required placeholder="Escreva uma breve sinopse..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Publicar no Catálogo Público</button>
+                </form>
+            </div>
+
+            <div>
+                <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1rem;">Gerenciar Produções Existentes (${catalog.length})</h4>
+                <div id="adminItemsList" style="max-height: 320px; overflow-y: auto; padding-right: 4px;">
+                    ${catalog.map(item => `
+                        <div class="admin-list-item">
+                            <div style="display: flex; align-items: center; gap: 0.8rem; overflow: hidden;">
+                                <img src="${item.thumbnail}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 4px; flex-shrink: 0;" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=200&q=80'">
+                                <div style="overflow: hidden;">
+                                    <h5 style="font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary);">${item.title}</h5>
+                                    <span style="font-size: 0.75rem; color: var(--accent-gold);">${item.category} &bull; ${item.sourceType}</span>
+                                </div>
+                            </div>
+                            <button class="btn-danger" onclick="deleteCatalogItem('${item.id}')">Excluir</button>
+                        </div>
+                    `).join("")}
+                </div>
+            </div>
+        `;
+    }
+
+    function toggleFormFields() {
+        const category = document.getElementById("newItemCategory").value;
+        const sourceType = document.getElementById("newItemSourceType").value;
+        const label = document.getElementById("urlOrPagesLabel");
+        const input = document.getElementById("newItemUrl");
+        const help = document.getElementById("urlHelpText");
+
+        if (category === "HQs" && sourceType === "hq-pages") {
+            label.textContent = "Links das Páginas da HQ (separados por vírgula ou quebra de linha)";
+            input.placeholder = "https://img1.com/p1.jpg, https://img2.com/p2.jpg";
+            help.textContent = "Cole os links diretos das imagens das páginas da HQ separados por vírgula.";
+        } else if (sourceType === "gdrive") {
+            label.textContent = "Link de Compartilhamento do Google Drive";
+            input.placeholder = "https://drive.google.com/file/d/.../view?usp=sharing";
+            help.textContent = "Certifique-se de que o arquivo no Google Drive esteja configurado como 'Qualquer pessoa com o link' (Leitor).";
+        } else if (sourceType === "globalcomics") {
+            label.textContent = "Link da HQ no Global Comics";
+            input.placeholder = "https://globalcomics.com/...";
+            help.textContent = "Insira o link oficial da publicação no Global Comics.";
+        } else {
+            label.textContent = "Link do Vídeo no YouTube";
+            input.placeholder = "https://www.youtube.com/watch?v=...";
+            help.textContent = "Insira o link completo do vídeo ou trailer no YouTube.";
+        }
+    }
+
+    function handleAddItem(event) {
+        event.preventDefault();
+        const title = document.getElementById("newItemTitle").value.trim();
+        const category = document.getElementById("newItemCategory").value;
+        const sourceType = document.getElementById("newItemSourceType").value;
+        const date = document.getElementById("newItemDate").value.trim();
+        const rawUrl = document.getElementById("newItemUrl").value.trim();
+        const thumbnail = document.getElementById("newItemThumb").value.trim();
+        const description = document.getElementById("newItemDesc").value.trim();
+        const alertBox = document.getElementById("formAlert");
+
+        let url = rawUrl;
+        let pages = [];
+
+        if (category === "HQs" && sourceType === "hq-pages") {
+            pages = rawUrl.split(",").map(s => s.trim()).filter(Boolean);
+            url = pages[0] || "";
+        }
+
+        const newItem = {
+            id: "item-" + Date.now(),
+            title,
+            category,
+            sourceType,
+            url,
+            pages,
+            thumbnail,
+            description,
+            date: date || "2026"
+        };
+
+        catalog.unshift(newItem);
+        saveCatalog();
+        renderCatalog();
+
+        alertBox.className = "alert-msg alert-success";
+        alertBox.textContent = "Produção publicada com sucesso no catálogo público!";
+        alertBox.style.display = "block";
+
+        setTimeout(() => {
+            renderAdminDashboard(document.getElementById("adminModalBody"));
+        }, 1200);
+    }
+
+    function deleteCatalogItem(id) {
+        if (confirm("Tem certeza que deseja excluir esta produção do catálogo?")) {
+            catalog = catalog.filter(i => i.id !== id);
             saveCatalog();
             renderCatalog();
-
-            alertBox.className = "alert-msg alert-success";
-            alertBox.textContent = "Produção publicada com sucesso no catálogo público!";
-            alertBox.style.display = "block";
-
-            setTimeout(() => {
-                renderAdminDashboard(document.getElementById("adminModalBody"));
-            }, 1200);
+            renderAdminDashboard(document.getElementById("adminModalBody"));
         }
+    }
 
-        function deleteCatalogItem(id) {
-            if (confirm("Tem certeza que deseja excluir esta produção do catálogo?")) {
-                catalog = catalog.filter(i => i.id !== id);
-                saveCatalog();
-                renderCatalog();
-                renderAdminDashboard(document.getElementById("adminModalBody"));
-            }
-        }
+    function logoutAdmin() {
+        sessionStorage.removeItem(AUTH_KEY);
+        openAdminModal();
+    }
 
-        function logoutAdmin() {
-            sessionStorage.removeItem(AUTH_KEY);
-            openAdminModal();
-        }
-
-        // Inicialização ao carregar a página
-        window.onload = function() {
-            renderCatalog();
-        };
-    </script>
-</body>
-</html>
+    // Inicialização ao carregar a página
+    window.onload = function() {
+        renderCatalog();
+    };
+</script>
