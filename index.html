@@ -1,60 +1,248 @@
-<!-- Seção Pública: Catálogo visível para TODOS os visitantes -->
-<section id="catalogo-publico">
-    <h2>Catálogo Wolf Studios</h2>
-    <div id="lista-hqs-publicas">
-        <!-- As HQs cadastradas pelo Firebase aparecem aqui automaticamente para qualquer pessoa -->
-    </div>
-</section>
-
-<!-- Botão Discreto de Acesso do Administrador -->
-<div style="margin-top: 30px; text-align: center;">
-    <button onclick="tentarEntrarAdmin()" style="background: transparent; border: none; color: #555; cursor: pointer; font-size: 12px;">
-        ⚙️ Área Restrita
-    </button>
-</div>
-
-<!-- Painel de Gerenciamento / Postagem: 100% Privado (Invisível por padrão) -->
-<div id="painel-admin-privado" style="display: none; border: 2px dashed #ff4444; padding: 20px; margin-top: 20px;">
-    <h3>Painel de Controle - Wolf Studios (Restrito)</h3>
-    
-    <!-- Formulário para postar nova HQ -->
-    <form id="form-postagem">
-        <input type="text" id="titulo-hq" placeholder="Título da HQ" required><br><br>
-        <input type="text" id="link-drive-hq" placeholder="Link de Leitura do Google Drive" required><br><br>
-        <button type="submit">Publicar HQ para o Público</button>
-    </form>
-</div>
-
-<script>
-    // Função para desbloquear o painel com a senha 9165
-    function tentarEntrarAdmin() {
-        let senhaSalva = sessionStorage.getItem("wolf_admin_autenticado");
-        
-        if (senhaSalva === "true") {
-            mostrarAdmin();
-            return;
+<img class="hq-page-display" src="${currentHqPages[currentHqIndex]}" alt="Página da HQ">
+                    <div class="hq-controls">
+                        <button class="btn-secondary" onclick="prevHqPage()" ${currentHqIndex === 0 ? 'disabled style="opacity:0.5"' : ''}>&larr; Anterior</button>
+                        <span style="font-size: 0.9rem; font-weight: 600;">Página ${currentHqIndex + 1} de ${currentHqPages.length}</span>
+                        <button class="btn-secondary" onclick="nextHqPage()" ${currentHqIndex === currentHqPages.length - 1 ? 'disabled style="opacity:0.5"' : ''}>Próxima &rarr;</button>
+                    </div>
+                    <p style="color: var(--text-secondary); text-align: center; margin-top: 0.5rem;">${description}</p>
+                </div>
+            `;
         }
 
-        let senhaDigitada = prompt("Digite a senha de administrador:");
-        if (senhaDigitada === "9165") {
-            sessionStorage.setItem("wolf_admin_autenticado", "true");
-            mostrarAdmin();
-            alert("Bem-vindo de volta, Chefe!");
-        } else if (senhaDigitada !== null) {
-            alert("Senha incorreta!");
+        function prevHqPage() {
+            if (currentHqIndex > 0) {
+                currentHqIndex--;
+                renderHqReader(catalog.find(i => i.category === "HQs" && (i.pages && i.pages[currentHqIndex] === currentHqPages[currentHqIndex] || true))?.description || "");
+            }
         }
-    }
 
-    function mostrarAdmin() {
-        document.getElementById("painel-admin-privado").style.display = "block";
-    }
-
-    // Ao carregar o site, verifica se o admin já estava logado nesta sessão
-    window.onload = function() {
-        if (sessionStorage.getItem("wolf_admin_autenticado") === "true") {
-            mostrarAdmin();
+        function nextHqPage() {
+            if (currentHqIndex < currentHqPages.length - 1) {
+                currentHqIndex++;
+                renderHqReader(catalog.find(i => i.category === "HQs")?.description || "");
+            }
         }
-        // Aqui você chama a sua função do Firebase para carregar as HQs publicamente
-        carregarHQsPublicas();
-    };
-</script>
+
+        function closeMediaModal() {
+            document.getElementById("mediaModal").classList.remove("open");
+            document.getElementById("mediaModalBody").innerHTML = "";
+        }
+
+        // --- SISTEMA DE SENHA E PAINEL PRIVADO (ESTÚDIO ADMIN) ---
+        function openAdminModal() {
+            const modal = document.getElementById("adminModal");
+            const body = document.getElementById("adminModalBody");
+
+            const isLogged = sessionStorage.getItem(AUTH_KEY) === "true";
+
+            if (!isLogged) {
+                body.innerHTML = `
+                    <div class="admin-auth-box">
+                        <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--accent-gold);">Acesso Restrito ao Estúdio</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Digite a senha de administrador para gerenciar o catálogo da Wolf Studios.</p>
+                        <div id="adminAlert" class="alert-msg alert-error"></div>
+                        <div class="form-group">
+                            <label for="adminPasswordInput">Senha de Acesso</label>
+                            <input type="password" id="adminPasswordInput" class="form-control" placeholder="Digite a senha..." onkeydown="if(event.key === 'Enter') verifyAdminPassword()">
+                        </div>
+                        <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="verifyAdminPassword()">Entrar no Painel</button>
+                    </div>
+                `;
+            } else {
+                renderAdminDashboard(body);
+            }
+
+            modal.classList.add("open");
+        }
+
+        function verifyAdminPassword() {
+            const pass = document.getElementById("adminPasswordInput").value.trim();
+            const alertBox = document.getElementById("adminAlert");
+
+            if (pass === "9165") {
+                sessionStorage.setItem(AUTH_KEY, "true");
+                renderAdminDashboard(document.getElementById("adminModalBody"));
+            } else {
+                alertBox.textContent = "Senha incorreta. Acesso negado.";
+                alertBox.style.display = "block";
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById("adminModal").classList.remove("open");
+        }
+
+        function renderAdminDashboard(container) {
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <span style="color: var(--accent-gold); font-weight: 600; font-size: 0.9rem;">&#128275; Modo Administrador Ativo</span>
+                    <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;" onclick="logoutAdmin()">Sancar / Bloquear</button>
+                </div>
+
+                <div id="formAlert" class="alert-msg"></div>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.2rem; color: var(--text-primary);">Adicionar Nova Produção</h4>
+                    <form onsubmit="handleAddItem(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Título da Obra</label>
+                                <input type="text" id="newItemTitle" class="form-control" required placeholder="Ex: Fênix Capítulo 2">
+                            </div>
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <select id="newItemCategory" class="form-control" onchange="toggleFormFields()">
+                                    <option value="Filmes">Filmes</option>
+                                    <option value="HQs">HQs</option>
+                                    <option value="Animações">Animações</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tipo de Fonte / Hospedagem</label>
+                                <select id="newItemSourceType" class="form-control" onchange="toggleFormFields()">
+                                    <option value="youtube">YouTube (Vídeo / Trailer)</option>
+                                    <option value="gdrive">Google Drive (PDF / Leitura)</option>
+                                    <option value="globalcomics">Global Comics (Link Externo)</option>
+                                    <option value="hq-pages">Páginas de Imagem (Leitor Web)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Ano / Data</label>
+                                <input type="text" id="newItemDate" class="form-control" value="2026">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="urlOrPagesLabel">Link do YouTube ou Google Drive</label>
+                            <input type="text" id="newItemUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                            <small id="urlHelpText" style="color: var(--text-secondary); display: block; margin-top: 0.3rem; font-size: 0.78rem;">Insira o link completo do YouTube ou o link de compartilhamento público do Google Drive.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Link da Imagem de Capa (Thumbnail)</label>
+                            <input type="text" id="newItemThumb" class="form-control" required placeholder="https://images.unsplash.com/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sinopse / Descrição</label>
+                            <textarea id="newItemDesc" class="form-control" rows="3" required placeholder="Escreva uma breve sinopse..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Publicar no Catálogo Público</button>
+                    </form>
+                </div>
+
+                <div>
+                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1rem;">Gerenciar Produções Existentes (${catalog.length})</h4>
+                    <div id="adminItemsList" style="max-height: 320px; overflow-y: auto; padding-right: 4px;">
+                        ${catalog.map(item => `
+                            <div class="admin-list-item">
+                                <div style="display: flex; align-items: center; gap: 0.8rem; overflow: hidden;">
+                                    <img src="${item.thumbnail}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 4px; flex-shrink: 0;" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=200&q=80'">
+                                    <div style="overflow: hidden;">
+                                        <h5 style="font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary);">${item.title}</h5>
+                                        <span style="font-size: 0.75rem; color: var(--accent-gold);">${item.category} &bull; ${item.sourceType}</span>
+                                    </div>
+                                </div>
+                                <button class="btn-danger" onclick="deleteCatalogItem('${item.id}')">Excluir</button>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleFormFields() {
+            const category = document.getElementById("newItemCategory").value;
+            const sourceType = document.getElementById("newItemSourceType").value;
+            const label = document.getElementById("urlOrPagesLabel");
+            const input = document.getElementById("newItemUrl");
+            const help = document.getElementById("urlHelpText");
+
+            if (category === "HQs" && sourceType === "hq-pages") {
+                label.textContent = "Links das Páginas da HQ (separados por vírgula ou quebra de linha)";
+                input.placeholder = "https://img1.com/p1.jpg, https://img2.com/p2.jpg";
+                help.textContent = "Cole os links diretos das imagens das páginas da HQ separados por vírgula.";
+            } else if (sourceType === "gdrive") {
+                label.textContent = "Link de Compartilhamento do Google Drive";
+                input.placeholder = "https://drive.google.com/file/d/.../view?usp=sharing";
+                help.textContent = "Certifique-se de que o arquivo no Google Drive esteja configurado como 'Qualquer pessoa com o link' (Leitor).";
+            } else if (sourceType === "globalcomics") {
+                label.textContent = "Link da HQ no Global Comics";
+                input.placeholder = "https://globalcomics.com/...";
+                help.textContent = "Insira o link oficial da publicação no Global Comics.";
+            } else {
+                label.textContent = "Link do Vídeo no YouTube";
+                input.placeholder = "https://www.youtube.com/watch?v=...";
+                help.textContent = "Insira o link completo do vídeo ou trailer no YouTube.";
+            }
+        }
+
+        function handleAddItem(event) {
+            event.preventDefault();
+            const title = document.getElementById("newItemTitle").value.trim();
+            const category = document.getElementById("newItemCategory").value;
+            const sourceType = document.getElementById("newItemSourceType").value;
+            const date = document.getElementById("newItemDate").value.trim();
+            const rawUrl = document.getElementById("newItemUrl").value.trim();
+            const thumbnail = document.getElementById("newItemThumb").value.trim();
+            const description = document.getElementById("newItemDesc").value.trim();
+            const alertBox = document.getElementById("formAlert");
+
+            let url = rawUrl;
+            let pages = [];
+
+            if (category === "HQs" && sourceType === "hq-pages") {
+                pages = rawUrl.split(",").map(s => s.trim()).filter(Boolean);
+                url = pages[0] || "";
+            }
+
+            const newItem = {
+                id: "item-" + Date.now(),
+                title,
+  1461:             category,
+                sourceType,
+                url,
+                pages,
+                thumbnail,
+                description,
+                date: date || "2026"
+            };
+
+            catalog.unshift(newItem);
+            saveCatalog();
+            renderCatalog();
+
+            alertBox.className = "alert-msg alert-success";
+            alertBox.textContent = "Produção publicada com sucesso no catálogo público!";
+            alertBox.style.display = "block";
+
+            setTimeout(() => {
+                renderAdminDashboard(document.getElementById("adminModalBody"));
+            }, 1200);
+        }
+
+        function deleteCatalogItem(id) {
+            if (confirm("Tem certeza que deseja excluir esta produção do catálogo?")) {
+                catalog = catalog.filter(i => i.id !== id);
+                saveCatalog();
+                renderCatalog();
+                renderAdminDashboard(document.getElementById("adminModalBody"));
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem(AUTH_KEY);
+            openAdminModal();
+        }
+
+        // Inicialização ao carregar a página
+        window.onload = function() {
+            renderCatalog();
+        };
+    </script>
+</body>
+</html>
