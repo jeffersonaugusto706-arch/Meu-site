@@ -1,246 +1,1398 @@
-<script>
-    const STORAGE_KEY = "wolf_studios_catalog_v7";
-    const AUTH_KEY = "wolf_studios_admin_logged";
-
-    const defaultCatalog = [
-        {
-            id: "hq-mascara-1",
-            title: "A Máscara da Vingança — Parte 1 (A Origem do Bicho-Papão)",
-            category: "HQs",
-            sourceType: "gdrive",
-            url: "https://drive.google.com/file/d/1bJiYFm_gJj5riQAhvt-3ckh2xwkmK895/view?usp=sharing",
-            thumbnail: "https://drive.google.com/thumbnail?id=1bJiYFm_gJj5riQAhvt-3ckh2xwkmK895&sz=w800",
-            description: "Arthur Henry abandonou o passado como assassino de aluguel, mas as sombras da cidade e a máscara amaldiçoada exigem um último acerto de contas.",
-            date: "2026"
-        },
-        {
-            id: "hq-mascara-2",
-            title: "A Máscara da Vingança — Parte 2",
-            category: "HQs",
-            sourceType: "gdrive",
-            url: "https://drive.google.com/file/d/1cgn_yEHPC69E75kBXEoA-bt5CHPNp3i5/view?usp=sharing",
-            thumbnail: "https://drive.google.com/thumbnail?id=1cgn_yEHPC69E75kBXEoA-bt5CHPNp3i5&sz=w800",
-            description: "Três meses depois da batalha anterior, Arthur retorna às ruas para cobrar cada dívida.",
-            date: "2026"
-        },
-        {
-            id: "hq-dw-skorm",
-            title: "Doctor Who: A Extinção Skorm",
-            category: "HQs",
-            sourceType: "gdrive",
-            url: "https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=sharing",
-            thumbnail: "https://drive.google.com/thumbnail?id=1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz&sz=w800",
-            description: "Uma invasão ilegal no planeta Skorm coloca uma criança em risco e força o Doutor a agir.",
-            date: "2026"
-        },
-        {
-            id: "hq-dw-novo-capitulo",
-            title: "Doctor Who: Um Novo Capítulo Se Inicia",
-            category: "HQs",
-            sourceType: "gdrive",
-            url: "https://drive.google.com/file/d/1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa/view?usp=sharing",
-            thumbnail: "https://drive.google.com/thumbnail?id=1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa&sz=w800",
-            description: "Com a chave sônica destruída e a TARDIS danificada, o Doutor enfrenta novos perigos.",
-            date: "2026"
-        }
-    ];
-
-    let catalog = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultCatalog;
-    let currentTab = "todos";
-
-    function switchTab(tab) {
-        currentTab = tab;
-        document.querySelectorAll(".nav-btn").forEach(btn => {
-            btn.classList.toggle("active", btn.dataset.tab === tab);
-        });
-
-        const titles = {
-            "todos": "Catálogo Completo",
-            "Filmes": "Filmes & Produções Live-Action",
-            "HQs": "Histórias em Quadrinhos (WCU)",
-            "Animações": "Animações Originais"
-        };
-        const secTitle = document.getElementById("sectionTitle");
-        const heroSec = document.getElementById("heroSection");
-        
-        if (secTitle) secTitle.textContent = titles[tab] || tab;
-        if (heroSec) heroSec.style.display = tab === "todos" ? "block" : "none";
-        renderCatalog();
-    }
-
-    function renderCatalog() {
-        const grid = document.getElementById("catalogGrid");
-        const searchInput = document.getElementById("searchInput");
-        if (!grid) return;
-
-        const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
-
-        const filtered = catalog.filter(item => {
-            const matchTab = currentTab === "todos" || item.category === currentTab;
-            const matchQuery = item.title.toLowerCase().includes(query) || item.description.toLowerCase().includes(query);
-            return matchTab && matchQuery;
-        });
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 3rem 0;">Nenhuma produção encontrada.</p>`;
-            return;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wolf Studios Produções | Portal Oficial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #070709;
+            --bg-secondary: #101015;
+            --bg-card: #16161e;
+            --bg-glass: rgba(16, 16, 21, 0.85);
+            --accent-red: #c9182b;
+            --accent-red-hover: #e61e34;
+            --accent-gold: #d4af37;
+            --accent-gold-soft: rgba(212, 175, 55, 0.15);
+            --text-primary: #f4f4f6;
+            --text-secondary: #a1a1aa;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.35);
+            --shadow-epic: 0 20px 50px rgba(0, 0, 0, 0.8);
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
         }
 
-        grid.innerHTML = filtered.map(item => {
-            const isHQ = item.category === "HQs";
-            let sourceLabel = "YouTube";
-            if (item.sourceType === "globalcomics") sourceLabel = "Global Comics";
-            else if (item.sourceType === "gdrive") sourceLabel = "Google Drive";
-            else if (item.sourceType === "hq-pages" || item.sourceType === "pdf") sourceLabel = "Leitor HQ";
-
-            const actionText = isHQ ? "Ler Edição &rarr;" : "Assistir Agora &rarr;";
-
-            return `
-                <article class="media-card">
-                    <div class="card-thumb ${isHQ ? 'hq-ratio' : ''}" onclick="openMedia('${item.id}')">
-                        <div class="card-tags">
-                            <span class="tag tag-cat">${item.category}</span>
-                            <span class="tag tag-src">${sourceLabel}</span>
-                        </div>
-                        <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=800&q=80'">
-                        <div class="play-overlay">
-                            <div class="play-circle">${isHQ ? '&#128214;' : '&#9654;'}</div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <h4 class="card-title">${item.title}</h4>
-                            <p class="card-desc">${item.description}</p>
-                        </div>
-                        <div class="card-footer">
-                            <span>Wolf Studios &bull; ${item.date || '2026'}</span>
-                            <button class="watch-link" onclick="openMedia('${item.id}')">${actionText}</button>
-                        </div>
-                    </div>
-                </article>
-            `;
-        }).join("");
-    }
-
-    function convertDriveUrl(url) {
-        if (!url) return "";
-        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-            return `https://drive.google.com/file/d/${match[1]}/preview`;
-        }
-        return url;
-    }
-
-    function openMedia(id) {
-        const item = catalog.find(i => i.id === id);
-        if (!item) return;
-
-        const modal = document.getElementById("mediaModal");
-        const title = document.getElementById("mediaModalTitle");
-        const body = document.getElementById("mediaModalBody");
-
-        if (title) title.textContent = item.title;
-
-        if (item.category === "HQs" && item.sourceType === "gdrive") {
-            const embedUrl = convertDriveUrl(item.url);
-            body.innerHTML = `
-                <iframe class="hq-pdf-frame" src="${embedUrl}" allow="autoplay"></iframe>
-                <p style="margin-top: 1rem; color: var(--text-secondary);">${item.description}</p>
-            `;
-        } else if (item.sourceType === "youtube") {
-            const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-            const match = item.url.match(regExp);
-            const ytId = match ? match[1] : null;
-            const embedUrl = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0` : item.url;
-            body.innerHTML = `
-                <div class="player-wrapper">
-                    <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <p style="color: var(--text-secondary);">${item.description}</p>
-            `;
-        } else {
-            const embedUrl = convertDriveUrl(item.url);
-            body.innerHTML = `
-                <div class="player-wrapper">
-                    <iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>
-                </div>
-                <p style="color: var(--text-secondary);">${item.description}</p>
-            `;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        if (modal) modal.classList.add("open");
-    }
-
-    function closeMediaModal() {
-        const modal = document.getElementById("mediaModal");
-        const body = document.getElementById("mediaModalBody");
-        if (modal) modal.classList.remove("open");
-        if (body) body.innerHTML = "";
-    }
-
-    function openAdminModal() {
-        const modal = document.getElementById("adminModal");
-        const body = document.getElementById("adminModalBody");
-        const isLogged = sessionStorage.getItem(AUTH_KEY) === "true";
-
-        if (!isLogged) {
-            body.innerHTML = `
-                <div class="admin-auth-box">
-                    <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--accent-gold);">Acesso Restrito ao Estúdio</h4>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Digite a senha de administrador para gerenciar o catálogo da Wolf Studios.</p>
-                    <div id="adminAlert" class="alert-msg alert-error"></div>
-                    <div class="form-group">
-                        <label for="adminPasswordInput">Senha de Acesso</label>
-                        <input type="password" id="adminPasswordInput" class="form-control" placeholder="Digite a senha..." onkeydown="if(event.key === 'Enter') verifyAdminPassword()">
-                    </div>
-                    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="verifyAdminPassword()">Entrar no Painel</button>
-                </div>
-            `;
-        } else {
-            renderAdminDashboard(body);
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        if (modal) modal.classList.add("open");
-    }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a35;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-red);
+        }
 
-    function verifyAdminPassword() {
-        const input = document.getElementById("adminPasswordInput");
-        const alertBox = document.getElementById("adminAlert");
-        if (!input) return;
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.9rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
-        if (input.value.trim() === "9165") {
-            sessionStorage.setItem(AUTH_KEY, "true");
-            renderAdminDashboard(document.getElementById("adminModalBody"));
-        } else {
-            if (alertBox) {
-                alertBox.textContent = "Senha incorreta. Acesso negado.";
-                alertBox.style.display = "block";
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .wolf-logo {
+            width: 44px;
+            height: 44px;
+            filter: drop-shadow(0 0 10px rgba(201, 24, 43, 0.5));
+        }
+
+        .brand-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 0.68rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            padding: 0.55rem 1.1rem;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-btn.active {
+            color: var(--text-primary);
+            background: rgba(201, 24, 43, 0.16);
+            border-color: rgba(201, 24, 43, 0.5);
+        }
+
+        .hero {
+            position: relative;
+            padding: 4.5rem 5% 3.5rem;
+            background: radial-gradient(circle at 75% 20%, rgba(201, 24, 43, 0.22), transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1), transparent 50%),
+                        linear-gradient(180deg, #0c0c12 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.3rem 0.85rem;
+            background: var(--accent-gold-soft);
+            border: 1px solid var(--border-gold);
+            color: var(--accent-gold);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .hero h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4.5vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1.15;
+            max-width: 820px;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ffffff 0%, #d4d4d8 65%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            max-width: 650px;
+            font-size: 1.05rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--accent-red);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-red-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(201, 24, 43, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        main {
+            flex: 1;
+            padding: 2.5rem 5% 4rem;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-left: 4px solid var(--accent-red);
+            padding-left: 1rem;
+        }
+
+        .section-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        .search-input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-width: 240px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.6rem;
+        }
+
+        .media-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .media-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-gold);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65);
+        }
+
+        .card-thumb {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: #0c0c10;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card-thumb.hq-ratio {
+            aspect-ratio: 3 / 4;
+        }
+
+        .card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .media-card:hover .card-thumb img {
+            transform: scale(1.06);
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(7, 7, 9, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .media-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-circle {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 0 25px rgba(201, 24, 43, 0.8);
+        }
+
+        .card-tags {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 0.4rem;
+            z-index: 2;
+        }
+
+        .tag {
+            padding: 0.25rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            letter-spacing: 0.8px;
+        }
+
+        .tag-cat {
+            background: rgba(7, 7, 9, 0.85);
+            color: var(--accent-gold);
+            border: 1px solid var(--border-gold);
+        }
+
+        .tag-src {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .watch-link {
+            color: var(--accent-gold);
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+        }
+
+        .watch-link:hover {
+            text-decoration: underline;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 960px;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-epic);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--accent-gold);
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .close-modal:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+        }
+
+        .player-wrapper iframe,
+        .player-wrapper video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .hq-viewer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hq-page-display {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .hq-pdf-frame {
+            width: 100%;
+            height: 76vh;
+            border: none;
+            border-radius: 6px;
+            background: #1a1a22;
+        }
+
+        .hq-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-card);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-note {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .modal-extra {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .modal-extra a {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .admin-auth-box {
+            max-width: 440px;
+            margin: 1rem auto;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.7rem 0.9rem;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
             }
         }
-    }
 
-    function closeAdminModal() {
-        const modal = document.getElementById("adminModal");
-        if (modal) modal.classList.remove("open");
-    }
+        .admin-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 0.7rem;
+            gap: 1rem;
+        }
 
-    function renderAdminDashboard(container) {
-        if (!container) return;
-        container.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                <span style="color: var(--accent-gold); font-weight: 600; font-size: 0.9rem;">&#128275; Modo Administrador Ativo</span>
-                <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;" onclick="logoutAdmin()">Bloquear Painel</button>
+        .btn-danger {
+            background: rgba(201, 24, 43, 0.2);
+            color: #ff4d5e;
+            border: 1px solid rgba(201, 24, 43, 0.5);
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-danger:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .alert-msg {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(201, 24, 43, 0.2);
+            border: 1px solid var(--accent-red);
+            color: #ff808c;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+        }
+
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 5%;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        footer strong {
+            color: var(--accent-gold);
+            font-family: var(--font-display);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="brand" onclick="switchTab('todos'); return false;">
+            <svg class="wolf-logo" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 10L22 24L32 18L42 24L52 10L56 34L44 50L32 56L20 50L8 34L12 10Z" fill="#16161E" stroke="#D4AF37" stroke-width="2.5"/>
+                <path d="M20 30L27 33L22 37L20 30Z" fill="#C9182B"/>
+                <path d="M44 30L37 33L42 37L44 30Z" fill="#C9182B"/>
+                <path d="M27 44L32 48L37 44L32 41L27 44Z" fill="#D4AF37"/>
+            </svg>
+            <div class="brand-text">
+                <h1>WOLF STUDIOS</h1>
+                <span>Produções</span>
             </div>
-            <p style="color: var(--text-secondary); text-align: center; padding: 2rem 0;">Painel de controle ativo. As produções padrão estão fixas no código para visualização de todos os visitantes.</p>
-        `;
-    }
+        </a>
 
-    function logoutAdmin() {
-        sessionStorage.removeItem(AUTH_KEY);
-        openAdminModal();
-    }
+        <nav>
+            <button class="nav-btn active" data-tab="todos" onclick="switchTab('todos')">Início / Destaques</button>
+            <button class="nav-btn" data-tab="Filmes" onclick="switchTab('Filmes')">Filmes</button>
+            <button class="nav-btn" data-tab="HQs" onclick="switchTab('HQs')">HQs</button>
+            <button class="nav-btn" data-tab="Animações" onclick="switchTab('Animações')">Animações</button>
+        </nav>
+    </header>
 
-    window.onload = function() {
-        renderCatalog();
-    };
-</script>
+    <section class="hero" id="heroSection">
+        <span class="hero-badge">Wolf Comics Universe &amp; Cinema Independente</span>
+        <h2>UNIVERSOS SOMBRIOS, NARRATIVAS ÉPICAS.</h2>
+        <p>Bem-vindo ao portal oficial da Wolf Studios Produções. Assista aos nossos filmes, explore edições exclusivas de histórias em quadrinhos e mergulhe em nossas animações originais.</p>
+        <div class="hero-actions">
+            <button class="btn-primary" onclick="switchTab('Filmes')">&#9654; Explorar Filmes</button>
+            <button class="btn-secondary" onclick="switchTab('HQs')">&#128214; Ler HQs do Universo</button>
+        </div>
+    </section>
+
+    <main>
+        <div class="section-header">
+            <h3 id="sectionTitle">Catálogo Completo</h3>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar título ou descrição..." oninput="renderCatalog()">
+        </div>
+
+        <div class="catalog-grid" id="catalogGrid"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 <strong>WOLF STUDIOS PRODUÇÕES</strong> &mdash; Todos os direitos reservados.</p>
+    </footer>
+
+    <div class="modal-backdrop" id="mediaModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="mediaModalTitle">Título da Obra</h3>
+                <button class="close-modal" onclick="closeMediaModal()" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="modal-body" id="mediaModalBody"></div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="adminModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Gerenciamento Privado &mdash; Wolf Studios</h3>
+                <button class="close-modal" onclick="closeAdminModal()" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="modal-body" id="adminModalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // As chaves abaixo guardam apenas itens adicionados pelo painel (neste navegador).
+        // As produções do defaultCatalog ficam fixas no código e aparecem para todos.
+        const STORAGE_KEY = "wolf_studios_custom_v1";
+        const AUTH_KEY = "wolf_studios_admin_logged";
+        const ADMIN_HASH = 4442367469459556;
+        const ADMIN_HASH_SALT = "wolf_studios::";
+        const ADMIN_HASH_ROUTE = "#studio";
+
+        const PLACEHOLDER_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">' +
+            '<rect width="300" height="400" fill="#101015"/>' +
+            '<path d="M80 110L110 150L150 130L190 150L220 110L232 200L190 270L150 290L110 270L68 200Z" fill="#16161e" stroke="#d4af37" stroke-width="5"/>' +
+            '<text x="150" y="340" fill="#a1a1aa" font-family="sans-serif" font-size="16" text-anchor="middle" letter-spacing="3">WOLF STUDIOS</text>' +
+            '</svg>'
+        );
+
+        const defaultCatalog = [
+            {
+                id: "hq-mascara-1",
+                title: "A Máscara da Vingança — Parte 1 (A Origem do Bicho-Papão)",
+                category: "HQs",
+                sourceType: "gdrive",
+                url: "https://drive.google.com/file/d/1bJiYFm_gJj5riQAhvt-3ckh2xwkmK895/view?usp=sharing",
+                thumbnail: "https://drive.google.com/thumbnail?id=1bJiYFm_gJj5riQAhvt-3ckh2xwkmK895&sz=w800",
+                description: "Arthur Henry abandonou o passado como assassino de aluguel, mas as sombras da cidade e a máscara amaldiçoada exigem um último acerto de contas.",
+                date: "2026"
+            },
+            {
+                id: "hq-mascara-2",
+                title: "A Máscara da Vingança — Parte 2",
+                category: "HQs",
+                sourceType: "gdrive",
+                url: "https://drive.google.com/file/d/1cgn_yEHPC69E75kBXEoA-bt5CHPNp3i5/view?usp=sharing",
+                thumbnail: "https://drive.google.com/thumbnail?id=1cgn_yEHPC69E75kBXEoA-bt5CHPNp3i5&sz=w800",
+                description: "Três meses depois da batalha anterior, Arthur retorna às ruas para cobrar cada dívida.",
+                date: "2026"
+            },
+            {
+                id: "hq-dw-skorm",
+                title: "Doctor Who: A Extinção Skorm",
+                category: "HQs",
+                sourceType: "gdrive",
+                url: "https://drive.google.com/file/d/1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz/view?usp=sharing",
+                thumbnail: "https://drive.google.com/thumbnail?id=1MNOY87hM2jTRGI96DqBpuooe-hhmuwOz&sz=w800",
+                description: "Uma invasão ilegal no planeta Skorm coloca uma criança em risco e força o Doutor a agir.",
+                date: "2026"
+            },
+            {
+                id: "hq-dw-novo-capitulo",
+                title: "Doctor Who: Um Novo Capítulo Se Inicia",
+                category: "HQs",
+                sourceType: "gdrive",
+                url: "https://drive.google.com/file/d/1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa/view?usp=sharing",
+                thumbnail: "https://drive.google.com/thumbnail?id=1DLtLS1P6fnBLIWJNsr2Ss1AjhHxC_AHa&sz=w800",
+                description: "Com a chave sônica destruída e a TARDIS danificada, o Doutor enfrenta novos perigos.",
+                date: "2026"
+            }
+        ];
+
+        // ---------- utilidades ----------
+        function esc(value) {
+            return String(value == null ? "" : value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function safeUrl(url) {
+            try {
+                const u = new URL(String(url || "").trim());
+                return (u.protocol === "https:" || u.protocol === "http:") ? u.href : "";
+            } catch (e) {
+                return "";
+            }
+        }
+
+        function hashPass(str) {
+            const s = ADMIN_HASH_SALT + str;
+            let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+            for (let i = 0, ch; i < s.length; i++) {
+                ch = s.charCodeAt(i);
+                h1 = Math.imul(h1 ^ ch, 2654435761);
+                h2 = Math.imul(h2 ^ ch, 1597334677);
+            }
+            h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+            h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+            return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+        }
+
+        function driveId(url) {
+            const s = String(url || "");
+            const m = s.match(/\/d\/([a-zA-Z0-9_-]+)/) || s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            return m ? m[1] : null;
+        }
+
+        function convertDriveUrl(url) {
+            const id = driveId(url);
+            return id ? "https://drive.google.com/file/d/" + id + "/preview" : safeUrl(url);
+        }
+
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = String(url).match(regExp);
+            return match ? match[1] : null;
+        }
+
+        // Miniaturas do Drive: o endereço googleusercontent costuma carregar em sites externos,
+        // o original drive.google.com/thumbnail fica como segunda tentativa.
+        function thumbSources(item) {
+            const thumb = safeUrl(item.thumbnail);
+            const isDriveThumb = /drive\.google\.com\/thumbnail/.test(thumb);
+            const id = isDriveThumb ? driveId(thumb) : (!thumb && item.sourceType === "gdrive" ? driveId(item.url) : null);
+            if (id) {
+                return {
+                    src: "https://lh3.googleusercontent.com/d/" + id + "=w800",
+                    alt: "https://drive.google.com/thumbnail?id=" + id + "&sz=w800"
+                };
+            }
+            return { src: thumb || PLACEHOLDER_IMG, alt: "" };
+        }
+
+        function imgFallback(img) {
+            const alt = img.dataset.alt;
+            if (alt && !img.dataset.tried) {
+                img.dataset.tried = "1";
+                img.src = alt;
+                return;
+            }
+            img.onerror = null;
+            img.src = PLACEHOLDER_IMG;
+        }
+
+        // ---------- catálogo ----------
+        function loadCustomItems() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                if (!Array.isArray(saved)) return [];
+                return saved.filter(i => i && typeof i.id === "string" && typeof i.title === "string" && typeof i.category === "string");
+            } catch (e) {
+                return [];
+            }
+        }
+
+        let customItems = loadCustomItems();
+        let currentTab = "todos";
+        let currentHqPages = [];
+        let currentHqIndex = 0;
+        let currentHqDescription = "";
+        let failedAttempts = 0;
+        let lockedUntil = 0;
+
+        function getCatalog() {
+            return customItems.concat(defaultCatalog);
+        }
+
+        function saveCustomItems() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(customItems));
+                return true;
+            } catch (e) {
+                alert("Aviso: não foi possível salvar. O armazenamento do navegador pode estar cheio ou bloqueado.");
+                return false;
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll(".nav-btn").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.tab === tab);
+            });
+
+            const titles = {
+                "todos": "Catálogo Completo",
+                "Filmes": "Filmes & Produções Live-Action",
+                "HQs": "Histórias em Quadrinhos (WCU)",
+                "Animações": "Animações Originais"
+            };
+            const secTitle = document.getElementById("sectionTitle");
+            const heroSec = document.getElementById("heroSection");
+            if (secTitle) secTitle.textContent = titles[tab] || tab;
+            if (heroSec) heroSec.style.display = tab === "todos" ? "block" : "none";
+            renderCatalog();
+        }
+
+        function renderCatalog() {
+            const grid = document.getElementById("catalogGrid");
+            const searchInput = document.getElementById("searchInput");
+            if (!grid) return;
+
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+            const filtered = getCatalog().filter(item => {
+                const matchTab = currentTab === "todos" || item.category === currentTab;
+                const matchQuery = String(item.title || "").toLowerCase().includes(query) ||
+                                   String(item.description || "").toLowerCase().includes(query);
+                return matchTab && matchQuery;
+            });
+
+            if (filtered.length === 0) {
+                const msg = currentTab !== "todos" && !query
+                    ? "Nenhuma produção nesta categoria ainda. Em breve, novidades!"
+                    : "Nenhuma produção encontrada.";
+                grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 3rem 0;">${msg}</p>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const isHQ = item.category === "HQs";
+                let sourceLabel = "YouTube";
+                if (item.sourceType === "globalcomics") sourceLabel = "Global Comics";
+                else if (item.sourceType === "gdrive") sourceLabel = "Google Drive";
+                else if (item.sourceType === "hq-pages" || item.sourceType === "pdf") sourceLabel = "Leitor HQ";
+                else if (item.sourceType === "direct-video") sourceLabel = "Direto";
+
+                const actionText = isHQ ? "Ler Edição &rarr;" : "Assistir Agora &rarr;";
+                const thumb = thumbSources(item);
+                const id = esc(item.id);
+
+                return `
+                    <article class="media-card">
+                        <div class="card-thumb ${isHQ ? 'hq-ratio' : ''}" onclick="openMedia('${id}')">
+                            <div class="card-tags">
+                                <span class="tag tag-cat">${esc(item.category)}</span>
+                                <span class="tag tag-src">${sourceLabel}</span>
+                            </div>
+                            <img src="${esc(thumb.src)}" data-alt="${esc(thumb.alt)}" alt="${esc(item.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFallback(this)">
+                            <div class="play-overlay">
+                                <div class="play-circle">${isHQ ? '&#128214;' : '&#9654;'}</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <h4 class="card-title">${esc(item.title)}</h4>
+                                <p class="card-desc">${esc(item.description)}</p>
+                            </div>
+                            <div class="card-footer">
+                                <span>Wolf Studios &bull; ${esc(item.date || '2026')}</span>
+                                <button class="watch-link" onclick="openMedia('${id}')">${actionText}</button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        // ---------- janela de conteúdo ----------
+        function openMedia(id) {
+            const item = getCatalog().find(i => i.id === id);
+            if (!item) return;
+
+            const modal = document.getElementById("mediaModal");
+            const title = document.getElementById("mediaModalTitle");
+            const body = document.getElementById("mediaModalBody");
+            if (!body) return;
+
+            if (title) title.textContent = item.title;
+            const desc = esc(item.description);
+            const rawUrl = safeUrl(item.url);
+
+            if (item.category === "HQs" && item.sourceType === "gdrive") {
+                const embedUrl = convertDriveUrl(item.url);
+                body.innerHTML = `
+                    <iframe class="hq-pdf-frame" src="${esc(embedUrl)}" allow="autoplay"></iframe>
+                    <p class="modal-note">${desc}</p>
+                    <p class="modal-extra">Não carregou? <a href="${esc(rawUrl)}" target="_blank" rel="noopener noreferrer">Abrir no Google Drive &rarr;</a></p>
+                `;
+            } else if (item.category === "HQs" && item.sourceType === "globalcomics") {
+                body.innerHTML = `
+                    <div style="text-align: center; padding: 2rem 1rem;">
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Esta HQ está hospedada oficialmente na plataforma <strong>Global Comics</strong>.</p>
+                        <a href="${esc(rawUrl)}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display: inline-flex; justify-content: center; margin-bottom: 1.5rem;">
+                            &#128218; Ler no Global Comics &rarr;
+                        </a>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${desc}</p>
+                    </div>
+                `;
+            } else if (item.category === "HQs") {
+                if (item.sourceType === "pdf") {
+                    body.innerHTML = `
+                        <iframe class="hq-pdf-frame" src="${esc(rawUrl)}"></iframe>
+                        <p class="modal-note">${desc}</p>
+                    `;
+                } else {
+                    const pages = (item.pages || []).map(safeUrl).filter(Boolean);
+                    const fallbackThumb = thumbSources(item).src;
+                    currentHqPages = pages.length ? pages : [fallbackThumb];
+                    currentHqIndex = 0;
+                    currentHqDescription = item.description || "";
+                    renderHqReader();
+                }
+            } else if (item.sourceType === "youtube") {
+                const ytId = extractYouTubeId(item.url);
+                const embedUrl = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0` : rawUrl;
+                body.innerHTML = `
+                    <div class="player-wrapper">
+                        <iframe src="${esc(embedUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p style="color: var(--text-secondary);">${desc}</p>
+                `;
+            } else if (item.sourceType === "gdrive") {
+                const embedUrl = convertDriveUrl(item.url);
+                body.innerHTML = `
+                    <div class="player-wrapper">
+                        <iframe src="${esc(embedUrl)}" allow="autoplay" allowfullscreen></iframe>
+                    </div>
+                    <p style="color: var(--text-secondary);">${desc}</p>
+                    <p class="modal-extra">Não carregou? <a href="${esc(rawUrl)}" target="_blank" rel="noopener noreferrer">Abrir no Google Drive &rarr;</a></p>
+                `;
+            } else {
+                body.innerHTML = `
+                    <div class="player-wrapper">
+                        <video src="${esc(rawUrl)}" controls autoplay playsinline></video>
+                    </div>
+                    <p style="color: var(--text-secondary);">${desc}</p>
+                `;
+            }
+
+            if (modal) modal.classList.add("open");
+        }
+
+        function renderHqReader() {
+            const body = document.getElementById("mediaModalBody");
+            if (!body) return;
+            const atStart = currentHqIndex === 0;
+            const atEnd = currentHqIndex === currentHqPages.length - 1;
+            body.innerHTML = `
+                <div class="hq-viewer">
+                    <img class="hq-page-display" src="${esc(currentHqPages[currentHqIndex])}" alt="Página ${currentHqIndex + 1} da HQ" referrerpolicy="no-referrer">
+                    <div class="hq-controls">
+                        <button class="btn-secondary" onclick="prevHqPage()" ${atStart ? 'disabled style="opacity:0.5; cursor:default"' : ''}>&larr; Anterior</button>
+                        <span style="font-size: 0.9rem; font-weight: 600;">Página ${currentHqIndex + 1} de ${currentHqPages.length}</span>
+                        <button class="btn-secondary" onclick="nextHqPage()" ${atEnd ? 'disabled style="opacity:0.5; cursor:default"' : ''}>Próxima &rarr;</button>
+                    </div>
+                    <p style="color: var(--text-secondary); text-align: center; margin-top: 0.5rem;">${esc(currentHqDescription)}</p>
+                </div>
+            `;
+        }
+
+        function prevHqPage() {
+            if (currentHqIndex > 0) {
+                currentHqIndex--;
+                renderHqReader();
+            }
+        }
+
+        function nextHqPage() {
+            if (currentHqIndex < currentHqPages.length - 1) {
+                currentHqIndex++;
+                renderHqReader();
+            }
+        }
+
+        function closeMediaModal() {
+            const modal = document.getElementById("mediaModal");
+            const body = document.getElementById("mediaModalBody");
+            if (modal) modal.classList.remove("open");
+            if (body) body.innerHTML = "";
+        }
+
+        // ---------- área privada do estúdio (só abre em /#studio + senha) ----------
+        function openAdminModal() {
+            const modal = document.getElementById("adminModal");
+            const body = document.getElementById("adminModalBody");
+            if (!body) return;
+            const isLogged = sessionStorage.getItem(AUTH_KEY) === "true";
+
+            if (!isLogged) {
+                body.innerHTML = `
+                    <div class="admin-auth-box">
+                        <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--accent-gold);">Acesso Restrito ao Estúdio</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Digite a senha de administrador para gerenciar o catálogo da Wolf Studios.</p>
+                        <div id="adminAlert" class="alert-msg alert-error"></div>
+                        <div class="form-group">
+                            <label for="adminPasswordInput">Senha de Acesso</label>
+                            <input type="password" id="adminPasswordInput" class="form-control" placeholder="Digite a senha..." autocomplete="off" onkeydown="if(event.key === 'Enter') verifyAdminPassword()">
+                        </div>
+                        <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="verifyAdminPassword()">Entrar no Painel</button>
+                    </div>
+                `;
+            } else {
+                renderAdminDashboard(body);
+            }
+
+            if (modal) modal.classList.add("open");
+        }
+
+        function showAdminAlert(text) {
+            const alertBox = document.getElementById("adminAlert");
+            if (!alertBox) return;
+            alertBox.textContent = text;
+            alertBox.style.display = "block";
+        }
+
+        function verifyAdminPassword() {
+            const input = document.getElementById("adminPasswordInput");
+            if (!input) return;
+
+            const now = Date.now();
+            if (now < lockedUntil) {
+                showAdminAlert("Muitas tentativas. Aguarde " + Math.ceil((lockedUntil - now) / 1000) + "s.");
+                return;
+            }
+
+            if (hashPass(input.value.trim()) === ADMIN_HASH) {
+                failedAttempts = 0;
+                sessionStorage.setItem(AUTH_KEY, "true");
+                renderAdminDashboard(document.getElementById("adminModalBody"));
+            } else {
+                failedAttempts++;
+                if (failedAttempts >= 5) {
+                    lockedUntil = Date.now() + 30000;
+                    failedAttempts = 0;
+                    showAdminAlert("Muitas tentativas. Aguarde 30s.");
+                } else {
+                    showAdminAlert("Senha incorreta. Acesso negado.");
+                }
+                input.value = "";
+            }
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById("adminModal");
+            if (modal) modal.classList.remove("open");
+            if (location.hash === ADMIN_HASH_ROUTE) {
+                history.replaceState(null, "", location.pathname + location.search);
+            }
+        }
+
+        function renderAdminDashboard(container) {
+            if (!container) return;
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <span style="color: var(--accent-gold); font-weight: 600; font-size: 0.9rem;">&#128275; Modo Administrador Ativo</span>
+                    <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;" onclick="logoutAdmin()">Bloquear Painel</button>
+                </div>
+
+                <div id="formAlert" class="alert-msg"></div>
+
+                <p style="color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 1.2rem;">
+                    Os itens adicionados aqui ficam salvos <strong>somente neste navegador</strong>. As produções padrão (HQs do Drive) ficam no código e aparecem para todos os visitantes. Para publicar algo para todos, inclua no <code>defaultCatalog</code> do arquivo.
+                </p>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.2rem; color: var(--text-primary);">Adicionar Nova Produção</h4>
+                    <form onsubmit="handleAddItem(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Título da Obra</label>
+                                <input type="text" id="newItemTitle" class="form-control" required placeholder="Ex: Fênix Capítulo 2">
+                            </div>
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <select id="newItemCategory" class="form-control" onchange="toggleFormFields()">
+                                    <option value="Filmes">Filmes</option>
+                                    <option value="HQs">HQs</option>
+                                    <option value="Animações">Animações</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tipo de Fonte / Hospedagem</label>
+                                <select id="newItemSourceType" class="form-control" onchange="toggleFormFields()">
+                                    <option value="youtube">YouTube (Vídeo / Trailer)</option>
+                                    <option value="gdrive">Google Drive (PDF / Leitura)</option>
+                                    <option value="globalcomics">Global Comics (Link Externo)</option>
+                                    <option value="hq-pages">Páginas de Imagem (Leitor Web)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Ano / Data</label>
+                                <input type="text" id="newItemDate" class="form-control" value="2026">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="urlOrPagesLabel">Link do Vídeo no YouTube</label>
+                            <textarea id="newItemUrl" class="form-control" rows="2" required placeholder="https://www.youtube.com/watch?v=..."></textarea>
+                            <small id="urlHelpText" style="color: var(--text-secondary); display: block; margin-top: 0.3rem; font-size: 0.78rem;">Insira o link completo do vídeo ou trailer no YouTube.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Link da Imagem de Capa (opcional para Google Drive)</label>
+                            <input type="text" id="newItemThumb" class="form-control" placeholder="https://images.unsplash.com/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sinopse / Descrição</label>
+                            <textarea id="newItemDesc" class="form-control" rows="3" required placeholder="Escreva uma breve sinopse..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Adicionar ao Catálogo (neste navegador)</button>
+                    </form>
+                </div>
+
+                <div>
+                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1rem;">Itens adicionados por você (${customItems.length})</h4>
+                    <div id="adminItemsList" style="max-height: 320px; overflow-y: auto; padding-right: 4px;">
+                        ${customItems.length === 0 ? '<p style="color: var(--text-secondary); font-size: 0.88rem;">Nenhum item adicionado ainda.</p>' : customItems.map(item => {
+                            const t = thumbSources(item);
+                            return `
+                            <div class="admin-list-item">
+                                <div style="display: flex; align-items: center; gap: 0.8rem; overflow: hidden;">
+                                    <img src="${esc(t.src)}" data-alt="${esc(t.alt)}" referrerpolicy="no-referrer" style="width: 42px; height: 42px; object-fit: cover; border-radius: 4px; flex-shrink: 0;" onerror="imgFallback(this)" alt="">
+                                    <div style="overflow: hidden;">
+                                        <h5 style="font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary);">${esc(item.title)}</h5>
+                                        <span style="font-size: 0.75rem; color: var(--accent-gold);">${esc(item.category)} &bull; ${esc(item.sourceType)}</span>
+                                    </div>
+                                </div>
+                                <button class="btn-danger" onclick="deleteCatalogItem('${esc(item.id)}')">Excluir</button>
+                            </div>`;
+                        }).join("")}
+                    </div>
+                </div>
+            `;
+            toggleFormFields();
+        }
+
+        function toggleFormFields() {
+            const category = document.getElementById("newItemCategory");
+            const source = document.getElementById("newItemSourceType");
+            const label = document.getElementById("urlOrPagesLabel");
+            const input = document.getElementById("newItemUrl");
+            const help = document.getElementById("urlHelpText");
+            if (!category || !source || !label || !input || !help) return;
+
+            const sourceType = source.value;
+
+            if (sourceType === "hq-pages") {
+                label.textContent = "Links das Páginas da HQ (separados por vírgula ou quebra de linha)";
+                input.placeholder = "https://img1.com/p1.jpg, https://img2.com/p2.jpg";
+                help.textContent = "Cole os links diretos das imagens das páginas da HQ, na ordem de leitura.";
+            } else if (sourceType === "gdrive") {
+                label.textContent = "Link de Compartilhamento do Google Drive";
+                input.placeholder = "https://drive.google.com/file/d/.../view?usp=sharing";
+                help.textContent = "O arquivo no Google Drive precisa estar como 'Qualquer pessoa com o link' (Leitor).";
+            } else if (sourceType === "globalcomics") {
+                label.textContent = "Link da HQ no Global Comics";
+                input.placeholder = "https://globalcomics.com/...";
+                help.textContent = "Insira o link oficial da publicação no Global Comics.";
+            } else {
+                label.textContent = "Link do Vídeo no YouTube";
+                input.placeholder = "https://www.youtube.com/watch?v=...";
+                help.textContent = "Insira o link completo do vídeo ou trailer no YouTube.";
+            }
+        }
+
+        function showFormAlert(text, ok) {
+            const alertBox = document.getElementById("formAlert");
+            if (!alertBox) return;
+            alertBox.className = "alert-msg " + (ok ? "alert-success" : "alert-error");
+            alertBox.textContent = text;
+            alertBox.style.display = "block";
+        }
+
+        function handleAddItem(event) {
+            event.preventDefault();
+            const title = document.getElementById("newItemTitle").value.trim();
+            const category = document.getElementById("newItemCategory").value;
+            const sourceType = document.getElementById("newItemSourceType").value;
+            const date = document.getElementById("newItemDate").value.trim();
+            const rawUrl = document.getElementById("newItemUrl").value.trim();
+            const rawThumb = document.getElementById("newItemThumb").value.trim();
+            const description = document.getElementById("newItemDesc").value.trim();
+
+            let url = "";
+            let pages = [];
+
+            if (sourceType === "hq-pages") {
+                pages = rawUrl.split(/[\n,]+/).map(s => safeUrl(s)).filter(Boolean);
+                if (!pages.length) {
+                    showFormAlert("Informe ao menos um link de imagem válido (começando com http ou https).", false);
+                    return;
+                }
+                url = pages[0];
+            } else {
+                url = safeUrl(rawUrl);
+                if (!url) {
+                    showFormAlert("O link da obra é inválido. Use um endereço completo começando com http ou https.", false);
+                    return;
+                }
+            }
+
+            const thumbnail = safeUrl(rawThumb);
+            if (rawThumb && !thumbnail) {
+                showFormAlert("O link da imagem de capa é inválido.", false);
+                return;
+            }
+            if (!thumbnail && sourceType !== "gdrive" && sourceType !== "hq-pages") {
+                showFormAlert("Informe o link da imagem de capa.", false);
+                return;
+            }
+
+            customItems.unshift({
+                id: "item-" + Date.now(),
+                title,
+                category,
+                sourceType,
+                url,
+                pages,
+                thumbnail: thumbnail || (pages[0] || ""),
+                description,
+                date: date || "2026"
+            });
+
+            if (!saveCustomItems()) {
+                customItems.shift();
+                return;
+            }
+            renderCatalog();
+            showFormAlert("Produção adicionada ao catálogo deste navegador!", true);
+
+            setTimeout(() => {
+                renderAdminDashboard(document.getElementById("adminModalBody"));
+            }, 1200);
+        }
+
+        function deleteCatalogItem(id) {
+            if (confirm("Tem certeza que deseja excluir esta produção do catálogo?")) {
+                customItems = customItems.filter(i => i.id !== id);
+                saveCustomItems();
+                renderCatalog();
+                renderAdminDashboard(document.getElementById("adminModalBody"));
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem(AUTH_KEY);
+            openAdminModal();
+        }
+
+        // ---------- inicialização ----------
+        function checkAdminRoute() {
+            if (location.hash === ADMIN_HASH_ROUTE) openAdminModal();
+        }
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                closeMediaModal();
+                closeAdminModal();
+            }
+        });
+
+        ["mediaModal", "adminModal"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener("mousedown", function (e) {
+                if (e.target !== el) return;
+                if (id === "mediaModal") closeMediaModal();
+                else closeAdminModal();
+            });
+        });
+
+        window.addEventListener("hashchange", checkAdminRoute);
+
+        window.onload = function () {
+            renderCatalog();
+            checkAdminRoute();
+        };
+    </script>
+</body>
+</html>
