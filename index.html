@@ -647,6 +647,145 @@
             color: #6ee7b7;
         }
 
+        .card-like {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+        }
+
+        .like-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(7, 7, 9, 0.85);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .like-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--text-primary);
+        }
+
+        .like-btn.liked {
+            background: rgba(201, 24, 43, 0.25);
+            border-color: var(--accent-red);
+            color: #ff808c;
+        }
+
+        .like-btn.big {
+            padding: 0.5rem 1.1rem;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .like-btn.big.liked {
+            background: rgba(201, 24, 43, 0.25);
+        }
+
+        .like-btn .heart {
+            font-size: 1.05em;
+            line-height: 1;
+        }
+
+        .modal-social {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .modal-social:empty {
+            display: none;
+        }
+
+        .social-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            padding: 1.2rem 0 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .social-head h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+        }
+
+        .comment-count {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+        }
+
+        .social-note {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            margin: 0.6rem 0;
+        }
+
+        .comment-list {
+            margin-top: 1.2rem;
+        }
+
+        .comment {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .comment-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .comment-meta strong {
+            color: var(--accent-gold);
+        }
+
+        .comment-text {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-size: 0.92rem;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 1.5rem;
+            transform: translate(-50%, 20px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            color: var(--text-primary);
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
         footer {
             background: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
@@ -716,6 +855,7 @@
                 <button class="close-modal" onclick="closeMediaModal()" aria-label="Fechar">&times;</button>
             </div>
             <div class="modal-body" id="mediaModalBody"></div>
+            <div class="modal-social" id="mediaSocial"></div>
         </div>
     </div>
 
@@ -968,6 +1108,7 @@
                                 <span class="tag tag-cat">${esc(item.category)}</span>
                                 <span class="tag tag-src">${sourceLabel}</span>
                             </div>
+                            <div class="card-like">${likeButtonHTML(item.id, false)}</div>
                             <img src="${esc(thumb.src)}" data-alt="${esc(thumb.alt)}" alt="${esc(item.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFallback(this)">
                             <div class="play-overlay">
                                 <div class="play-circle">${isHQ ? '&#128214;' : '&#9654;'}</div>
@@ -986,6 +1127,317 @@
                     </article>
                 `;
             }).join("");
+        }
+
+        // ---------- curtidas e comentários ----------
+        // Para curtidas/comentários COMPARTILHADOS entre todos os visitantes, cole abaixo o endereço
+        // do seu Firebase Realtime Database (ex.: "https://meu-projeto-default-rtdb.firebaseio.com").
+        // Deixando vazio, tudo fica salvo só no navegador de quem usa (modo local).
+        const SOCIAL_DB_URL = "";
+
+        const SOCIAL_KEY = "wolf_studios_social_v1";
+        const LIKED_KEY = "wolf_studios_liked_v1";
+        const VISITOR_KEY = "wolf_studios_visitor_v1";
+        const NAME_KEY = "wolf_studios_commenter_name";
+        const COMMENT_COOLDOWN_MS = 15000;
+        const MAX_COMMENTS_SHOWN = 100;
+
+        let likeCounts = {};
+        let likedSet = new Set();
+        let likeBusy = new Set();
+        let socialToken = 0;
+        let currentSocialId = null;
+        let lastCommentAt = 0;
+        let memVisitorId = null;
+
+        function remoteOn() { return /^https:\/\/.+/.test(SOCIAL_DB_URL); }
+        function keySafe(id) { return String(id).replace(/[.$#\[\]\/]/g, "_"); }
+
+        function lsGet(key, fallback) {
+            try {
+                const v = JSON.parse(localStorage.getItem(key));
+                return v == null ? fallback : v;
+            } catch (e) { return fallback; }
+        }
+        function lsSet(key, val) {
+            try { localStorage.setItem(key, JSON.stringify(val)); return true; }
+            catch (e) { return false; }
+        }
+
+        function visitorId() {
+            if (memVisitorId) return memVisitorId;
+            let v = lsGet(VISITOR_KEY, null);
+            if (typeof v !== "string" || !/^[a-zA-Z0-9]{8,64}$/.test(v)) {
+                v = (window.crypto && crypto.randomUUID)
+                    ? crypto.randomUUID().replace(/-/g, "")
+                    : "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+                lsSet(VISITOR_KEY, v);
+            }
+            memVisitorId = v;
+            return v;
+        }
+
+        async function remote(path, options) {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 8000);
+            try {
+                const url = SOCIAL_DB_URL.replace(/\/+$/, "") + "/" + path + ".json";
+                const res = await fetch(url, Object.assign({ signal: ctrl.signal }, options));
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                return await res.json();
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        function toast(msg) {
+            let t = document.getElementById("toast");
+            if (!t) {
+                t = document.createElement("div");
+                t.id = "toast";
+                t.className = "toast";
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            t.classList.add("show");
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => t.classList.remove("show"), 3000);
+        }
+
+        function formatDate(ts) {
+            const d = new Date(Number(ts));
+            return isNaN(d.getTime()) ? "" : d.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+        }
+
+        function likeButtonHTML(id, big) {
+            const k = keySafe(id);
+            const n = likeCounts[k] || 0;
+            const liked = likedSet.has(k);
+            return `<button type="button" class="like-btn ${big ? 'big' : ''} ${liked ? 'liked' : ''}" data-like="${esc(k)}" aria-pressed="${liked}" aria-label="Curtir" onclick="toggleLike('${esc(id)}', event)"><span class="heart">${liked ? '&#9829;' : '&#9825;'}</span><span class="count">${n}</span></button>`;
+        }
+
+        function updateLikeUI(id) {
+            const k = keySafe(id);
+            const n = likeCounts[k] || 0;
+            const liked = likedSet.has(k);
+            document.querySelectorAll("[data-like]").forEach(btn => {
+                if (btn.dataset.like !== k) return;
+                btn.classList.toggle("liked", liked);
+                btn.setAttribute("aria-pressed", String(liked));
+                const heart = btn.querySelector(".heart");
+                const count = btn.querySelector(".count");
+                if (heart) heart.innerHTML = liked ? "&#9829;" : "&#9825;";
+                if (count) count.textContent = n;
+            });
+        }
+
+        function updateAllLikeUI() {
+            getCatalog().forEach(item => updateLikeUI(item.id));
+        }
+
+        async function loadLikeCounts() {
+            likedSet = new Set(lsGet(LIKED_KEY, []));
+            if (remoteOn()) {
+                try {
+                    const data = (await remote("likes")) || {};
+                    const vid = visitorId();
+                    likeCounts = {};
+                    likedSet = new Set();
+                    Object.keys(data).forEach(k => {
+                        const voters = data[k] || {};
+                        likeCounts[k] = Object.keys(voters).length;
+                        if (voters[vid]) likedSet.add(k);
+                    });
+                    lsSet(LIKED_KEY, Array.from(likedSet));
+                } catch (e) { /* mantém tudo zerado se o banco não responder */ }
+            } else {
+                const s = lsGet(SOCIAL_KEY, { likes: {}, comments: {} });
+                likeCounts = s.likes || {};
+            }
+            updateAllLikeUI();
+        }
+
+        async function toggleLike(id, ev) {
+            if (ev) ev.stopPropagation();
+            const k = keySafe(id);
+            if (likeBusy.has(k)) return;
+            likeBusy.add(k);
+
+            const was = likedSet.has(k);
+            const apply = (liked) => {
+                if (liked) { likedSet.add(k); likeCounts[k] = (likeCounts[k] || 0) + 1; }
+                else { likedSet.delete(k); likeCounts[k] = Math.max(0, (likeCounts[k] || 1) - 1); }
+                lsSet(LIKED_KEY, Array.from(likedSet));
+                updateLikeUI(id);
+            };
+
+            apply(!was);
+            try {
+                if (remoteOn()) {
+                    await remote("likes/" + k + "/" + visitorId(),
+                        was ? { method: "DELETE" }
+                            : { method: "PUT", headers: { "Content-Type": "application/json" }, body: "true" });
+                } else {
+                    const s = lsGet(SOCIAL_KEY, { likes: {}, comments: {} });
+                    s.likes = s.likes || {};
+                    s.likes[k] = likeCounts[k] || 0;
+                    lsSet(SOCIAL_KEY, s);
+                }
+            } catch (e) {
+                apply(was);
+                toast("Não foi possível registrar a curtida. Tente novamente.");
+            } finally {
+                likeBusy.delete(k);
+            }
+        }
+
+        async function loadComments(id) {
+            const k = keySafe(id);
+            let list;
+            if (remoteOn()) {
+                const data = (await remote("comments/" + k)) || {};
+                list = Object.keys(data).map(key => Object.assign({}, data[key], { id: key }));
+            } else {
+                const s = lsGet(SOCIAL_KEY, { likes: {}, comments: {} });
+                list = ((s.comments || {})[k] || []).slice();
+            }
+            return list
+                .filter(c => c && typeof c === "object")
+                .sort((a, b) => (Number(b.ts) || 0) - (Number(a.ts) || 0));
+        }
+
+        async function postComment(id, name, text) {
+            const k = keySafe(id);
+            const comment = { name: name, text: text, ts: Date.now() };
+            if (remoteOn()) {
+                await remote("comments/" + k, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(comment)
+                });
+            } else {
+                const s = lsGet(SOCIAL_KEY, { likes: {}, comments: {} });
+                s.comments = s.comments || {};
+                s.comments[k] = s.comments[k] || [];
+                s.comments[k].push(Object.assign({ id: "c" + Date.now() + Math.random().toString(36).slice(2, 6) }, comment));
+                if (!lsSet(SOCIAL_KEY, s)) throw new Error("storage");
+            }
+        }
+
+        function removeComment(id, commentId) {
+            if (remoteOn() || sessionStorage.getItem(AUTH_KEY) !== "true") return;
+            if (!confirm("Excluir este comentário?")) return;
+            const k = keySafe(id);
+            const s = lsGet(SOCIAL_KEY, { likes: {}, comments: {} });
+            s.comments = s.comments || {};
+            s.comments[k] = (s.comments[k] || []).filter(c => c.id !== commentId);
+            lsSet(SOCIAL_KEY, s);
+            loadComments(id).then(list => { if (currentSocialId === id) renderCommentList(list, id); });
+        }
+
+        function renderCommentList(list, id) {
+            const el = document.getElementById("commentList");
+            if (!el) return;
+            const cnt = document.getElementById("commentCount");
+            if (cnt) cnt.textContent = list.length ? "(" + list.length + ")" : "";
+
+            if (!list.length) {
+                el.innerHTML = '<p class="social-note">Seja o primeiro a comentar.</p>';
+                return;
+            }
+            const canDelete = !remoteOn() && sessionStorage.getItem(AUTH_KEY) === "true";
+            el.innerHTML = list.slice(0, MAX_COMMENTS_SHOWN).map(c => `
+                <div class="comment">
+                    <div class="comment-meta">
+                        <span><strong>${esc(String(c.name || "Anônimo").slice(0, 40))}</strong> &bull; ${esc(formatDate(c.ts))}</span>
+                        ${canDelete ? `<button type="button" class="btn-danger" onclick="removeComment('${esc(id)}','${esc(c.id)}')">Excluir</button>` : ""}
+                    </div>
+                    <p class="comment-text">${esc(String(c.text || "").slice(0, 500))}</p>
+                </div>
+            `).join("");
+        }
+
+        function showCommentAlert(text, ok) {
+            const box = document.getElementById("commentAlert");
+            if (!box) return;
+            box.className = "alert-msg " + (ok ? "alert-success" : "alert-error");
+            box.textContent = text;
+            box.style.display = "block";
+            clearTimeout(showCommentAlert._t);
+            if (ok) showCommentAlert._t = setTimeout(() => { box.style.display = "none"; }, 3000);
+        }
+
+        async function submitComment(ev, id) {
+            ev.preventDefault();
+            const nameEl = document.getElementById("commentName");
+            const textEl = document.getElementById("commentText");
+            const btn = document.getElementById("commentBtn");
+            if (!nameEl || !textEl || !btn) return;
+
+            const name = nameEl.value.trim().slice(0, 40);
+            const text = textEl.value.trim().slice(0, 500);
+            if (!name || !text) {
+                showCommentAlert("Preencha seu nome e o comentário.", false);
+                return;
+            }
+            const wait = COMMENT_COOLDOWN_MS - (Date.now() - lastCommentAt);
+            if (wait > 0) {
+                showCommentAlert("Aguarde " + Math.ceil(wait / 1000) + "s para comentar de novo.", false);
+                return;
+            }
+
+            btn.disabled = true;
+            try {
+                await postComment(id, name, text);
+                lastCommentAt = Date.now();
+                lsSet(NAME_KEY, name);
+                textEl.value = "";
+                showCommentAlert("Comentário publicado!", true);
+                const list = await loadComments(id);
+                if (currentSocialId === id) renderCommentList(list, id);
+            } catch (e) {
+                showCommentAlert("Não foi possível publicar o comentário. Tente novamente.", false);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function renderSocial(id) {
+            const box = document.getElementById("mediaSocial");
+            if (!box) return;
+            const token = ++socialToken;
+            currentSocialId = id;
+
+            box.innerHTML = `
+                <div class="social-head">
+                    <h4>Comentários <span id="commentCount" class="comment-count"></span></h4>
+                    ${likeButtonHTML(id, true)}
+                </div>
+                <form class="comment-form" onsubmit="submitComment(event, '${esc(id)}')">
+                    <div class="form-group">
+                        <label for="commentName">Seu nome</label>
+                        <input type="text" id="commentName" class="form-control" maxlength="40" required placeholder="Como você quer ser chamado" autocomplete="nickname" value="${esc(lsGet(NAME_KEY, ''))}">
+                    </div>
+                    <div class="form-group">
+                        <label for="commentText">Comentário</label>
+                        <textarea id="commentText" class="form-control" rows="3" maxlength="500" required placeholder="Escreva seu comentário..."></textarea>
+                    </div>
+                    <div id="commentAlert" class="alert-msg"></div>
+                    <button type="submit" class="btn-primary" id="commentBtn">Comentar</button>
+                </form>
+                ${remoteOn() ? "" : '<p class="social-note">Modo de demonstração: curtidas e comentários ficam salvos apenas neste navegador.</p>'}
+                <div id="commentList" class="comment-list"><p class="social-note">Carregando comentários...</p></div>
+            `;
+
+            try {
+                const list = await loadComments(id);
+                if (token !== socialToken) return;
+                renderCommentList(list, id);
+            } catch (e) {
+                if (token !== socialToken) return;
+                const el = document.getElementById("commentList");
+                if (el) el.innerHTML = '<p class="social-note">Não foi possível carregar os comentários agora.</p>';
+            }
         }
 
         // ---------- janela de conteúdo ----------
@@ -1060,6 +1512,7 @@
                 `;
             }
 
+            renderSocial(item.id);
             if (modal) modal.classList.add("open");
         }
 
@@ -1100,6 +1553,9 @@
             const body = document.getElementById("mediaModalBody");
             if (modal) modal.classList.remove("open");
             if (body) body.innerHTML = "";
+            const social = document.getElementById("mediaSocial");
+            if (social) social.innerHTML = "";
+            socialToken++;
         }
 
         // ---------- área privada do estúdio (só abre em /#studio + senha) ----------
@@ -1402,6 +1858,7 @@
         window.onload = function () {
             renderCatalog();
             checkAdminRoute();
+            loadLikeCounts();
         };
     </script>
 </body>
