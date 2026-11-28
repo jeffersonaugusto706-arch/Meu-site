@@ -902,6 +902,52 @@
             background: #0d0f12;
         }
 
+        .community {
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            padding: 1.6rem 1.8rem;
+            background: linear-gradient(135deg, rgba(26, 122, 69, 0.28), rgba(200, 16, 46, 0.16));
+            border: 1px solid var(--border-gold);
+            border-radius: 14px;
+        }
+        .community + .community {
+            margin-top: 1rem;
+        }
+        .community-btn.yt-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #ff0000;
+            color: #fff;
+        }
+        .community h3 {
+            font-family: var(--font-display);
+            color: var(--accent-gold);
+            font-size: 1.25rem;
+            margin-bottom: 0.3rem;
+        }
+        .community p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+        .community-btn {
+            background: #25d366;
+            color: #06210f;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .community-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
         footer {
             background: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
@@ -958,6 +1004,24 @@
         </div>
 
         <div class="catalog-grid" id="catalogGrid"></div>
+        <section class="community" aria-label="Comunidade no WhatsApp">
+            <div class="community-text">
+                <h3>Comunidade Wolf Studios Produções</h3>
+                <p>Acesse este link para entrar na minha comunidade do WhatsApp:</p>
+            </div>
+            <a class="community-btn" href="https://chat.whatsapp.com/EEbL0MPFWY2HQuR8SLDm29" target="_blank" rel="noopener noreferrer">Entrar na comunidade &rarr;</a>
+        </section>
+
+        <section class="community" aria-label="Canal no YouTube">
+            <div class="community-text">
+                <h3>Canal Wolf Studios Produções no YouTube</h3>
+                <p>Inscreva-se no nosso canal e acompanhe as novidades.</p>
+            </div>
+            <a class="community-btn yt-btn" href="https://www.youtube.com/@Wolfstudiosprodu%C3%A7%C3%B5es" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 28 20" width="28" height="20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#fff"/><path d="M11 6l8 4-8 4z" fill="#ff0000"/></svg>
+                Acessar o canal
+            </a>
+        </section>
     </main>
 
     <footer>
@@ -1271,7 +1335,6 @@
                                 <span class="tag tag-cat">${esc(item.category)}</span>
                                 <span class="tag tag-src">${sourceLabel}</span>
                             </div>
-                            <div class="card-like">${likeButtonHTML(item.id, false)}</div>
                             <img src="${esc(thumb.src)}" data-alt="${esc(thumb.alt)}" alt="${esc(item.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFallback(this)">
                             <div class="play-overlay">
                                 <div class="play-circle">${isHQ ? '&#128214;' : '&#9654;'}</div>
@@ -1675,7 +1738,6 @@
                 `;
             }
 
-            renderSocial(item.id);
             if (modal) modal.classList.add("open");
         }
 
@@ -2078,7 +2140,6 @@
         window.onload = function () {
             renderCatalog();
             checkAdminRoute();
-            loadLikeCounts();
         };
     </script>
     <!-- Código do editor Wolf Cut (base64). Não edite aqui: gere de novo a partir do wolf-cut.html. -->
@@ -2099,4 +2160,3 @@
 </script>
 </body>
 </html>
-
