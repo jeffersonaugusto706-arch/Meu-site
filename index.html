@@ -9,18 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #06140d;
-            --bg-secondary: #0b2016;
-            --bg-card: #11291d;
-            --bg-glass: rgba(8, 28, 18, 0.88);
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: #111113;
+            --bg-glass: rgba(0, 0, 0, 0.88);
             --accent-red: #c8102e;
             --accent-red-hover: #ea2c46;
-            --accent-gold: #f0cd6e;
-            --accent-gold-soft: rgba(240, 205, 110, 0.15);
-            --text-primary: #f4f4f6;
-            --text-secondary: #a1a1aa;
+            --accent-gold: #c9ced6;
+            --accent-gold-soft: rgba(201, 206, 214, 0.15);
+            --text-primary: #e3e6ea;
+            --text-secondary: #a8adb6;
             --border-color: rgba(255, 255, 255, 0.08);
-            --border-gold: rgba(240, 205, 110, 0.4);
+            --border-gold: rgba(201, 206, 214, 0.4);
             --shadow-epic: 0 20px 50px rgba(0, 0, 0, 0.8);
             --font-display: 'Cinzel', serif;
             --font-body: 'Inter', sans-serif;
@@ -50,7 +50,7 @@
             background: var(--bg-primary);
         }
         ::-webkit-scrollbar-thumb {
-            background: #1f4a33;
+            background: #2a2a2e;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
@@ -984,6 +984,7 @@
             <button class="nav-btn" data-tab="Filmes" onclick="switchTab('Filmes')">Filmes</button>
             <button class="nav-btn" data-tab="HQs" onclick="switchTab('HQs')">HQs</button>
             <button class="nav-btn" data-tab="Animações" onclick="switchTab('Animações')">Animações</button>
+            <button class="nav-btn" data-tab="Produtos" onclick="switchTab('Produtos')">Produtos</button>
         </nav>
     </header>
 
@@ -1285,7 +1286,8 @@
                 "todos": "Catálogo Completo",
                 "Filmes": "Filmes & Produções Live-Action",
                 "HQs": "Histórias em Quadrinhos (WCU)",
-                "Animações": "Animações Originais"
+                "Animações": "Animações Originais",
+                "Produtos": "Produtos"
             };
             const secTitle = document.getElementById("sectionTitle");
             const heroSec = document.getElementById("heroSection");
@@ -1310,7 +1312,7 @@
 
             if (filtered.length === 0) {
                 const msg = currentTab !== "todos" && !query
-                    ? "Nenhuma produção nesta categoria ainda. Em breve, novidades!"
+                    ? (currentTab === "Produtos" ? "Nenhum produto por enquanto. Em breve, novidades!" : "Nenhuma produção nesta categoria ainda. Em breve, novidades!")
                     : "Nenhuma produção encontrada.";
                 grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 3rem 0;">${msg}</p>`;
                 return;
@@ -1892,6 +1894,7 @@
                                     <option value="Filmes">Filmes</option>
                                     <option value="HQs">HQs</option>
                                     <option value="Animações">Animações</option>
+                                    <option value="Produtos">Produtos</option>
                                 </select>
                             </div>
                         </div>
