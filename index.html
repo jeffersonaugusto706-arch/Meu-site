@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -1079,6 +1079,7 @@
                 url: "https://drive.google.com/file/d/1oQLa7t4OYtSoPAeLJt3UoxeHpuqZPm3_/view?usp=sharing",
                 cover: "dw-cin-2023",
                 portrait: true,
+                studio: "BBC",
                 description: "Especial de Doctor Who de 2023 para o Children in Need, com dublagem em português. Para entender a HQ que postei recentemente de Doctor Who, assistam esse especial!",
                 date: "2023"
             },
@@ -1089,7 +1090,8 @@
                 sourceType: "gdrive",
                 url: "https://drive.google.com/file/d/1qJDBvv9RkoH8haSn6XfKrsPMamkJADKw/view?usp=sharing",
                 cover: "dw-imensidao-azul",
-                description: "Assista agora a esta produção da Wolf Studios.",
+                studio: "BBC",
+                description: "Produção da BBC. Assista agora a este episódio de Doctor Who.",
                 date: "2026"
             }
         ];
@@ -1281,7 +1283,7 @@
                                 <p class="card-desc">${esc(item.description)}</p>
                             </div>
                             <div class="card-footer">
-                                <span>Wolf Studios &bull; ${esc(item.date || '2026')}</span>
+                                <span>${esc(item.studio || 'Wolf Studios')} &bull; ${esc(item.date || '2026')}</span>
                                 <button class="watch-link" onclick="openMedia('${id}')">${actionText}</button>
                             </div>
                         </div>
@@ -2097,3 +2099,4 @@
 </script>
 </body>
 </html>
+
